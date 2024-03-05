@@ -16,16 +16,13 @@ CREATE TABLE users (
     image varchar(255) DEFAULT NULL,
     role_id int,
     status enum('active', 'inactive', 'banned') not null DEFAULT "active",
-    address varchar(100) NOT NUll,
-    created_at datetime DEFAULT NULL,
-    deleted_at datetime DEFAULT NULL,
+    address varchar(255) NOT NUll,
     UNIQUE KEY email (email)
 );
 
 CREATE TABLE permissions (
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name varchar(50) NOT NULL,
-    deleted_at datetime DEFAULT NULL
+    name varchar(50) NOT NULL
 );
 
 CREATE TABLE roles (
@@ -43,17 +40,15 @@ CREATE TABLE users_permissions (
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     permission_id int NOT NULL,
     user_id int NOT NULL,
-    status enum('active', 'inactive') NOT NULL DEFAULT "inactive",
-    FOREIGN KEY (permission_id) REFERENCES permissions (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    status enum('active', 'inactive') NOT NULL DEFAULT "inactive"
 );
 
-CREATE TABLE `customers` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(50) NOT NULL,
-    `phone` VARCHAR(10) NOT NULL,
-    `email` VARCHAR(100) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+CREATE TABLE customers (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    phone VARCHAR(11) DEFAULT NULL,
+    email VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE `orders` (
@@ -140,9 +135,7 @@ CREATE TABLE carts (
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id int NOT NULL,
     product_id int NOT NULL,
-    quantity int NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    quantity int NOT NULL
 );
 
 CREATE TABLE settings (
@@ -157,10 +150,7 @@ CREATE TABLE reviews (
     product_id int NOT NULL,
     content text NOT NULL,
     rating int NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at DATETIME DEFAULT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE review_status (
@@ -179,114 +169,3 @@ CREATE TABLE coupons (
     description VARCHAR(255) NOT NULL,
     deleted_at DATETIME DEFAULT NULL
 );
-
--- Roles_Permissions Table
-ALTER TABLE
-    roles_permissions
-ADD
-    CONSTRAINT fk_role_id_roles_permissions FOREIGN KEY (role_id) REFERENCES roles(id),
-ADD
-    CONSTRAINT fk_permission_id_roles_permissions FOREIGN KEY (permission_id) REFERENCES permissions(id);
-
--- Users_Permissions Table
-ALTER TABLE
-    users_permissions
-ADD
-    CONSTRAINT fk_permission_id_users_permissions FOREIGN KEY (permission_id) REFERENCES permissions(id),
-ADD
-    CONSTRAINT fk_user_id_users_permissions FOREIGN KEY (user_id) REFERENCES users(id);
-
--- Orders Table
-ALTER TABLE
-    orders
-ADD
-    CONSTRAINT fk_customer_id_orders FOREIGN KEY (customer_id) REFERENCES customers(id),
-ADD
-    CONSTRAINT fk_user_id_orders FOREIGN KEY (user_id) REFERENCES users(id);
-
--- Order_Items Table
-ALTER TABLE
-    order_items
-ADD
-    CONSTRAINT fk_order_id_order_items FOREIGN KEY (order_id) REFERENCES orders(id),
-ADD
-    CONSTRAINT fk_product_id_order_items FOREIGN KEY (product_id) REFERENCES products(id),
-ADD
-    CONSTRAINT fk_size_id_order_items FOREIGN KEY (size_id) REFERENCES sizes(id);
-
--- Payments Table
-ALTER TABLE
-    payments
-ADD
-    CONSTRAINT fk_order_id_payments FOREIGN KEY (order_id) REFERENCES orders(id),
-ADD
-    CONSTRAINT fk_method_id_payments FOREIGN KEY (method_id) REFERENCES payment_methods(id);
-
--- Import Table
-ALTER TABLE
-    import
-ADD
-    CONSTRAINT fk_user_id_import FOREIGN KEY (user_id) REFERENCES users(id);
-
--- Import_Items Table
-ALTER TABLE
-    import_items
-ADD
-    CONSTRAINT fk_import_id_import_items FOREIGN KEY (import_id) REFERENCES import(id),
-ADD
-    CONSTRAINT fk_product_id_import_items FOREIGN KEY (product_id) REFERENCES products(id),
-ADD
-    CONSTRAINT fk_size_id_import_items FOREIGN KEY (size_id) REFERENCES sizes(id);
-
--- Size_Items Table
-ALTER TABLE
-    size_items
-ADD
-    CONSTRAINT fk_product_id_size_items FOREIGN KEY (product_id) REFERENCES products(id),
-ADD
-    CONSTRAINT fk_size_id_size_items FOREIGN KEY (size_id) REFERENCES sizes(id);
-
--- Carts Table
-ALTER TABLE
-    carts
-ADD
-    CONSTRAINT fk_user_id_carts FOREIGN KEY (user_id) REFERENCES users(id),
-ADD
-    CONSTRAINT fk_product_id_carts FOREIGN KEY (product_id) REFERENCES products(id);
-
--- Reviews Table
-ALTER TABLE
-    reviews
-ADD
-    CONSTRAINT fk_user_id_reviews FOREIGN KEY (user_id) REFERENCES users(id),
-ADD
-    CONSTRAINT fk_product_id_reviews FOREIGN KEY (product_id) REFERENCES products(id);
-
--- Review_Status Table
-ALTER TABLE
-    review_status
-ADD
-    CONSTRAINT fk_product_id_review_status FOREIGN KEY (product_id) REFERENCES products(id);
-
--- Products Table
-ALTER TABLE
-    products
-ADD
-    CONSTRAINT fk_category_id_products FOREIGN KEY (category_id) REFERENCES categories(id);
-
--- Coupons Table
-ALTER TABLE
-    coupons
-ADD
-    CONSTRAINT fk_required_coupons FOREIGN KEY (required) REFERENCES products(id);
-
-ALTER TABLE
-    users
-ADD
-    FOREIGN KEY (role_id) REFERENCES roles (id);
-
--- Categories Table
-ALTER TABLE
-    categories
-ADD
-    CONSTRAINT fk_product_id_categories FOREIGN KEY (id) REFERENCES products(category_id);

@@ -470,9 +470,56 @@ th:last-child {
     justify-content: flex-end;
     text-align: right;
 }
+
 .checkout-btn {
     display: flex;
     justify-content: flex-end;
     background-color: coral;
     color: white;
+}
+
+/* Login */
+#login-form {
+    width: 50%;
+    margin: 5px auto;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid coral;
+}
+
+#login-form input {
+    width: 50%;
+    margin: 5px auto;
+}
+
+#login-form #login-btn {
+    background-color: coral;
+    color: white;
+}
+
+#login-form #register-url {
+    color: coral;
+}
+
+/* Register */
+#register-form {
+    width: 50%;
+    margin: 5px auto;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid coral;
+}
+
+#register-form input {
+    width: 50%;
+    margin: 5px auto;
+}
+
+#register-form #register-btn {
+    background-color: coral;
+    color: white;
+}
+
+#register-form #login-url {
+    color: coral;
 }

@@ -18,7 +18,7 @@ class ReviewStatusDAO implements DAOInterface
     public function readDatabase(): array
     {
         $statusList = [];
-        $rs = DatabaseConnection::executeQuery("SELECT * FROM review_statuses");
+        $rs = DatabaseConnection::executeQuery("SELECT * FROM review_status");
         while ($row = $rs->fetch_assoc()) {
             $statusModel = $this->createStatusModel($row);
             array_push($statusList, $statusModel);
@@ -37,7 +37,7 @@ class ReviewStatusDAO implements DAOInterface
     public function getAll(): array
     {
         $statusList = [];
-        $rs = DatabaseConnection::executeQuery("SELECT * FROM review_statuses");
+        $rs = DatabaseConnection::executeQuery("SELECT * FROM review_status");
         while ($row = $rs->fetch_assoc()) {
             $statusModel = $this->createStatusModel($row);
             array_push($statusList, $statusModel);

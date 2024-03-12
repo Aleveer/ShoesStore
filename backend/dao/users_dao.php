@@ -6,6 +6,15 @@ require_once 'backend/utilities/db_connection.php';
 class UserDAO implements DAOInterface
 {
     private static $instance;
+
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new UserDAO();
+        }
+        return self::$instance;
+    }
+
     public function readDatabase(): array
     {
         $userList = [];
@@ -15,14 +24,6 @@ class UserDAO implements DAOInterface
             array_push($userList, $userModel);
         }
         return $userList;
-    }
-
-    public static function getInstance()
-    {
-        if (self::$instance == null) {
-            self::$instance = new UserDAO();
-        }
-        return self::$instance;
     }
 
     private function createUserModel($rs)
@@ -142,4 +143,3 @@ class UserDAO implements DAOInterface
         return $userList;
     }
 }
-?>

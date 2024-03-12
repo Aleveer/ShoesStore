@@ -1,5 +1,5 @@
 <?php
-interface IBUS
+interface BUSInterface
 {
     /**
      * Returns a list of all models.

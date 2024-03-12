@@ -1,5 +1,5 @@
 <?php
-interface IDAO
+interface DAOInterface
 {
 
     /**

@@ -82,6 +82,13 @@ class UserBUS implements BUSInterface
 
     public function searchModel(string $value, array $columns)
     {
+        if (empty($value)) {
+            throw new InvalidArgumentException("Invalid search value");
+        }
+
+        if (empty($columns)) {
+            $columns = array('username', 'email', 'name', 'address', 'phone', 'gender', 'role_id', 'status', 'id');
+        }
         $result = UserDAO::getInstance()->search($value, $columns);
         return $result;
     }

@@ -6,7 +6,7 @@ interface BUSInterface
      *
      * @return array a list of all models
      */
-    public function getAllModels(): array;
+    public function getAllModels();
 
     /**
      * Refreshes the data in the model list.
@@ -25,25 +25,22 @@ interface BUSInterface
      * Adds the given model to the database.
      *
      * @param mixed $model the model to add
-     * @return int the number of rows affected by the operation
      */
-    public function addModel($model): int;
+    public function addModel($model);
 
     /**
      * Updates the given model in the database.
      *
      * @param mixed $model the model to update
-     * @return int the number of rows affected by the operation
      */
-    public function updateModel($model): int;
+    public function updateModel($model);
 
     /**
      * Deletes the model with the given id from the database.
      *
      * @param int $id the id of the model to delete
-     * @return int the number of rows affected by the operation
      */
-    public function deleteModel(int $id): int;
+    public function deleteModel(int $id);
 
     /**
      * Searches for models that match the given value in the specified columns.

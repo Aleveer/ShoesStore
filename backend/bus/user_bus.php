@@ -5,8 +5,8 @@ require_once 'backend/model/user_model.php';
 class UserBUS implements BUSInterface
 {
     private $userList = array();
-
     private static $instance;
+
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -17,31 +17,72 @@ class UserBUS implements BUSInterface
 
     public function __construct()
     {
-        $this->userList = UserDAO::getInstance()->readDatabase();
+        $this->refreshData();
     }
 
     public function getAllModels()
     {
-        $this->userList = UserDAO::getInstance()->readDatabase();
+        return $this->userList;
     }
 
     public function refreshData(): void
     {
-        $this->userList = [];
         $this->userList = UserDAO::getInstance()->readDatabase();
     }
 
     public function getModelById(int $id)
     {
-        foreach ($this->userList as $user) {
-            if ($user->getId() == $id) {
-                return $user;
-            }
+        if (isset($this->userList[$id])) {
+            return $this->userList[$id];
+        } else {
+            throw new InvalidArgumentException('Invalid user id');
         }
-        return null;
+    }
+
+    private function validateUser($user)
+    {
+        if (empty($user->getUserName()) || empty($user->getPassword()) || empty($user->getEmail()) || empty($user->getName()) || empty($user->getAddress())) {
+            throw new InvalidArgumentException("Please fill in all fields");
+        }
     }
 
     public function addModel($user)
     {
+        $this->validateUser($user);
+        $newUser = UserDAO::getInstance()->insert($user);
+        if ($newUser) {
+            $this->userList[] = $newUser;
+            return true;
+        }
+        return false;
+    }
+
+    public function updateModel($user)
+    {
+        $result = UserDAO::getInstance()->update($user);
+        if ($result) {
+            $this->userList[$user->getId()] = $user;
+            return $user->getId();
+        }
+        return -1;
+    }
+
+    public function deleteModel(int $id)
+    {
+        $user = $this->getModelById($id);
+        $result = UserDAO::getInstance()->delete($id);
+        if ($result) {
+            $userId = $user['id'];
+            unset($this->userList[$userId]);
+        } else {
+            throw new InvalidArgumentException('Invalid user id');
+        }
+        return $result;
+    }
+
+    public function searchModel(string $value, array $columns)
+    {
+        $result = UserDAO::getInstance()->search($value, $columns);
+        return $result;
     }
 }

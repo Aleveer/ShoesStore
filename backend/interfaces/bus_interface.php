@@ -47,7 +47,6 @@ interface BUSInterface
      *
      * @param string $value the value to search for
      * @param array $columns the columns to search in
-     * @return array a list of models that match the search criteria
      */
-    public function searchModel(string $value, array $columns): array;
+    public function searchModel(string $value, array $columns);
 }

@@ -3,7 +3,7 @@ require_once(__DIR__ . "/../dao/user_dao.php");
 
 use PHPUnit\Framework\TestCase;
 
-class user_daoTest extends TestCase
+class user_dao_test extends TestCase
 {
     private $userDAO;
 
@@ -75,8 +75,10 @@ class user_daoTest extends TestCase
     public function testSearch()
     {
         $condition = "john doe"; // Provide a search condition for testing
-        $userList = $this->userDAO->search($condition, ["name"]);
+        $userList = $this->userDAO->search($condition, ['name']);
         $this->assertIsArray($userList);
         // Add more assertions to validate the returned user list
+        //Check result of search:
+        $this->assertEquals(1, count($userList));
     }
 }

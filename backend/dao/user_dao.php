@@ -108,34 +108,33 @@ class UserDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($deleteSql, $id);
     }
 
+    //TODO: Need further testing:
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM users WHERE CONCAT(id, username, password, email, image, name, phone, address, gender, role_id, status) LIKE ?";
+            $query = "SELECT * FROM users WHERE id LIKE ? OR username LIKE ? OR email LIKE ? OR name LIKE ? OR phone LIKE ? OR gender LIKE ? OR role_id LIKE ? OR address LIKE ? OR status LIKE ?";
+            $args = array_fill(0,  9, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM users WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, username, password, email, image, name, phone, address, gender, role_id, status FROM users WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM users WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $userList = [];
         while ($row = $rs->fetch_assoc()) {
             $userModel = $this->createUserModel($row);
             array_push($userList, $userModel);
         }
-
         if (count($userList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $userList;
     }
 }

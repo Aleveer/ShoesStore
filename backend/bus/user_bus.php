@@ -1,7 +1,8 @@
 <?php
-require_once 'backend/dao/user_dao.php';
-require_once 'backend/bus/bus_interface.php';
-require_once 'backend/model/user_model.php';
+require_once(__DIR__ . "/../dao/user_dao.php");
+require_once(__DIR__ . "/../interfaces/bus_interface.php");
+require_once(__DIR__ . "/../models/user_model.php");
+
 class UserBUS implements BUSInterface
 {
     private $userList = array();

@@ -81,32 +81,30 @@ class ReviewStatusDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM review_status WHERE CONCAT(id, product_id, status) LIKE ?";
+            $query = "SELECT * FROM review_status WHERE id LIKE ? OR product_id LIKE ? OR status LIKE ?";
+            $args = array_fill(0,  3, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM review_status WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT * FROM review_status WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM review_status WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $statusList = [];
         while ($row = $rs->fetch_assoc()) {
             $statusModel = $this->createStatusModel($row);
             array_push($statusList, $statusModel);
         }
-
         if (count($statusList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $statusList;
     }
 }

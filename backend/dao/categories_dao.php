@@ -72,34 +72,32 @@ class CategoriesDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames): array
+    public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM categories WHERE CONCAT(id, name) LIKE ?";
+            $query = "SELECT * FROM categories WHERE id LIKE ? OR name LIKE ?";
+            $args = array_fill(0,  2, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM categories WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, name FROM categories WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM categories WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $categoriesList = [];
         while ($row = $rs->fetch_assoc()) {
             $categoriesModel = $this->createCategoriesModel($row);
             array_push($categoriesList, $categoriesModel);
         }
-
         if (count($categoriesList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $categoriesList;
     }
 }

@@ -76,34 +76,32 @@ class CartsDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames): array
+    public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM carts WHERE CONCAT(id, user_id, product_id, quantity, size_id) LIKE ?";
+            $query = "SELECT * FROM carts WHERE id LIKE ? OR user_id LIKE ? OR product_id LIKE ? OR quantity LIKE ? OR size_id LIKE ?";
+            $args = array_fill(0,  5, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM carts WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, user_id, product_id, quantity, size_id FROM carts WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM carts WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $cartsList = [];
         while ($row = $rs->fetch_assoc()) {
             $cartsModel = $this->createCartsModel($row);
             array_push($cartsList, $cartsModel);
         }
-
         if (count($cartsList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $cartsList;
     }
 }

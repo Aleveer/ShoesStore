@@ -108,7 +108,6 @@ class UserDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($deleteSql, $id);
     }
 
-    //TODO: Need further testing:
     public function search(string $condition, $columnNames): array
     {
         if (empty($condition)) {

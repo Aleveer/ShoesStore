@@ -98,33 +98,30 @@ class ProductDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM products WHERE CONCAT(id, name, category_id, price, description, image, gender) LIKE ?";
+            $query = "SELECT * FROM products WHERE id LIKE ? OR name LIKE ? OR category_id LIKE ? OR price LIKE ? OR description LIKE ? OR image LIKE ? OR gender LIKE ?";
+            $args = array_fill(0,  7, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM products WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $columns = implode(", ", $columnNames);
-            $query = "SELECT id, name, category_id, price, description, image, gender FROM products WHERE CONCAT($columns) LIKE ?";
+            $query = "SELECT * FROM products WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $productList = [];
         while ($row = $rs->fetch_assoc()) {
             $productModel = $this->createProductModel($row);
             array_push($productList, $productModel);
         }
-
         if (count($productList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $productList;
     }
 }

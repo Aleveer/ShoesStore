@@ -76,34 +76,32 @@ class ImportDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames): array
+    public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM imports WHERE CONCAT(id, user_id, total_price, import_date) LIKE ?";
+            $query = "SELECT * FROM imports WHERE id LIKE ? OR user_id LIKE ? OR total_price LIKE ? OR import_date LIKE ?";
+            $args = array_fill(0,  4, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM imports WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, user_id, total_price, import_date FROM imports WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM imports WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $importList = [];
         while ($row = $rs->fetch_assoc()) {
             $importModel = $this->createImportModel($row);
             array_push($importList, $importModel);
         }
-
         if (count($importList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $importList;
     }
 }

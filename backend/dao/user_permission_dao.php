@@ -89,34 +89,30 @@ class UserPermissionDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-
-            $query =
-                "SELECT * FROM user_permissions WHERE concat(id, permission_id, user_id, status) LIKE ?";
+            $query = "SELECT * FROM user_permissions WHERE id LIKE ? OR permission_id LIKE ? OR user_id LIKE ? OR status LIKE ?";
+            $args = array_fill(0,  4, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM user_permissions WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, permission_id, user_id, status FROM user_permissions WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM user_permissions WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $userPermissionList = [];
         while ($row = $rs->fetch_assoc()) {
             $userPermissionModel = $this->createUserPermissionModel($row);
             array_push($userPermissionList, $userPermissionModel);
         }
-
         if (count($userPermissionList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $userPermissionList;
     }
 }

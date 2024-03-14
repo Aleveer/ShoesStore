@@ -78,32 +78,30 @@ class CustomerDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM customers WHERE CONCAT(id, name, phone, email) LIKE ?";
+            $query = "SELECT * FROM customers WHERE id LIKE ? OR name LIKE ? OR email LIKE ? OR phone LIKE ?";
+            $args = array_fill(0,  4, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM customers WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, name, phone, email FROM customers WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM customers WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $customerList = [];
         while ($row = $rs->fetch_assoc()) {
             $customerModel = $this->createCustomerModel($row);
             array_push($customerList, $customerModel);
         }
-
         if (count($customerList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $customerList;
     }
 }

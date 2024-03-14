@@ -84,34 +84,32 @@ class ImportItemsDAO
         return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames): array
+    public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM import_items WHERE CONCAT(id, import_id, product_id, size_id, quantity, price) LIKE ?";
+            $query = "SELECT * FROM import_items WHERE id LIKE ? OR import_id LIKE ? OR product_id LIKE ? OR size_id LIKE ? OR quantity LIKE ? OR price LIKE ?";
+            $args = array_fill(0,  6, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM import_items WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, import_id, product_id, size_id, quantity, price FROM import_items WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM import_items WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $importItemsList = [];
         while ($row = $rs->fetch_assoc()) {
             $importItemsModel = $this->createImportItemsModel($row);
             array_push($importItemsList, $importItemsModel);
         }
-
         if (count($importItemsList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $importItemsList;
     }
 }

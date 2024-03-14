@@ -79,32 +79,30 @@ class RoleDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM roles WHERE CONCAT(id, name) LIKE ?";
+            $query = "SELECT * FROM roles WHERE id LIKE ? OR name LIKE ?";
+            $args = array_fill(0,  2, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM roles WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT * FROM roles WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM roles WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $roleList = [];
         while ($row = $rs->fetch_assoc()) {
             $roleModel = $this->createRoleModel($row);
             array_push($roleList, $roleModel);
         }
-
         if (count($roleList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $roleList;
     }
 }

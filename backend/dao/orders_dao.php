@@ -77,32 +77,30 @@ class OrdersDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM orders WHERE CONCAT(id, customer_id, user_id, order_date, total_amount) LIKE ?";
+            $query = "SELECT * FROM orders WHERE id LIKE ? OR customer_id LIKE ? OR user_id LIKE ? OR order_date LIKE ? OR total_amount LIKE ?";
+            $args = array_fill(0,  5, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM orders WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, customer_id, user_id, order_date, total_amount FROM orders WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM orders WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $ordersList = [];
         while ($row = $rs->fetch_assoc()) {
             $ordersModel = $this->createOrdersModel($row);
             array_push($ordersList, $ordersModel);
         }
-
         if (count($ordersList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $ordersList;
     }
 }

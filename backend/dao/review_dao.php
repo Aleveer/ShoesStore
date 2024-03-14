@@ -82,21 +82,21 @@ class ReviewDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM reviews WHERE CONCAT(id, product_id, user_id, rating, content) LIKE ?";
+            $query = "SELECT * FROM reviews WHERE id LIKE ? OR user_id LIKE ? OR product_id LIKE ? OR content LIKE ? OR rating LIKE ?";
+            $args = array_fill(0,  5, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM reviews WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT * FROM reviews WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM reviews WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $reviewList = [];
         while ($row = $rs->fetch_assoc()) {
@@ -106,7 +106,6 @@ class ReviewDAO implements DAOInterface
         if (count($reviewList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $reviewList;
     }
 }

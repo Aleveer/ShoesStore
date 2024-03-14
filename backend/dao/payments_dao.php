@@ -90,7 +90,8 @@ class PaymentsDAO implements DAOInterface
             $column = $columnNames[0];
             $query = "SELECT * FROM payments WHERE $column LIKE ?";
         } else {
-            $query = "SELECT id, order_id, method_id, payment_date, total_price FROM payments WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $columns = implode(", ", $columnNames);
+            $query = "SELECT id, order_id, method_id, payment_date, total_price FROM payments WHERE CONCAT($columns) LIKE ?";
         }
 
         $args = ["%" . $condition . "%"];

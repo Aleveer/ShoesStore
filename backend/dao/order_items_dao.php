@@ -96,34 +96,32 @@ class OrderItemsDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($query, $orderId);
     }
 
-    public function search($condition, $columnNames): array
+    public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM order_items WHERE CONCAT(id, order_id, product_id, size_id, quantity, price) LIKE ?";
+            $query = "SELECT * FROM order_items WHERE id LIKE ? OR order_id LIKE ? OR product_id LIKE ? OR size_id LIKE ? OR quantity LIKE ? OR price LIKE ?";
+            $args = array_fill(0,  6, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM order_items WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, order_id, product_id, size_id, quantity, price FROM order_items WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM order_items WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $orderItemsList = [];
         while ($row = $rs->fetch_assoc()) {
             $orderItemsModel = $this->createOrderItemsModel($row);
             array_push($orderItemsList, $orderItemsModel);
         }
-
         if (count($orderItemsList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $orderItemsList;
     }
 }

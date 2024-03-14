@@ -81,32 +81,30 @@ class CouponsDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM coupons WHERE CONCAT(id, code, quantity, required, percent, expired, description) LIKE ?";
+            $query = "SELECT * FROM coupons WHERE id LIKE ? OR code LIKE ? OR quantity LIKE ? OR required LIKE ? OR percent LIKE ? OR expired LIKE ? OR description LIKE ?";
+            $args = array_fill(0,  7, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM coupons WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, code, quantity, required, percent, expired, description FROM coupons WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM coupons WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $couponsList = [];
         while ($row = $rs->fetch_assoc()) {
             $couponsModel = $this->createCouponsModel($row);
             array_push($couponsList, $couponsModel);
         }
-
         if (count($couponsList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $couponsList;
     }
 }

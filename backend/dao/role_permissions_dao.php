@@ -87,32 +87,30 @@ class RolePermissionDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM role_permissions WHERE CONCAT(id, role_id, permission_id) LIKE ?";
+            $query = "SELECT * FROM role_permissions WHERE id LIKE ? OR role_id LIKE ? OR permission_id LIKE ?";
+            $args = array_fill(0, 3, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM role_permissions WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT * FROM role_permissions WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM role_permissions WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $rolePermissionList = [];
         while ($row = $rs->fetch_assoc()) {
             $rolePermissionModel = $this->createRolePermissionModel($row);
             array_push($rolePermissionList, $rolePermissionModel);
         }
-
         if (count($rolePermissionList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $rolePermissionList;
     }
 }

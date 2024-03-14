@@ -89,32 +89,30 @@ class SizeItemsDAO implements DAOInterface
 
     public function search(string $condition, $columnNames): array
     {
-        if (empty(trim($condition))) {
+        if (empty($condition)) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
         }
-
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM size_items WHERE CONCAT(id, product_id, size_id, quantity) LIKE ?";
+            $query = "SELECT * FROM size_items WHERE id LIKE ? OR product_id LIKE ? OR size_id LIKE ? OR quantity LIKE ?";
+            $args = array_fill(0,  4, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM size_items WHERE $column LIKE ?";
+            $args = ["%" . $condition . "%"];
         } else {
-            $query = "SELECT id, product_id, size_id, quantity FROM size_items WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT * FROM size_items WHERE " . implode(" LIKE ? OR ", $columnNames) . " LIKE ?";
+            $args = array_fill(0, count($columnNames), "%" . $condition . "%");
         }
-
-        $args = ["%" . $condition . "%"];
         $rs = DatabaseConnection::executeQuery($query, ...$args);
         $sizeItemList = [];
         while ($row = $rs->fetch_assoc()) {
             $sizeItemModel = $this->createSizeItemModel($row);
             array_push($sizeItemList, $sizeItemModel);
         }
-
         if (count($sizeItemList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
-
         return $sizeItemList;
     }
 }

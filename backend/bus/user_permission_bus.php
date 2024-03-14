@@ -1,4 +1,7 @@
 <?php
+require_once 'backend/dao/user_permission_dao.php';
+require_once 'backend/bus/bus_interface.php';
+require_once 'backend/model/user_permission_model.php';
 class UserPermissionBUS implements BUSInterface
 {
     private $userPermissionList = array();

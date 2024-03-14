@@ -1,7 +1,7 @@
 <?php
-require_once 'backend/interfaces/dao_interface.php';
-require_once 'backend/entities/size_item_model.php';
-require_once 'backend/utilities/db_connection.php';
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/size_items_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
 
 class SizeItemsDAO implements DAOInterface
 {
@@ -49,14 +49,14 @@ class SizeItemsDAO implements DAOInterface
     public function getById(int $id)
     {
         $query = "SELECT * FROM size_items WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createSizeItemModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createSizeItemModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($sizeItem): int
@@ -67,7 +67,7 @@ class SizeItemsDAO implements DAOInterface
             $sizeItem->getSizeId(),
             $sizeItem->getQuantity(),
         ];
-        return DatabaseConnection::executeUpdate($insertSql, $args);
+        return DatabaseConnection::executeUpdate($insertSql, ...$args);
     }
 
     public function update($sizeItem): int
@@ -78,17 +78,16 @@ class SizeItemsDAO implements DAOInterface
             $sizeItem->getSizeId(),
             $sizeItem->getQuantity(),
         ];
-        return DatabaseConnection::executeUpdate($updateSql, $args);
+        return DatabaseConnection::executeUpdate($updateSql, ...$args);
     }
 
     public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM size_items WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($deleteSql, $args);
+        return DatabaseConnection::executeUpdate($deleteSql, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -105,7 +104,7 @@ class SizeItemsDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $sizeItemList = [];
         while ($row = $rs->fetch_assoc()) {
             $sizeItemModel = $this->createSizeItemModel($row);

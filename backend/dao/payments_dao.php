@@ -1,7 +1,7 @@
 <?php
-require_once 'backend/utilities/db_connection.php';
-require_once 'backend/model/payment_model.php';
-require_once 'backend/dao/dao_interface.php';
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+require_once(__DIR__ . "/../models/payments_model.php");
+require_once(__DIR__ . "/../dao/database_connection.php");
 
 class PaymentsDAO implements DAOInterface
 {
@@ -47,37 +47,37 @@ class PaymentsDAO implements DAOInterface
     public function getById($id)
     {
         $query = "SELECT * FROM payments WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createPaymentModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createPaymentModel($row);
+            }
         }
+        return null;
     }
+
     public function insert($payment): int
     {
         $query = "INSERT INTO payments (order_id, method_id, payment_date, total_price) VALUES (?, ?, ?, ?)";
         $args = [$payment->getOrderId(), $payment->getMethodId(), $payment->getPaymentDate(), $payment->getTotalPrice()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($payment): int
     {
         $query = "UPDATE payments SET order_id = ?, method_id = ?, payment_date = ?, total_price = ? WHERE id = ?";
         $args = [$payment->getOrderId(), $payment->getMethodId(), $payment->getPaymentDate(), $payment->getTotalPrice(), $payment->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete(int $id): int
     {
         $query = "DELETE FROM payments WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -94,7 +94,7 @@ class PaymentsDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $paymentList = [];
         while ($row = $rs->fetch_assoc()) {
             $paymentModel = $this->createPaymentModel($row);

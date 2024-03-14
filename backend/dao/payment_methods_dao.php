@@ -1,4 +1,7 @@
 <?php
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/payment_method_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
 class PaymentMethodsDAO implements DAOInterface
 {
     private static $instance;
@@ -43,38 +46,37 @@ class PaymentMethodsDAO implements DAOInterface
     public function getById(int $id)
     {
         $query = "SELECT * FROM payment_methods WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createPaymentMethodsModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createPaymentMethodsModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($paymentMethodModel): int
     {
         $query = "INSERT INTO payment_methods (name) VALUES (?)";
         $args = [$paymentMethodModel->getName()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($paymentMethodModel): int
     {
         $query = "UPDATE payment_methods SET name = ? WHERE id = ?";
         $args = [$paymentMethodModel->getName(), $paymentMethodModel->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete(int $id): int
     {
         $query = "DELETE FROM payment_methods WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -91,7 +93,7 @@ class PaymentMethodsDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $paymentMethodsList = [];
         while ($row = $rs->fetch_assoc()) {
             $paymentMethodsModel = $this->createPaymentMethodsModel($row);

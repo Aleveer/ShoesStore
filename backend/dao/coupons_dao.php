@@ -1,7 +1,7 @@
 <?php
-require_once "backend/dao/database_connection.php";
-require_once "backend/dao/dao_interface.php";
-require_once "backend/model/coupons_model.php";
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/coupons_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
 
 class CouponsDAO implements DAOInterface
 {
@@ -49,38 +49,37 @@ class CouponsDAO implements DAOInterface
     public function getById($id)
     {
         $query = "SELECT * FROM coupons WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createCouponsModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createCouponsModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($couponsModel): int
     {
         $query = "INSERT INTO coupons (code, quantity, required, percent, expired, description) VALUES (?, ?, ?, ?, ?, ?)";
         $args = [$couponsModel->getCode(), $couponsModel->getQuantity(), $couponsModel->getRequired(), $couponsModel->getPercent(), $couponsModel->getExpired(), $couponsModel->getDescription()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($couponsModel): int
     {
         $query = "UPDATE coupons SET code = ?, quantity = ?, required = ?, percent = ?, expired = ?, description = ? WHERE id = ?";
         $args = [$couponsModel->getCode(), $couponsModel->getQuantity(), $couponsModel->getRequired(), $couponsModel->getPercent(), $couponsModel->getExpired(), $couponsModel->getDescription(), $couponsModel->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete($id): int
     {
         $query = "DELETE FROM coupons WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -97,7 +96,7 @@ class CouponsDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $couponsList = [];
         while ($row = $rs->fetch_assoc()) {
             $couponsModel = $this->createCouponsModel($row);

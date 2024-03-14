@@ -1,4 +1,8 @@
 <?php
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+require_once(__DIR__ . "/../models/categories_model.php");
+require_once(__DIR__ . "/../dao/database_connection.php");
+
 class CategoriesDAO implements DAOInterface
 {
     private static $instance;
@@ -38,37 +42,37 @@ class CategoriesDAO implements DAOInterface
     public function getById($id)
     {
         $query = "SELECT * FROM categories WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createCategoriesModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createCategoriesModel($row);
+            }
         }
+        return null;
     }
+
     public function insert($categoriesModel): int
     {
         $query = "INSERT INTO categories (name) VALUES (?)";
         $args = [$categoriesModel->getName()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($categoriesModel): int
     {
         $query = "UPDATE categories SET name = ? WHERE id = ?";
         $args = [$categoriesModel->getName(), $categoriesModel->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete($id): int
     {
         $query = "DELETE FROM categories WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search($condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -85,7 +89,7 @@ class CategoriesDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $categoriesList = [];
         while ($row = $rs->fetch_assoc()) {
             $categoriesModel = $this->createCategoriesModel($row);

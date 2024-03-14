@@ -1,7 +1,7 @@
 <?php
-require_once 'backend/interfaces/dao_interface.php';
-require_once 'backend/entities/role_permission_model.php';
-require_once 'backend/utilities/db_connection.php';
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/role_permissions_model.php");
+require_once(__DIR__ . "/../dao/dao_interface.php");
 
 class RolePermissionDAO implements DAOInterface
 {
@@ -48,14 +48,14 @@ class RolePermissionDAO implements DAOInterface
     public function getById(int $id)
     {
         $query = "SELECT * FROM role_permissions WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createRolePermissionModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createRolePermissionModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($rolePermission): int
@@ -65,7 +65,7 @@ class RolePermissionDAO implements DAOInterface
             $rolePermission->getRoleId(),
             $rolePermission->getPermissionId()
         ];
-        return DatabaseConnection::executeUpdate($insertSql, $args);
+        return DatabaseConnection::executeUpdate($insertSql, ...$args);
     }
 
     public function update($rolePermission): int
@@ -76,17 +76,16 @@ class RolePermissionDAO implements DAOInterface
             $rolePermission->getPermissionId(),
             $rolePermission->getId()
         ];
-        return DatabaseConnection::executeUpdate($updateSql, $args);
+        return DatabaseConnection::executeUpdate($updateSql, ...$args);
     }
 
     public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM role_permissions WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($deleteSql, $args);
+        return DatabaseConnection::executeUpdate($deleteSql, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -103,7 +102,7 @@ class RolePermissionDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $rolePermissionList = [];
         while ($row = $rs->fetch_assoc()) {
             $rolePermissionModel = $this->createRolePermissionModel($row);

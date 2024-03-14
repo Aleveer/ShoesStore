@@ -1,4 +1,8 @@
 <?php
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/carts_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
 class CartsDAO implements DAOInterface
 {
     private static $instance;
@@ -42,38 +46,37 @@ class CartsDAO implements DAOInterface
     public function getById($id)
     {
         $query = "SELECT * FROM carts WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createCartsModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createCartsModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($cartsModel): int
     {
         $query = "INSERT INTO carts (user_id, product_id, quantity, size_id) VALUES (?, ?, ?, ?)";
         $args = [$cartsModel->getUserId(), $cartsModel->getProductId(), $cartsModel->getQuantity(), $cartsModel->getSizeId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($cartsModel): int
     {
         $query = "UPDATE carts SET user_id = ?, product_id = ?, quantity = ?, size_id = ? WHERE id = ?";
         $args = [$cartsModel->getUserId(), $cartsModel->getProductId(), $cartsModel->getQuantity(), $cartsModel->getSizeId(), $cartsModel->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete($id): int
     {
         $query = "DELETE FROM carts WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search($condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -90,7 +93,7 @@ class CartsDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $cartsList = [];
         while ($row = $rs->fetch_assoc()) {
             $cartsModel = $this->createCartsModel($row);

@@ -1,7 +1,8 @@
 <?php
-require_once 'backend/entities/permission_model.php';
-require_once 'backend/utilities/db_connection.php';
-require_once 'backend/dao/dao_interface.php';
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/permissions_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
 
 class PermissionDAO implements DAOInterface
 {
@@ -43,38 +44,37 @@ class PermissionDAO implements DAOInterface
     public function getById(int $id)
     {
         $query = "SELECT * FROM permissions WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createPermissionModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createPermissionModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($permission): int
     {
         $query = "INSERT INTO permissions (name) VALUES (?)";
         $args = [$permission->getName()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($permission): int
     {
         $query = "UPDATE permissions SET name = ? WHERE id = ?";
         $args = [$permission->getName(), $permission->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete(int $id): int
     {
         $query = "DELETE FROM permissions WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -91,7 +91,7 @@ class PermissionDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $permissionList = [];
         while ($row = $rs->fetch_assoc()) {
             $permissionModel = $this->createPermissionModel($row);

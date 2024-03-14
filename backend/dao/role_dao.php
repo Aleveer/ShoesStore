@@ -1,7 +1,7 @@
 <?php
-require_once 'backend/interfaces/dao_interface.php';
-require_once 'backend/entities/role_model.php';
-require_once 'backend/utilities/db_connection.php';
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+require_once(__DIR__ . "/../models/role_model.php");
+require_once(__DIR__ . "/../dao/database_connection.php");
 
 class RoleDAO implements DAOInterface
 {
@@ -47,38 +47,37 @@ class RoleDAO implements DAOInterface
     public function getById(int $id)
     {
         $query = "SELECT * FROM roles WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createRoleModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createRoleModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($role): int
     {
         $insertSql = "INSERT INTO roles (name) VALUES (?)";
         $args = [$role->getName()];
-        return DatabaseConnection::executeUpdate($insertSql, $args);
+        return DatabaseConnection::executeUpdate($insertSql, ...$args);
     }
 
     public function update($role): int
     {
         $updateSql = "UPDATE roles SET name = ? WHERE id = ?";
         $args = [$role->getName(), $role->getId()];
-        return DatabaseConnection::executeUpdate($updateSql, $args);
+        return DatabaseConnection::executeUpdate($updateSql, ...$args);
     }
 
     public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM roles WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($deleteSql, $args);
+        return DatabaseConnection::executeUpdate($deleteSql, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -95,7 +94,7 @@ class RoleDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $roleList = [];
         while ($row = $rs->fetch_assoc()) {
             $roleModel = $this->createRoleModel($row);

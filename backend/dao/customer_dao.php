@@ -1,4 +1,8 @@
 <?php
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/customer_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
 class CustomerDAO implements DAOInterface
 {
     private static $instance;
@@ -42,38 +46,37 @@ class CustomerDAO implements DAOInterface
     public function getById($id)
     {
         $query = "SELECT * FROM customers WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createCustomerModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createCustomerModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($customerModel): int
     {
         $query = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)";
         $args = [$customerModel->getName(), $customerModel->getEmail(), $customerModel->getPhone()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($customerModel): int
     {
         $query = "UPDATE customers SET name = ?, email = ?, phone = ? WHERE id = ?";
         $args = [$customerModel->getName(), $customerModel->getEmail(), $customerModel->getPhone(), $customerModel->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete($id): int
     {
         $query = "DELETE FROM customers WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -90,7 +93,7 @@ class CustomerDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $customerList = [];
         while ($row = $rs->fetch_assoc()) {
             $customerModel = $this->createCustomerModel($row);

@@ -1,4 +1,8 @@
 <?php
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/orders_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
 class OrdersDAO implements DAOInterface
 {
     private static $instance;
@@ -43,36 +47,35 @@ class OrdersDAO implements DAOInterface
     public function getById(int $id)
     {
         $query = "SELECT * FROM orders WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createOrdersModel($row);
-        } else {
-            return null;
+        $rs = DatabaseConnection::executeQuery($query, $id);
+        if ($rs->num_rows > 0) {
+            $row = $rs->fetch_assoc();
+            if ($row) {
+                return $this->createOrdersModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($ordersModel): int
     {
         $query = "INSERT INTO orders (customer_id, user_id, order_date, total_amount) VALUES (?, ?, ?, ?)";
         $args = [$ordersModel->getCustomerId(), $ordersModel->getUserId(), $ordersModel->getOrderDate(), $ordersModel->getTotalAmount()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
     public function update($ordersModel): int
     {
         $query = "UPDATE orders SET customer_id = ?, user_id = ?, order_date = ?, total_amount = ? WHERE id = ?";
         $args = [$ordersModel->getCustomerId(), $ordersModel->getUserId(), $ordersModel->getOrderDate(), $ordersModel->getTotalAmount(), $ordersModel->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
     public function delete(int $id): int
     {
         $query = "DELETE FROM orders WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -89,7 +92,7 @@ class OrdersDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $ordersList = [];
         while ($row = $rs->fetch_assoc()) {
             $ordersModel = $this->createOrdersModel($row);

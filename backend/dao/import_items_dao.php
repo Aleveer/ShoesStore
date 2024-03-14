@@ -1,7 +1,8 @@
 <?php
-require_once 'backend/dao/dao_interface.php';
-require_once 'backend/model/import_items_model.php';
-require_once 'backend/database/database_connection.php';
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/import_items_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
 class ImportItemsDAO
 {
     private static $instance;
@@ -47,45 +48,43 @@ class ImportItemsDAO
     public function getById($id)
     {
         $query = "SELECT * FROM import_items WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createImportItemsModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createImportItemsModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($importItemsModel): int
     {
         $query = "INSERT INTO import_items (import_id, product_id, size_id, quantity, price) VALUES (?, ?, ?, ?, ?)";
         $args = [$importItemsModel->getImportId(), $importItemsModel->getProductId(), $importItemsModel->getSizeId(), $importItemsModel->getQuantity(), $importItemsModel->getPrice()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($importItemsModel): int
     {
         $query = "UPDATE import_items SET import_id = ?, product_id = ?, size_id = ?, quantity = ?, price = ? WHERE id = ?";
         $args = [$importItemsModel->getImportId(), $importItemsModel->getProductId(), $importItemsModel->getSizeId(), $importItemsModel->getQuantity(), $importItemsModel->getPrice(), $importItemsModel->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete($id): int
     {
         $query = "DELETE FROM import_items WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
     public function deleteByImportId($id): int
     {
         $query = "DELETE FROM import_items WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search($condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -102,7 +101,7 @@ class ImportItemsDAO
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $importItemsList = [];
         while ($row = $rs->fetch_assoc()) {
             $importItemsModel = $this->createImportItemsModel($row);

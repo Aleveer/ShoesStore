@@ -1,8 +1,7 @@
 <?php
-require_once 'backend/interfaces/dao_interface.php';
-require_once 'backend/models/user_permission_model.php';
-require_once 'backend/utilities/db_connection.php';
-
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/user_permission_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
 class UserPermissionDAO implements DAOInterface
 {
     private static $instance;
@@ -31,7 +30,7 @@ class UserPermissionDAO implements DAOInterface
         $id = $rs['id'];
         $permissionId = $rs['permission_id'];
         $userId = $rs['user_id'];
-        $status = $rs['status'];
+        $status = strtoupper($rs['status']);
         return new UserPermissionModel($id, $permissionId, $userId, $status);
     }
 
@@ -49,10 +48,12 @@ class UserPermissionDAO implements DAOInterface
     public function getById($id)
     {
         $query = "SELECT * FROM user_permissions WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        if ($row = $rs->fetch_assoc()) {
-            return $this->createUserPermissionModel($row);
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createUserPermissionModel($row);
+            }
         }
         return null;
     }
@@ -65,7 +66,7 @@ class UserPermissionDAO implements DAOInterface
             $userPermission->getUserId(),
             strtoupper($userPermission->getStatus())
         ];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($userPermission): int
@@ -77,17 +78,16 @@ class UserPermissionDAO implements DAOInterface
             $userPermission->getStatus(),
             $userPermission->getId()
         ];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete(int $id): int
     {
         $query = "DELETE FROM user_permissions WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -106,17 +106,17 @@ class UserPermissionDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $userList = [];
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
+        $userPermissionList = [];
         while ($row = $rs->fetch_assoc()) {
-            $userModel = $this->createUserPermissionModel($row);
-            array_push($userList, $userModel);
+            $userPermissionModel = $this->createUserPermissionModel($row);
+            array_push($userPermissionList, $userPermissionModel);
         }
 
-        if (count($userList) === 0) {
+        if (count($userPermissionList) === 0) {
             throw new Exception("No records found for the given condition: " . $condition);
         }
 
-        return $userList;
+        return $userPermissionList;
     }
 }

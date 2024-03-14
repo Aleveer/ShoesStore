@@ -1,4 +1,8 @@
 <?php
+require_once(__DIR__ . "/../dao/database_connection.php");
+require_once(__DIR__ . "/../models/import_model.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
 class ImportDAO implements DAOInterface
 {
     private static $instance;

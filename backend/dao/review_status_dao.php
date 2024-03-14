@@ -1,7 +1,8 @@
 <?php
-require_once 'backend/interfaces/dao_interface.php';
-require_once 'backend/entities/review_status_model.php';
-require_once 'backend/utilities/db_connection.php';
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+require_once(__DIR__ . "/../models/review_status_model.php");
+require_once(__DIR__ . "/../dao/database_connection.php");
+
 
 class ReviewStatusDAO implements DAOInterface
 {
@@ -48,38 +49,37 @@ class ReviewStatusDAO implements DAOInterface
     public function getById(int $id)
     {
         $query = "SELECT * FROM review_status WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createStatusModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createStatusModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($status): int
     {
         $insertSql = "INSERT INTO review_status (product_id, status) VALUES (?)";
         $args = [$status->getStatus()];
-        return DatabaseConnection::executeUpdate($insertSql, $args);
+        return DatabaseConnection::executeUpdate($insertSql, ...$args);
     }
 
     public function update($status): int
     {
         $updateSql = "UPDATE review_status SET product_id = ?, status = ? WHERE id = ?";
         $args = [$status->getProductId(), $status->getStatus(), $status->getId()];
-        return DatabaseConnection::executeUpdate($updateSql, $args);
+        return DatabaseConnection::executeUpdate($updateSql, ...$args);
     }
 
     public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM review_status WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($deleteSql, $args);
+        return DatabaseConnection::executeUpdate($deleteSql, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -96,7 +96,7 @@ class ReviewStatusDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $statusList = [];
         while ($row = $rs->fetch_assoc()) {
             $statusModel = $this->createStatusModel($row);

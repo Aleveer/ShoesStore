@@ -6,6 +6,7 @@ require_once 'backend/dao/dao_interface.php';
 class ProductDAO implements DAOInterface
 {
     private static $instance;
+
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -13,6 +14,7 @@ class ProductDAO implements DAOInterface
         }
         return self::$instance;
     }
+
     public function readDatabase(): array
     {
         $productList = [];
@@ -23,6 +25,7 @@ class ProductDAO implements DAOInterface
         }
         return $productList;
     }
+
     private function createProductModel($rs)
     {
         $id = $rs['id'];
@@ -48,14 +51,14 @@ class ProductDAO implements DAOInterface
     public function getById(int $id)
     {
         $query = "SELECT * FROM products WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createProductModel($row);
-        } else {
-            return null;
+        $result = DatabaseConnection::executeQuery($query, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createProductModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($data): int
@@ -69,7 +72,7 @@ class ProductDAO implements DAOInterface
             $data['image'],
             $data['gender']
         ];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($data): int
@@ -84,17 +87,16 @@ class ProductDAO implements DAOInterface
             $data['gender'],
             $data['id']
         ];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete(int $id): int
     {
         $query = "DELETE FROM products WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -112,7 +114,7 @@ class ProductDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $productList = [];
         while ($row = $rs->fetch_assoc()) {
             $productModel = $this->createProductModel($row);

@@ -52,19 +52,6 @@ class UserDAO implements DAOInterface
         return $userList;
     }
 
-    // public function getById($id)
-    // {
-    //     $query = "SELECT * FROM users WHERE id = ?";
-    //     $args = array($id);
-    //     $rs = DatabaseConnection::executeQuery($query, $args);
-    //     $row = $rs->fetch_assoc();
-    //     if ($row) {
-    //         return $this->createUserModel($row);
-    //     } else {
-    //         throw new Exception("User with ID $id does not exist in the database.");
-    //     }
-    // }
-
     public function getById($id)
     {
         $sql = "SELECT * FROM users WHERE id = ?";

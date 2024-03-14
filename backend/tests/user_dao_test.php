@@ -32,11 +32,11 @@ class user_daoTest extends TestCase
 
     public function testGetById()
     {
-        $id = 1;
+        $id = 3;
         $user = $this->userDAO->getById($id);
         $this->assertInstanceOf(UserModel::class, $user);
         $this->assertIsObject($user);
-        $this->assertEquals(1, $user->getId());
+        $this->assertEquals(3, $user->getId());
         // $this->assertEquals("john doe", $user->getName());
         // $this->assertEquals("aiuwghduya@gmail.com", $user->getEmail());
         // Add more assertions to validate the returned user object

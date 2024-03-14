@@ -10,11 +10,11 @@ class UserModel
     private $phone;
     private $gender;
     private $image;
-    private $role_id;
+    private $roleId;
     private $status;
     private $address;
 
-    public function __construct($id, $username, $password, $email, $name, $phone, $gender, $image, $role_id, $status, $address)
+    public function __construct($id, $username, $password, $email, $name, $phone, $gender, $image, $roleId, $status, $address)
     {
         $this->id = $id;
         $this->username = $username;
@@ -24,7 +24,7 @@ class UserModel
         $this->phone = $phone;
         $this->gender = $gender;
         $this->image = $image;
-        $this->role_id = $role_id;
+        $this->roleId = $roleId;
         $this->status = $status;
         $this->address = $address;
     }
@@ -111,12 +111,12 @@ class UserModel
 
     public function getRoleId()
     {
-        return $this->role_id;
+        return $this->roleId;
     }
 
-    public function setRoleId($role_id)
+    public function setRoleId($roleId)
     {
-        $this->role_id = $role_id;
+        $this->roleId = $roleId;
     }
 
     public function getStatus()

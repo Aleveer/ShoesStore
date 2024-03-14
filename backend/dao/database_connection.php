@@ -50,7 +50,9 @@ class DatabaseConnection
                     $types .= "b";
                 }
             }
-            $preparedStatement->bind_param($types, ...$args);
+            if (!empty($types) && !empty($args)) {
+                $preparedStatement->bind_param($types, ...$args);
+            }
             return $preparedStatement;
         } catch (Exception $e) {
             throw new Exception("Error: " . $e->getMessage() . " with sql: " . $sql);
@@ -66,9 +68,16 @@ class DatabaseConnection
 
     public static function executeUpdate($sql, ...$args)
     {
-        $preparedStatement = self::getPreparedStatement($sql, ...$args);
-        $preparedStatement->execute();
-        return $preparedStatement->affected_rows;
+        try {
+            $preparedStatement = self::getPreparedStatement($sql, ...$args);
+            $preparedStatement->execute();
+            $affectedRows = $preparedStatement->affected_rows;
+            error_log("Executed query: $sql, affected rows: $affectedRows");
+            return $affectedRows;
+        } catch (Exception $e) {
+            error_log("Error executing update: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     public static function closeConnection()

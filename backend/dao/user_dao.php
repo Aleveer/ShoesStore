@@ -52,17 +52,30 @@ class UserDAO implements DAOInterface
         return $userList;
     }
 
-    public function getById(int $id)
+    // public function getById($id)
+    // {
+    //     $query = "SELECT * FROM users WHERE id = ?";
+    //     $args = array($id);
+    //     $rs = DatabaseConnection::executeQuery($query, $args);
+    //     $row = $rs->fetch_assoc();
+    //     if ($row) {
+    //         return $this->createUserModel($row);
+    //     } else {
+    //         throw new Exception("User with ID $id does not exist in the database.");
+    //     }
+    // }
+
+    public function getById($id)
     {
-        $query = "SELECT * FROM users WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createUserModel($row);
-        } else {
-            return null;
+        $sql = "SELECT * FROM users WHERE id = ?";
+        $result = DatabaseConnection::executeQuery($sql, $id);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createUserModel($row);
+            }
         }
+        return null;
     }
 
     public function insert($user): int
@@ -80,7 +93,7 @@ class UserDAO implements DAOInterface
             $user->getAddress(),
             strtoupper($user->getStatus())
         ];
-        return DatabaseConnection::executeUpdate($insertSql, $args);
+        return DatabaseConnection::executeUpdate($insertSql, ...$args);
     }
 
     public function update($user): int
@@ -99,17 +112,16 @@ class UserDAO implements DAOInterface
             strtoupper($user->getStatus()),
             $user->getId()
         ];
-        return DatabaseConnection::executeUpdate($updateSql, $args);
+        return DatabaseConnection::executeUpdate($updateSql, ...$args);
     }
 
     public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM users WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($deleteSql, $args);
+        return DatabaseConnection::executeUpdate($deleteSql, $id);
     }
 
-    public function search(string $condition, array $columnNames = null): array
+    public function search(string $condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -117,16 +129,16 @@ class UserDAO implements DAOInterface
 
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM users WHERE CONCAT(id, username, password, status, name, email, phone, created_at, updated_at, role) LIKE ?";
+            $query = "SELECT * FROM users WHERE CONCAT(id, username, password, email, image, name, phone, address, gender, role_id, status) LIKE ?";
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM users WHERE $column LIKE ?";
         } else {
-            $query = "SELECT id, username, password, email, image, name, phone, address, gender, role_id, status, created_at, updated_at FROM users WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
+            $query = "SELECT id, username, password, email, image, name, phone, address, gender, role_id, status FROM users WHERE CONCAT(" . implode(", ", $columnNames) . ") LIKE ?";
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $userList = [];
         while ($row = $rs->fetch_assoc()) {
             $userModel = $this->createUserModel($row);

@@ -47,13 +47,12 @@ class ImportDAO implements DAOInterface
     public function getById($id)
     {
         $query = "SELECT * FROM imports WHERE id = ?";
-        $args = [$id];
-        $rs = DatabaseConnection::executeQuery($query, $args);
-        $row = $rs->fetch_assoc();
-        if ($row) {
-            return $this->createImportModel($row);
-        } else {
-            return null;
+        $rs = DatabaseConnection::executeQuery($query, $id);
+        if ($rs->num_rows > 0) {
+            $row = $rs->fetch_assoc();
+            if ($row) {
+                return $this->createImportModel($row);
+            }
         }
     }
 
@@ -61,24 +60,23 @@ class ImportDAO implements DAOInterface
     {
         $query = "INSERT INTO imports (user_id, total_price, import_date) VALUES (?, ?, ?)";
         $args = [$importModel->getUserId(), $importModel->getTotalPrice(), $importModel->getImportDate()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($importModel): int
     {
         $query = "UPDATE imports SET user_id = ?, total_price = ?, import_date = ? WHERE id = ?";
         $args = [$importModel->getUserId(), $importModel->getTotalPrice(), $importModel->getImportDate(), $importModel->getId()];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function delete($id): int
     {
         $query = "DELETE FROM imports WHERE id = ?";
-        $args = [$id];
-        return DatabaseConnection::executeUpdate($query, $args);
+        return DatabaseConnection::executeUpdate($query, $id);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search($condition, $columnNames): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -95,7 +93,7 @@ class ImportDAO implements DAOInterface
         }
 
         $args = ["%" . $condition . "%"];
-        $rs = DatabaseConnection::executeQuery($query, $args);
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
         $importList = [];
         while ($row = $rs->fetch_assoc()) {
             $importModel = $this->createImportModel($row);

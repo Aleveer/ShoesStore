@@ -13,8 +13,9 @@
 <body>
     <h1>PHP File Execution</h1>
     <?php
-    require_once 'backend/models/user_model.php';
-    require_once 'backend/dao/users_dao.php';
+    require_once(__DIR__ . "/../dao/database_connection.php");
+    require_once(__DIR__ . "/../dao/user_dao.php");
+    require_once(__DIR__ . "/../models/user_model.php");
     // Instantiate UserDAO
     $userDAO = UserDAO::getInstance();
 

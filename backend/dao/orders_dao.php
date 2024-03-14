@@ -40,7 +40,7 @@ class OrdersDAO implements DAOInterface
         return $ordersList;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $query = "SELECT * FROM orders WHERE id = ?";
         $args = [$id];
@@ -65,14 +65,14 @@ class OrdersDAO implements DAOInterface
         $args = [$ordersModel->getCustomerId(), $ordersModel->getUserId(), $ordersModel->getOrderDate(), $ordersModel->getTotalAmount(), $ordersModel->getId()];
         return DatabaseConnection::executeUpdate($query, $args);
     }
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $query = "DELETE FROM orders WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");

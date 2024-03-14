@@ -80,14 +80,14 @@ class UserPermissionDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $query = "DELETE FROM user_permissions WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");

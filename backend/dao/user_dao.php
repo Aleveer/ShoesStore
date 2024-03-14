@@ -1,8 +1,7 @@
 <?php
-require_once 'backend/interfaces/dao_interface.php';
-require_once 'backend/entities/user_model.php';
-require_once 'backend/utilities/db_connection.php';
-
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
+require_once(__DIR__ . "/../models/user_model.php");
+require_once(__DIR__ . "/../dao/database_connection.php");
 class UserDAO implements DAOInterface
 {
     private static $instance;
@@ -53,7 +52,7 @@ class UserDAO implements DAOInterface
         return $userList;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $query = "SELECT * FROM users WHERE id = ?";
         $args = [$id];
@@ -66,9 +65,8 @@ class UserDAO implements DAOInterface
         }
     }
 
-    public function insert($data): int
+    public function insert($user): int
     {
-        $user = $data;
         $insertSql = "INSERT INTO users (username, password, email, name, phone, gender, image, role_id, address, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $args = [
             $user->getUsername(),
@@ -85,9 +83,8 @@ class UserDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($insertSql, $args);
     }
 
-    public function update($data): int
+    public function update($user): int
     {
-        $user = $data;
         $updateSql = "UPDATE users SET username = ?, password = ?, email = ?, name = ?, phone = ?, gender = ?, image = ?, role_id = ?, address = ?, status = ? WHERE id = ?";
         $args = [
             $user->getUsername(),
@@ -105,14 +102,14 @@ class UserDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($updateSql, $args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM users WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($deleteSql, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");

@@ -44,7 +44,7 @@ class RoleDAO implements DAOInterface
         return $roleList;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $query = "SELECT * FROM roles WHERE id = ?";
         $args = [$id];
@@ -57,30 +57,28 @@ class RoleDAO implements DAOInterface
         }
     }
 
-    public function insert($data): int
+    public function insert($role): int
     {
-        $role = $data;
         $insertSql = "INSERT INTO roles (name) VALUES (?)";
         $args = [$role->getName()];
         return DatabaseConnection::executeUpdate($insertSql, $args);
     }
 
-    public function update($data): int
+    public function update($role): int
     {
-        $role = $data;
         $updateSql = "UPDATE roles SET name = ? WHERE id = ?";
         $args = [$role->getName(), $role->getId()];
         return DatabaseConnection::executeUpdate($updateSql, $args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM roles WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($deleteSql, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");

@@ -40,7 +40,7 @@ class PermissionDAO implements DAOInterface
         return $permissionList;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $query = "SELECT * FROM permissions WHERE id = ?";
         $args = [$id];
@@ -53,30 +53,28 @@ class PermissionDAO implements DAOInterface
         }
     }
 
-    public function insert($data): int
+    public function insert($permission): int
     {
-        $permission = $data;
         $query = "INSERT INTO permissions (name) VALUES (?)";
         $args = [$permission->getName()];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function update($data): int
+    public function update($permission): int
     {
-        $permission = $data;
         $query = "UPDATE permissions SET name = ? WHERE id = ?";
         $args = [$permission->getName(), $permission->getId()];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $query = "DELETE FROM permissions WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");

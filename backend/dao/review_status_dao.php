@@ -45,7 +45,7 @@ class ReviewStatusDAO implements DAOInterface
         return $statusList;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $query = "SELECT * FROM review_status WHERE id = ?";
         $args = [$id];
@@ -58,30 +58,28 @@ class ReviewStatusDAO implements DAOInterface
         }
     }
 
-    public function insert($data): int
+    public function insert($status): int
     {
-        $status = $data;
         $insertSql = "INSERT INTO review_status (product_id, status) VALUES (?)";
         $args = [$status->getStatus()];
         return DatabaseConnection::executeUpdate($insertSql, $args);
     }
 
-    public function update($data): int
+    public function update($status): int
     {
-        $status = $data;
         $updateSql = "UPDATE review_status SET product_id = ?, status = ? WHERE id = ?";
         $args = [$status->getProductId(), $status->getStatus(), $status->getId()];
         return DatabaseConnection::executeUpdate($updateSql, $args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM review_status WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($deleteSql, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");

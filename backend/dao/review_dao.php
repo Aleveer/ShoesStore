@@ -47,7 +47,7 @@ class ReviewDAO implements DAOInterface
         return $reviewList;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $query = "SELECT * FROM reviews WHERE id = ?";
         $args = [$id];
@@ -74,14 +74,14 @@ class ReviewDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $query = "DELETE FROM reviews WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");

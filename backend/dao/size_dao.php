@@ -44,7 +44,7 @@ class SizeDAO implements DAOInterface
         return $sizeList;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $query = "SELECT * FROM sizes WHERE id = ?";
         $args = [$id];
@@ -73,14 +73,14 @@ class SizeDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($updateSql, $args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $deleteSql = "DELETE FROM sizes WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($deleteSql, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");
@@ -108,6 +108,6 @@ class SizeDAO implements DAOInterface
             throw new Exception("No records found for the given condition: " . $condition);
         }
 
-        return $sizeList;
+        return $sizeList; 
     }
 }

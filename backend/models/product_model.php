@@ -1,16 +1,24 @@
 <?php
 class ProductModel
 {
-    private $id, $name, $categoryId, $price, $description, $image;
+    private $id, $name, $categoryId, $price, $description, $image, $gender;
 
-    public function __construct($id, $name, $categoryId, $price, $description, $image)
-    {
+    public function __construct(
+        $id,
+        $name,
+        $categoryId,
+        $price,
+        $description,
+        $image,
+        $gender
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->categoryId = $categoryId;
         $this->price = $price;
         $this->description = $description;
         $this->image = $image;
+        $this->gender = $gender;
     }
 
     public function getId()
@@ -71,5 +79,15 @@ class ProductModel
     public function setImage($image)
     {
         $this->image = $image;
+    }
+
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
     }
 }

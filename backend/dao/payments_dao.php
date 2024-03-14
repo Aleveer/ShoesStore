@@ -32,6 +32,7 @@ class PaymentsDAO implements DAOInterface
         $totalPrice = $rs['total_price'];
         return new PaymentsModel($id, $orderId, $methodId, $paymentDate, $totalPrice);
     }
+
     public function getAll(): array
     {
         $paymentList = [];
@@ -42,6 +43,7 @@ class PaymentsDAO implements DAOInterface
         }
         return $paymentList;
     }
+
     public function getById($id)
     {
         $query = "SELECT * FROM payments WHERE id = ?";
@@ -54,30 +56,28 @@ class PaymentsDAO implements DAOInterface
             return null;
         }
     }
-    public function insert($data): int
+    public function insert($payment): int
     {
-        $payment = $data;
         $query = "INSERT INTO payments (order_id, method_id, payment_date, total_price) VALUES (?, ?, ?, ?)";
         $args = [$payment->getOrderId(), $payment->getMethodId(), $payment->getPaymentDate(), $payment->getTotalPrice()];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function update($data): int
+    public function update($payment): int
     {
-        $payment = $data;
         $query = "UPDATE payments SET order_id = ?, method_id = ?, payment_date = ?, total_price = ? WHERE id = ?";
         $args = [$payment->getOrderId(), $payment->getMethodId(), $payment->getPaymentDate(), $payment->getTotalPrice(), $payment->getId()];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $query = "DELETE FROM payments WHERE id = ?";
         $args = [$id];
         return DatabaseConnection::executeUpdate($query, $args);
     }
 
-    public function search($condition, $columnNames = null): array
+    public function search(string $condition, array $columnNames = null): array
     {
         if (empty(trim($condition))) {
             throw new InvalidArgumentException("Search condition cannot be empty or null");

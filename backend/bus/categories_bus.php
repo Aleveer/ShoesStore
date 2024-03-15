@@ -33,19 +33,17 @@ class CategoriesBUS implements BUSInterface
 
     public function getModelById(int $id)
     {
-        foreach ($this->categoriesList as $categories) {
-            if ($categories->getId() == $id) {
-                return $categories;
-            }
-        }
-        return null;
+        return CategoriesDAO::getInstance()->getById($id);
     }
 
     public function addModel($categoriesModel): int
     {
         $this->validateModel($categoriesModel);
         $result = CategoriesDAO::getInstance()->insert($categoriesModel);
-        $this->refreshData();
+        if ($result) {
+            $this->categoriesList[] = $categoriesModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
@@ -53,14 +51,22 @@ class CategoriesBUS implements BUSInterface
     {
         $this->validateModel($categoriesModel);
         $result = CategoriesDAO::getInstance()->update($categoriesModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($categoriesModel, $this->categoriesList);
+            $this->categoriesList[$index] = $categoriesModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
     public function deleteModel($categoriesModel): int
     {
         $result = CategoriesDAO::getInstance()->delete($categoriesModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($categoriesModel, $this->categoriesList);
+            unset($this->categoriesList[$index]);
+            $this->refreshData();
+        }
         return $result;
     }
 

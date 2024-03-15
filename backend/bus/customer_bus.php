@@ -33,12 +33,7 @@ class CustomerBUS implements BUSInterface
 
     public function getModelById(int $id)
     {
-        foreach ($this->customerList as $customer) {
-            if ($customer->getId() == $id) {
-                return $customer;
-            }
-        }
-        return null;
+        return CustomerDAO::getInstance()->getById($id);
     }
 
     public function getModelByEmail(string $email)
@@ -55,7 +50,10 @@ class CustomerBUS implements BUSInterface
     {
         $this->validateModel($customerModel);
         $result = CustomerDAO::getInstance()->insert($customerModel);
-        $this->refreshData();
+        if ($result) {
+            $this->customerList[] = $customerModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
@@ -63,14 +61,22 @@ class CustomerBUS implements BUSInterface
     {
         $this->validateModel($customerModel);
         $result = CustomerDAO::getInstance()->update($customerModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($customerModel, $this->customerList);
+            $this->customerList[$index] = $customerModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
     public function deleteModel($id): int
     {
         $result = CustomerDAO::getInstance()->delete($id);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($id, $this->customerList);
+            unset($this->customerList[$index]);
+            $this->refreshData();
+        }
         return $result;
     }
 

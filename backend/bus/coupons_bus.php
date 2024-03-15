@@ -33,19 +33,17 @@ class CouponsBUS implements BUSInterface
 
     public function getModelById(int $id)
     {
-        foreach ($this->couponsList as $coupons) {
-            if ($coupons->getId() == $id) {
-                return $coupons;
-            }
-        }
-        return null;
+        return CouponsDAO::getInstance()->getById($id);
     }
 
     public function addModel($couponsModel): int
     {
         $this->validateModel($couponsModel);
         $result = CouponsDAO::getInstance()->insert($couponsModel);
-        $this->refreshData();
+        if ($result) {
+            $this->couponsList[] = $couponsModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
@@ -53,14 +51,22 @@ class CouponsBUS implements BUSInterface
     {
         $this->validateModel($couponsModel);
         $result = CouponsDAO::getInstance()->update($couponsModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($couponsModel, $this->couponsList);
+            $this->couponsList[$index] = $couponsModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
     public function deleteModel($couponsModel): int
     {
         $result = CouponsDAO::getInstance()->delete($couponsModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($couponsModel, $this->couponsList);
+            unset($this->couponsList[$index]);
+            $this->refreshData();
+        }
         return $result;
     }
 

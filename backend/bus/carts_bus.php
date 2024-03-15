@@ -33,12 +33,7 @@ class CartsBUS implements BUSInterface
 
     public function getModelById(int $id)
     {
-        foreach ($this->cartsList as $carts) {
-            if ($carts->getId() == $id) {
-                return $carts;
-            }
-        }
-        return null;
+        return CartsDAO::getInstance()->getById($id);
     }
 
     public function checkDuplicateProduct($userId, $productId, $sizeId)
@@ -55,23 +50,37 @@ class CartsBUS implements BUSInterface
     {
         $this->validateModel($cartsModel);
         $result = CartsDAO::getInstance()->insert($cartsModel);
-        $this->refreshData();
-        return $result;
+        if ($result) {
+            $this->cartsList[] = $cartsModel;
+            $this->refreshData();
+            return true;
+        }
+        return false;
     }
 
     public function updateModel($cartsModel): int
     {
         $this->validateModel($cartsModel);
         $result = CartsDAO::getInstance()->update($cartsModel);
-        $this->refreshData();
-        return $result;
+        if ($result) {
+            $index = array_search($cartsModel, $this->cartsList);
+            $this->cartsList[$index] = $cartsModel;
+            $this->refreshData();
+            return true;
+        }
+        return false;
     }
 
     public function deleteModel(int $id): int
     {
         $result = CartsDAO::getInstance()->delete($id);
-        $this->refreshData();
-        return $result;
+        if ($result) {
+            $index = array_search($id, array_column($this->cartsList, 'id'));
+            unset($this->cartsList[$index]);
+            $this->refreshData();
+            return true;
+        }
+        return false;
     }
 
     public function searchModel(string $value, array $columns)

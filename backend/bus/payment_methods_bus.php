@@ -5,6 +5,7 @@ require_once(__DIR__ . "/../interfaces/dao_interface.php");
 
 class PaymentMethodsBUS implements BUSInterface
 {
+    private $paymentMethodsList = array();
     private static $instance;
     public static function getInstance()
     {
@@ -38,7 +39,10 @@ class PaymentMethodsBUS implements BUSInterface
     {
         $this->validateModel($paymentMethodModel);
         $result = PaymentMethodsDAO::getInstance()->insert($paymentMethodModel);
-        $this->refreshData();
+        if ($result) {
+            $this->paymentMethodsList[] = $paymentMethodModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
@@ -46,14 +50,22 @@ class PaymentMethodsBUS implements BUSInterface
     {
         $this->validateModel($paymentMethodModel);
         $result = PaymentMethodsDAO::getInstance()->update($paymentMethodModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($paymentMethodModel, $this->paymentMethodsList);
+            $this->paymentMethodsList[$index] = $paymentMethodModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
     public function deleteModel($paymentMethodModel): int
     {
         $result = PaymentMethodsDAO::getInstance()->delete($paymentMethodModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($paymentMethodModel, $this->paymentMethodsList);
+            unset($this->paymentMethodsList[$index]);
+            $this->refreshData();
+        }
         return $result;
     }
 

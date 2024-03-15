@@ -27,12 +27,7 @@ class PermissionBUS implements BUSInterface
     }
     public function getModelById(int $id)
     {
-        foreach ($this->permissionList as $permission) {
-            if ($permission->getId() == $id) {
-                return $permission;
-            }
-        }
-        return null;
+        return PermissionDAO::getInstance()->getById($id);
     }
     public function getModelByName(string $name)
     {
@@ -47,20 +42,31 @@ class PermissionBUS implements BUSInterface
     {
         $this->validateModel($permissionModel);
         $result = PermissionDAO::getInstance()->insert($permissionModel);
-        $this->refreshData();
+        if ($result) {
+            $this->permissionList[] = $permissionModel;
+            $this->refreshData();
+        }
         return $result;
     }
     public function updateModel($permissionModel): int
     {
         $this->validateModel($permissionModel);
         $result = PermissionDAO::getInstance()->update($permissionModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($permissionModel, $this->permissionList);
+            $this->permissionList[$index] = $permissionModel;
+            $this->refreshData();
+        }
         return $result;
     }
     public function deleteModel($permissionModel): int
     {
         $result = PermissionDAO::getInstance()->delete($permissionModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($permissionModel, $this->permissionList);
+            unset($this->permissionList[$index]);
+            $this->refreshData();
+        }
         return $result;
     }
     public function validateModel($permissionModel): void

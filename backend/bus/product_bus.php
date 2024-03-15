@@ -32,12 +32,7 @@ class ProductBUS implements BUSInterface
 
     public function getModelById(int $id)
     {
-        foreach ($this->productList as $product) {
-            if ($product->getId() == $id) {
-                return $product;
-            }
-        }
-        return null;
+        return ProductDAO::getInstance()->getById($id);
     }
 
     public function addModel($productModel): int

@@ -33,19 +33,23 @@ class ImportItemsBUS implements BUSInterface
 
     public function getModelById(int $id)
     {
-        foreach ($this->importItemsList as $importItems) {
-            if ($importItems->getId() == $id) {
-                return $importItems;
-            }
-        }
-        return null;
+        // foreach ($this->importItemsList as $importItems) {
+        //     if ($importItems->getId() == $id) {
+        //         return $importItems;
+        //     }
+        // }
+        // return null;
+        return ImportItemsDAO::getInstance()->getById($id);
     }
 
     public function addModel($importItemsModel): int
     {
         $this->validateModel($importItemsModel);
         $result = ImportItemsDAO::getInstance()->insert($importItemsModel);
-        $this->refreshData();
+        if ($result) {
+            $this->importItemsList[] = $importItemsModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
@@ -53,14 +57,22 @@ class ImportItemsBUS implements BUSInterface
     {
         $this->validateModel($importItemsModel);
         $result = ImportItemsDAO::getInstance()->update($importItemsModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($importItemsModel, $this->importItemsList);
+            $this->importItemsList[$index] = $importItemsModel;
+            $this->refreshData();
+        }
         return $result;
     }
 
     public function deleteModel($importItemsModel): int
     {
         $result = ImportItemsDAO::getInstance()->delete($importItemsModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($importItemsModel, $this->importItemsList);
+            unset($this->importItemsList[$index]);
+            $this->refreshData();
+        }
         return $result;
     }
 
@@ -84,7 +96,6 @@ class ImportItemsBUS implements BUSInterface
     {
         return ImportItemsDAO::getInstance()->search($value, $columns);
     }
-
 
     public function getModelsByImportId(int $importId): array
     {

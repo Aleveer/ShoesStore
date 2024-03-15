@@ -27,31 +27,38 @@ class OrdersBUS implements BUSInterface
     }
     public function getModelById(int $id)
     {
-        foreach ($this->ordersList as $orders) {
-            if ($orders->getId() == $id) {
-                return $orders;
-            }
-        }
-        return null;
+        return OrdersDAO::getInstance()->getById($id);
     }
     public function addModel($ordersModel): int
     {
         $this->validateModel($ordersModel);
         $result = OrdersDAO::getInstance()->insert($ordersModel);
-        $this->refreshData();
+        if ($result) {
+            $this->ordersList[] = $ordersModel;
+            $this->refreshData();
+        }
         return $result;
     }
     public function updateModel($ordersModel): int
     {
         $this->validateModel($ordersModel);
         $result = OrdersDAO::getInstance()->update($ordersModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($ordersModel, $this->ordersList);
+            $this->ordersList[$index] = $ordersModel;
+            $this->refreshData();
+        }
         return $result;
     }
+
     public function deleteModel($ordersModel): int
     {
         $result = OrdersDAO::getInstance()->delete($ordersModel);
-        $this->refreshData();
+        if ($result) {
+            $index = array_search($ordersModel, $this->ordersList);
+            unset($this->ordersList[$index]);
+            $this->refreshData();
+        }
         return $result;
     }
 

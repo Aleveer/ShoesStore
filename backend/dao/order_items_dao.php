@@ -6,7 +6,7 @@ require_once(__DIR__ . "/../interfaces/dao_interface.php");
 class OrderItemsDAO implements DAOInterface
 {
     private static $instance;
-    public function getInstance()
+    public static function getInstance()
     {
         if (self::$instance == null) {
             self::$instance = new OrderItemsDAO();

@@ -44,18 +44,24 @@ class ImportItemsBUS implements BUSInterface
     public function addModel($importItemsModel): int
     {
         $this->validateModel($importItemsModel);
-        return ImportItemsDAO::getInstance()->insert($importItemsModel);
+        $result = ImportItemsDAO::getInstance()->insert($importItemsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function updateModel($importItemsModel): int
     {
         $this->validateModel($importItemsModel);
-        return ImportItemsDAO::getInstance()->update($importItemsModel);
+        $result = ImportItemsDAO::getInstance()->update($importItemsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function deleteModel($importItemsModel): int
     {
-        return ImportItemsDAO::getInstance()->delete($importItemsModel);
+        $result = ImportItemsDAO::getInstance()->delete($importItemsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function validateModel($importItemsModel): void

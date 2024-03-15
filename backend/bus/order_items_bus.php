@@ -44,18 +44,24 @@ class OrderItemsBUS implements BUSInterface
     public function addModel($orderItemsModel): int
     {
         $this->validateModel($orderItemsModel);
-        return OrderItemsDAO::getInstance()->insert($orderItemsModel);
+        $result = OrderItemsDAO::getInstance()->insert($orderItemsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function updateModel($orderItemsModel): int
     {
         $this->validateModel($orderItemsModel);
-        return OrderItemsDAO::getInstance()->update($orderItemsModel);
+        $result = OrderItemsDAO::getInstance()->update($orderItemsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function deleteModel($orderItemsModel): int
     {
-        return OrderItemsDAO::getInstance()->delete($orderItemsModel);
+        $result = OrderItemsDAO::getInstance()->delete($orderItemsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function validateModel($orderItemsModel)

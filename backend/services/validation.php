@@ -1,6 +1,15 @@
 <?php
 class validation
 {
+    private static $instance;
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new validation();
+        }
+        return self::$instance;
+    }
+
     private static function isMatch($input, $regex)
     {
         return preg_match($regex, $input);
@@ -76,5 +85,12 @@ class validation
     {
         $regex = "/^[0-9]{5}$/";
         return self::isMatch($postalCode, $regex);
+    }
+
+    public function isCouponValid($couponsModel): bool
+    {
+        $expirationDate = $couponsModel->getExpired();
+        $currentDate = date("Y-m-d");
+        return $expirationDate >= $currentDate;
     }
 }

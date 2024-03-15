@@ -54,84 +54,29 @@ class CartsBUS implements BUSInterface
     public function addModel($cartsModel): int
     {
         $this->validateModel($cartsModel);
-        return CartsDAO::getInstance()->insert($cartsModel);
+        $result = CartsDAO::getInstance()->insert($cartsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function updateModel($cartsModel): int
     {
         $this->validateModel($cartsModel);
-        return CartsDAO::getInstance()->update($cartsModel);
+        $result = CartsDAO::getInstance()->update($cartsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function deleteModel(int $id): int
     {
-        return CartsDAO::getInstance()->delete($id);
-    }
-
-    public function deleteModelByUserId(int $userId): int
-    {
-        foreach ($this->cartsList as $carts) {
-            if ($carts->getUserId() == $userId) {
-                $this->deleteModel($carts->getId());
-            }
-        }
-        return 1;
+        $result = CartsDAO::getInstance()->delete($id);
+        $this->refreshData();
+        return $result;
     }
 
     public function searchModel(string $value, array $columns)
     {
         return CartsDAO::getInstance()->search($value, $columns);
-    }
-
-    public function getCartByUserId(int $userId)
-    {
-        $cartList = array();
-        foreach ($this->cartsList as $carts) {
-            if ($carts->getUserId() == $userId) {
-                $cartList[] = $carts;
-            }
-        }
-        return $cartList;
-    }
-
-    public function getCartByUserIdAndProductId(int $userId, int $productId)
-    {
-        foreach ($this->cartsList as $carts) {
-            if ($carts->getUserId() == $userId && $carts->getProductId() == $productId) {
-                return $carts;
-            }
-        }
-        return null;
-    }
-
-    public function getCartByUserIdAndSizeId(int $userId, int $sizeId)
-    {
-        foreach ($this->cartsList as $carts) {
-            if ($carts->getUserId() == $userId && $carts->getSizeId() == $sizeId) {
-                return $carts;
-            }
-        }
-        return null;
-    }
-
-    public function getCartByUserIdAndProductIdAndSizeId(int $userId, int $productId, int $sizeId)
-    {
-        foreach ($this->cartsList as $carts) {
-            if ($carts->getUserId() == $userId && $carts->getProductId() == $productId && $carts->getSizeId() == $sizeId) {
-                return $carts;
-            }
-        }
-        return null;
-    }
-
-    public function getCartByUserIdAndProductIdAndSizeIdAndColorId(int $userId, int $productId, int $sizeId, int $colorId)
-    {
-        foreach ($this->cartsList as $carts) {
-            if ($carts->getUserId() == $userId && $carts->getProductId() == $productId && $carts->getSizeId() == $sizeId && $carts->getColorId() == $colorId) {
-                return $carts;
-            }
-        }
-        return null;
     }
 
     private function validateModel($cartsModel): void

@@ -37,16 +37,22 @@ class ImportBUS implements BUSInterface
     public function addModel($importModel): int
     {
         $this->validateModel($importModel);
-        return ImportDAO::getInstance()->insert($importModel);
+        $result = ImportDAO::getInstance()->insert($importModel);
+        $this->refreshData();
+        return $result;
     }
     public function updateModel($importModel): int
     {
         $this->validateModel($importModel);
-        return ImportDAO::getInstance()->update($importModel);
+        $result = ImportDAO::getInstance()->update($importModel);
+        $this->refreshData();
+        return $result;
     }
     public function deleteModel($importModel): int
     {
-        return ImportDAO::getInstance()->delete($importModel);
+        $result = ImportDAO::getInstance()->delete($importModel);
+        $this->refreshData();
+        return $result;
     }
     public function validateModel($importModel): void
     {

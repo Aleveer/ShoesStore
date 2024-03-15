@@ -70,6 +70,7 @@ class ProductBUS implements BUSInterface
         $newProduct = ProductDAO::getInstance()->insert($productModel);
         if ($newProduct) {
             $this->productList[] = $productModel;
+            $this->refreshData();
             return true;
         }
         return false;
@@ -81,6 +82,7 @@ class ProductBUS implements BUSInterface
         if ($result) {
             $index = array_search($model, $this->productList);
             $this->productList[$index] = $model;
+            $this->refreshData();
             return true;
         }
         return false;
@@ -92,6 +94,7 @@ class ProductBUS implements BUSInterface
         if ($result) {
             $index = array_search($id, array_column($this->productList, 'id'));
             unset($this->productList[$index]);
+            $this->refreshData();
             return true;
         }
         return false;

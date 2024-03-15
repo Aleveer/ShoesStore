@@ -37,18 +37,24 @@ class PaymentMethodsBUS implements BUSInterface
     public function addModel($paymentMethodModel): int
     {
         $this->validateModel($paymentMethodModel);
-        return PaymentMethodsDAO::getInstance()->insert($paymentMethodModel);
+        $result = PaymentMethodsDAO::getInstance()->insert($paymentMethodModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function updateModel($paymentMethodModel): int
     {
         $this->validateModel($paymentMethodModel);
-        return PaymentMethodsDAO::getInstance()->update($paymentMethodModel);
+        $result = PaymentMethodsDAO::getInstance()->update($paymentMethodModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function deleteModel($paymentMethodModel): int
     {
-        return PaymentMethodsDAO::getInstance()->delete($paymentMethodModel);
+        $result = PaymentMethodsDAO::getInstance()->delete($paymentMethodModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function searchModel(string $value, array $columns)

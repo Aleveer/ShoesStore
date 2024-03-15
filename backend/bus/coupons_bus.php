@@ -44,18 +44,24 @@ class CouponsBUS implements BUSInterface
     public function addModel($couponsModel): int
     {
         $this->validateModel($couponsModel);
-        return CouponsDAO::getInstance()->insert($couponsModel);
+        $result = CouponsDAO::getInstance()->insert($couponsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function updateModel($couponsModel): int
     {
         $this->validateModel($couponsModel);
-        return CouponsDAO::getInstance()->update($couponsModel);
+        $result = CouponsDAO::getInstance()->update($couponsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function deleteModel($couponsModel): int
     {
-        return CouponsDAO::getInstance()->delete($couponsModel);
+        $result = CouponsDAO::getInstance()->delete($couponsModel);
+        $this->refreshData();
+        return $result;
     }
 
     public function validateModel($couponsModel)
@@ -81,12 +87,5 @@ class CouponsBUS implements BUSInterface
     {
         $discount = $couponsModel->getPercent();
         return $orderTotal - ($orderTotal * $discount / 100);
-    }
-
-    public function isCouponValid($couponsModel): bool
-    {
-        $expirationDate = $couponsModel->getExpired();
-        $currentDate = date("Y-m-d");
-        return $expirationDate >= $currentDate;
     }
 }

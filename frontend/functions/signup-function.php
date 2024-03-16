@@ -1,33 +1,30 @@
 <?php
-session_start();
+require_once(__DIR__ . '/../backend/bus/user_bus.php');
+require_once(__DIR__ . '/../backend/model/user_model.php');
+require_once(__DIR__ . '/../backend/services/password_utilities.php');
+require_once(__DIR__ . '/../backend/services/validation.php');
 
-function signup($username, $email, $password)
+function signup($username, $email, $password, $confirmPassword, $phone, $gender)
 {
-    $username = $_POST['username'];
     if (UserBus::getInstance()->isUsernameTaken($username)) {
         return "Username is already taken";
     }
 
-    $email = $_POST['email'];
     if (UserBus::getInstance()->isEmailTaken($email)) {
         return "Email is already taken";
     }
 
-    $password = $_POST['password'];
     $password = PasswordUtilities::getInstance()->hashPassword($password);
-    $confirmPassword = $_POST['confirmPassword'];
     $confirmPassword = PasswordUtilities::getInstance()->hashPassword($confirmPassword);
 
     if ($password != $confirmPassword) {
         return "Passwords do not match. Please try again.";
     }
 
-    $phone = $_POST['phone'];
     if ($phone != null && !validation::getInstance()->isValidPhoneNumber($phone)) {
         return "Invalid phone number";
     }
 
-    $gender = $_POST['gender'];
     if ($gender != 'male' && $gender != 'female') {
         return "Invalid gender";
     } else if ($gender == 'male') {
@@ -45,7 +42,6 @@ function signup($username, $email, $password)
     //check for successful signup:
     try {
         $user = new UserModel(0, $username, $password, $email, $name, $phone, $gender, $image, $roleId, $status, $address);
-        UserBus::getInstance()->validateModel($user);
         UserBus::getInstance()->addModel($user);
         return "Signup successful";
     } catch (Exception $e) {
@@ -54,4 +50,3 @@ function signup($username, $email, $password)
         return "Error occurred during signup";
     }
 }
-session_abort();

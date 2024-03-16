@@ -1,4 +1,24 @@
-// Purpose: Sign up page for the user to create an account
+<?php
+// Check if the sign-up form is submitted
+// if ($_SERVER["REQUEST_METHOD" == 'POST']) {
+//     echo "Form submitted";
+//     print_r($_POST);
+// }
+
+include_once(__DIR__ . '/../frontend/functions/signup-function.php');
+if (isset($_POST['Signup'])) {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm_password'];
+    $phone = $_POST['phone'];
+    $gender = $_POST['gender'];
+
+    // Call the signup function
+    signup($username, $email, $password, $confirmPassword, $phone, $gender);
+}
+?>
+
 <html lang="en">
 
 <head>
@@ -15,7 +35,7 @@
             <img src="assets/images/nike-af.jpeg" alt="background">
             <div class="LogOut">
                 <h1>Sign up</h1>
-                <form action="/backend/services/signup-function.php" method="POST">
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
                     <div>
                         <input type="text" id="username" name="username" placeholder="">
                         <label for="username">Username</label>
@@ -49,7 +69,7 @@
                         <label for="female">Female</label>
                     </div>
                     <div>
-                        <button type="submit">Signup</button>
+                        <button type="submit" name="signup">Signup</button>
                     </div>
                     <div class="split" style="margin-right: 20px;">
                         <a href="#">If you have an account, please log in!</a>

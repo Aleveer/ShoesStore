@@ -121,4 +121,16 @@ class UserBUS implements BUSInterface
             throw new Exception(json_encode($errors));
         }
     }
+
+    public function isUsernameTaken($username)
+    {
+        $usernames = array_column($this->userList, 'username');
+        return in_array($username, $usernames);
+    }
+
+    public function isEmailTaken($email)
+    {
+        $emails = array_column($this->userList, 'email');
+        return in_array($email, $emails);
+    }
 }

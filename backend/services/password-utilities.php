@@ -3,6 +3,15 @@ session_start();
 
 class PasswordUtilities
 {
+    private static $instance;
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new PasswordUtilities();
+        }
+        return self::$instance;
+    }
+
     public static function hashPassword($password)
     {
         return password_hash($password, PASSWORD_DEFAULT);

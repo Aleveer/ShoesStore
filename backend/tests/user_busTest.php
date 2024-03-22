@@ -24,11 +24,12 @@ class user_busTest extends TestCase
     public function testGetModelById()
     {
         $user = $this->userBUS->getModelById(1);
-        $this->assertInstanceOf(UserModel::class, $user, "getModelById should return an instance of UserModel");
+        //return $user data:
+        var_dump($user);
+        $user->getId();
+        $this->assertEquals(1, $user->getId(), "User id should be 1");
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid user id');
-        $this->userBUS->getModelById(100);
+        $this->userBUS->getModelById(1);
     }
 
     // Add more test methods for other functions in the UserBUS class

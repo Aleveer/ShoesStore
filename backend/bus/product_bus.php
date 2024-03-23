@@ -120,4 +120,47 @@ class ProductBUS implements BUSInterface
         }
         return $result;
     }
+
+    //Handle multiple images upload at once
+    public function imageUploadHandle($productId, array $imageFiles)
+    {
+        $target_dir = __DIR__ . "/../../public/images/";
+        $uploaded_files = [];
+        foreach ($imageFiles as $imageFile) {
+            $target_file = $target_dir . basename($imageFile["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+            $check = getimagesize($imageFile["tmp_name"]);
+            if ($check !== false) {
+                $uploadOk = 1;
+            } else {
+                $uploadOk = 0;
+            }
+            if (file_exists($target_file)) {
+                $uploadOk = 0;
+            }
+            if ($imageFile["size"] > 500000) {
+                $uploadOk = 0;
+            }
+            if (
+                $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif"
+            ) {
+                $uploadOk = 0;
+            }
+            if ($uploadOk == 0) {
+                return false;
+            } else {
+                if (move_uploaded_file($imageFile["tmp_name"], $target_file)) {
+                    $uploaded_files[] = $target_file;
+                } else {
+                    return false;
+                }
+            }
+        }
+        $product = $this->getModelById($productId);
+        $product->setImage(implode(",", $uploaded_files));
+        $this->updateModel($product);
+        return true;
+    }
 }

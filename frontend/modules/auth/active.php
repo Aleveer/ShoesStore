@@ -20,7 +20,6 @@ if (isLogin()) {
     // Update user status in the database
     $data = [
         'status' => 1,
-        'activeToken' => null
     ];
 
     $updateStatus = UserBUS::getInstance()->updateModelStatus($userId, $data);

@@ -26,9 +26,10 @@ if (isPost()) {
         $email = $filterAll['email'];
         $password = $filterAll['password'];
 
-        $userQuery = getRow("SELECT password, id FROM user WHERE email='$email'");
+        // $userQuery = getRow("SELECT password, id FROM user WHERE email='$email'");
+        $userQuery = UserBUS::getInstance()->getModelByField($email, 'email');
         if (!empty($userQuery)) {
-            $passwordHash = $userQuery['password'];
+            $passwordHash = $userQuery->getPassword();
             if (PasswordUtilities::getInstance()->verifyPassword($password, $passwordHash)) {
                 // Password is valid, start the session and store the user's ID
                 $_SESSION['userId'] = $userQuery['id'];

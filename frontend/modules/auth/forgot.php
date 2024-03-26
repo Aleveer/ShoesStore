@@ -25,10 +25,10 @@ if (isLogin()) {
         $filterAll = filter();
         if (!empty($filterAll['email'])) {
             $email = $filterAll['email'];
-            $userQuery = getRow("SELECT id FROM user WHERE email = '$email'");
+            //$userQuery = getRow("SELECT id FROM user WHERE email = '$email'");
+            $userQuery = UserBUS::getInstance()->getModelByField($email, 'email');
             if (!empty($userQuery)) {
-                $userId = $userQuery['id'];
-
+                $userId = $userQuery->getId();
                 $_SESSION['forgotUserId'] = $userId;
                 redirect('?module=auth&action=reset');
             } else {

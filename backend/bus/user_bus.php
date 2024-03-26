@@ -36,6 +36,14 @@ class UserBUS implements BUSInterface
         return UserDAO::getInstance()->getById($id);
     }
 
+    public function getModelByField(string $field, string $value)
+    {
+        $filteredModels = array_filter($this->userList, function ($user) use ($field, $value) {
+            return $user->$field === $value;
+        });
+        return reset($filteredModels);
+    }
+
     public function addModel($userModel): int
     {
         $this->validateModel($userModel);

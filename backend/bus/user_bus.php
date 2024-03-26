@@ -59,6 +59,13 @@ class UserBUS implements BUSInterface
         return $result;
     }
 
+    public function updateModelStatus(int $id, $status): int
+    {
+        $user = $this->getModelById($id);
+        $user->setStatus($status);
+        return $this->updateModel($user);
+    }
+
     public function deleteModel($userModel): int
     {
         $result = UserDAO::getInstance()->delete($userModel);
@@ -77,39 +84,87 @@ class UserBUS implements BUSInterface
 
     public function validateModel($userModel)
     {
-        $validation = validation::getInstance();
+        $validation = Validation::getInstance();
         $errors = [];
 
+        // Check for required fields:
+        if ($userModel->username === null || trim($userModel->username) === "") {
+            $errors[] = "Username is required";
+        }
+
+        if ($userModel->password === null || trim($userModel->password) === "") {
+            $errors[] = "Password is required";
+        }
+
+        if ($userModel->email === null || trim($userModel->email) === "") {
+            $errors[] = "Email is required";
+        }
+
+        if ($userModel->name === null || trim($userModel->name) === "") {
+            $errors[] = "Name is required";
+        }
+
+        // Check for possibly taken properties in database:
+        if ($this->isUsernameTaken($userModel->username)) {
+            $errors[] = "Username is taken";
+        }
+
+        if ($this->isEmailTaken($userModel->email)) {
+            $errors[] = "Email is taken";
+        }
+
+        if ($this->isPhoneTaken($userModel->phone)) {
+            $errors[] = "Phone number is taken";
+        }
+
+        // Validate username and password
         if (!$validation->isValidUsername($userModel->username)) {
             $errors[] = "Invalid username";
         }
+
         if (!$validation->isValidPassword($userModel->password)) {
             $errors[] = "Invalid password";
         }
+
+        if (strlen($userModel->password) < 8) {
+            $errors[] = "Password must be at least 8 characters";
+        }
+
+        // Validate email and name
         if (!$validation->isValidEmail($userModel->email)) {
             $errors[] = "Invalid email";
         }
+
         if (!$validation->isValidName($userModel->name)) {
             $errors[] = "Invalid name";
         }
 
-        $roleId = $userModel->getRoleId();
-        if ($roleId !== null) {
-            if ($roleId !== 1 && $roleId !== 2) {
-                $errors[] = "Invalid role";
-            }
-        } else {
-            // Default is customer
-            $userModel->setRoleId(0);
+        if (strlen($userModel->name) < 6) {
+            $errors[] = "Name must be at least 6 characters";
         }
 
-        $phone = $userModel->getPhone();
-        if ($phone !== null && !$validation->isValidPhoneNumber($phone)) {
+        // Validate role
+        $roleId = $userModel->getRoleId();
+        switch ($roleId) {
+            case 1:
+            case 2:
+            case 3: // Add missing case for role 3
+                break;
+            case null:
+                // Default is customer
+                $userModel->setRoleId(0);
+                break;
+            default:
+                $errors[] = "Invalid role";
+                break;
+        }
+
+        // Validate phone number and address
+        if ($userModel->getPhone() !== null && !$validation->isValidPhoneNumber($userModel->getPhone())) {
             $errors[] = "Invalid phone number";
         }
 
-        $address = $userModel->getAddress();
-        if ($address !== null && !$validation->isValidAddress($address)) {
+        if ($userModel->getAddress() !== null && !$validation->isValidAddress($userModel->getAddress())) {
             $errors[] = "Invalid address";
         }
 
@@ -118,8 +173,12 @@ class UserBUS implements BUSInterface
         }
 
         if (count($errors) > 0) {
-            throw new Exception(json_encode($errors));
+            //Output the error on and return error number count:
+            foreach ($errors as $error) {
+                echo $error . "<br>";
+            }
         }
+        return count($errors);
     }
 
     public function isUsernameTaken($username)

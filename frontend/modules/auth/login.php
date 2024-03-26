@@ -1,6 +1,6 @@
 <!-- Đăng nhập tài khoản -->
-
 <?php
+// login.php
 if (!defined('_CODE')) {
     die('Access denied');
 }
@@ -8,75 +8,50 @@ if (!defined('_CODE')) {
 $data = [
     'pageTitle' => 'Đăng nhập'
 ];
+
 // Đã nhúng file function.php bên index.php
 layouts('header', $data);
 
-
-
 // Kiểm tra trạng thái đăng nhập
-
 if (isLogin()) {
     redirect('?module=indexphp&action=userhomepage');
 }
 
-
 if (isPost()) {
     $filterAll = filter();
+    $response = ['success' => false, 'msg' => ''];
+
     if (!empty(trim($filterAll['email'])) && !empty(trim($filterAll['password']))) {
-        // Kiểm tra đăng nhập
+        // Check login
         $email = $filterAll['email'];
         $password = $filterAll['password'];
 
         $userQuery = getRow("SELECT password, id FROM user WHERE email='$email'");
         if (!empty($userQuery)) {
             $passwordHash = $userQuery['password'];
-
-            if (password_verify($password, $passwordHash)) {
-                // Tạo tokenLogin
-                $tokenLogin = sha1(uniqid() . time());
-
-                // Insert vào bảng loginToken
-                $dataInsert = [
-                    "user_id" => $userQuery['id'],
-                    "token" => $tokenLogin,
-                    "create_at" => date("Y-m-d H:i:s")
-                ];
-
-                $insertStatus = insert('tokenLogin', $dataInsert);
-
-                if ($insertStatus) {
-                    // Insert thành công
-                    // Lưu login token vào session
-                    setSession('tokenLogin', $tokenLogin);
-                    redirect('?module=indexphp&action=userhomepage');
-                } else {
-                    setFlashData('msg', 'Không thể đăng nhập, vui lòng thử lại sau!');
-                    setFlashData('msg_type', 'danger');
-                }
+            if (PasswordUtilities::getInstance()->verifyPassword($password, $passwordHash)) {
+                // Password is valid, start the session and store the user's ID
+                $_SESSION['userId'] = $userQuery['id'];
+                $response['success'] = true;
+                $response['msg'] = 'Login successful!';
             } else {
-                setFlashData('msg', 'Mật khẩu không chính xác!');
-                setFlashData('msg_type', 'danger');
+                $response['msg'] = 'Incorrect password!';
             }
         } else {
-            setFlashData('msg', 'Email không tồn tại!');
-            setFlashData('msg_type', 'danger');
+            $response['msg'] = 'Email does not exist!';
         }
     } else {
-        setFlashData('msg', 'Vui lòng nhập email và password!');
-        setFlashData('msg_type', 'danger');
+        $response['msg'] = 'Please enter email and password!';
     }
-    redirect('?module=auth&action=login');
 }
 
-$msg = getFlashData('msg');
-$msgType = getFlashData('msg_type');
-
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>
-
 
 <div class="row">
     <div class="col-4" style="margin:50px auto;">
-        <h2  class="cw" style="text-align: center; text-transform: uppercase;">Đăng Nhập</h2>
+        <h2 class="cw" style="text-align: center; text-transform: uppercase;">Đăng Nhập</h2>
         <?php if (!empty($msg)) {
             getMsg($msg, $msgType);
         } ?>
@@ -97,7 +72,6 @@ $msgType = getFlashData('msg_type');
         </form>
     </div>
 </div>
-
 
 <?php
 layouts('footer');

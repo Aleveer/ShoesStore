@@ -1,7 +1,7 @@
 <!-- Các hàm xử lí chung của project -->
 
 <?php
-include __DIR__.'/../backend/services/session.php';
+include __DIR__ . '/../backend/services/session.php';
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -49,7 +49,7 @@ function sendMail($to, $subject, $content)
         $mail->isHTML(true);                                  //Set email format to HTML
         $mail->Subject = $subject;
         $mail->Body    = $content;
-        
+
 
         $sendMailStatus = $mail->send();
         // echo 'Gửi thành công!';
@@ -169,23 +169,11 @@ function formOldInfor($name, $duLieuDaNhap, $default = '')
 
 
 
-// Hàm kiểm tra trạng thái đăng nhập
+// Hàm kiểm tra trạng thái đăng nhập, sử dụng session php, không sử dụng token:
 function isLogin()
 {
-    // Kiểm tra trạng thái đăng nhập
-    $checkLogin = false;
-    $session = new session();
-    if ($session->get('tokenLogin')) {
-        $tokenLogin = $session->get('tokenLogin');
-
-        // Kiểm tra tokenLogin có giống token trong database không
-        $queryToken = getRow("SELECT user_id FROM tokenlogin WHERE token = '$tokenLogin'");
-
-        if (!empty($queryToken)) {
-            $checkLogin = true;
-        } else {
-            $session->remove('tokenLogin');
-        }
+    if (isset($_SESSION['userId'])) {
+        return true;
     }
-    return $checkLogin;
+    return false;
 }

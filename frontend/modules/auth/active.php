@@ -1,42 +1,40 @@
 <!-- Kích hoạt tài khoản -->
 <?php
 
+use services\session;
+
 if (!defined('_CODE')) {
     die('Access denied');
 }
+
 $data = [
     'active' => 'Active'
 ];
+
 layouts('header-login', $data);
 
-if (!empty(filter()['token']))  $token = filter()['token'];
-if (!empty($token)) {
-    // nếu có tồn tại token thì truy vấn và CSDL để check xem có trùng activeToken trong user hay không
-    $tokenQuery = getRow("SELECT id FROM user WHERE activeToken = '$token'");
-    if (!empty($tokenQuery)) {
-        $data = [
-            'status' => 1,
-            'activeToken' => null
-        ];
+// Check if user is logged in
+if (isLogin()) {
+    $userId = $_SESSION['userId'];
 
-        $updateStatus = update('user', $data, "id = '$tokenQuery[id]'");
+    // Update user status in the database
+    $data = [
+        'status' => 1,
+        'activeToken' => null
+    ];
 
-        if ($updateStatus) {
-            setFlashData('msg', 'Kích hoạt tài khoản thành công!');
-            setFlashData('msg_type', 'success');
-            redirect('?module=auth&action=login');
-        } else {
-            setFlashData('msg', 'Kích hoạt tài khoản thất bại, vui lòng liên hệ quản trị viên!');
-            setFlashData('msg_type', 'danger');
-        }
+    $updateStatus = UserBUS::getInstance()->updateModelStatus($userId, $data);
+    $session = new session();
+    if ($updateStatus) {
+        $session->setFlash('msg', 'Kích hoạt tài khoản thành công!');
+        $session->setFlash('msg_type', 'success');
+        redirect('?module=auth&action=login');
     } else {
-        getMsg('Liên kết không tồn tại hoặc đã hết hạn', 'danger');
+        $session->setFlash('msg', 'Kích hoạt tài khoản thất bại, vui lòng liên hệ quản trị viên!');
+        $session->setFlash('msg_type', 'danger');
     }
 } else {
     getMsg('Liên kết không tồn tại hoặc đã hết hạn', 'danger');
 }
-?>
 
-<?php
 layouts('footer-login');
-?>

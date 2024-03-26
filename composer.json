@@ -11,6 +11,7 @@
     ]
   },
   "require": {
-    "symfony/error-handler": "^7.0"
+    "symfony/error-handler": "^7.0",
+    "phpmailer/phpmailer": "^6.9"
   }
 }

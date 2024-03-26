@@ -1,6 +1,7 @@
 <!-- Các hàm xử lí chung của project -->
 
 <?php
+include __DIR__.'/../backend/services/session.php';
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -10,6 +11,7 @@ if (!defined('_CODE')) {
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use services\session;
 
 // Hàm giúp nhúng header và footer nhanh hơn vào các file
 function layouts($layoutName = 'header', $data = [])
@@ -172,8 +174,9 @@ function isLogin()
 {
     // Kiểm tra trạng thái đăng nhập
     $checkLogin = false;
-    if (getSession('tokenLogin')) {
-        $tokenLogin = getSession('tokenLogin');
+    $session = new session();
+    if ($session->get('tokenLogin')) {
+        $tokenLogin = $session->get('tokenLogin');
 
         // Kiểm tra tokenLogin có giống token trong database không
         $queryToken = getRow("SELECT user_id FROM tokenlogin WHERE token = '$tokenLogin'");
@@ -181,9 +184,8 @@ function isLogin()
         if (!empty($queryToken)) {
             $checkLogin = true;
         } else {
-            removeSession('tokenLogin');
+            $session->remove('tokenLogin');
         }
     }
-
     return $checkLogin;
 }

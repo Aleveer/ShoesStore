@@ -1,8 +1,10 @@
 <!-- Kích hoạt tài khoản -->
 <?php
-require_once __DIR__.'/../../../backend/bus/user_bus.php';
+require_once __DIR__ . '/../../../backend/bus/user_bus.php';
+
 use services\session;
 
+require_once __DIR__ . '/../../../backend/enums/status_enums.php';
 if (!defined('_CODE')) {
     die('Access denied');
 }
@@ -16,13 +18,11 @@ layouts('header-login', $data);
 // Check if user is logged in
 if (isLogin()) {
     $userId = $_SESSION['userId'];
-
+    $userModel = UserBUS::getInstance()->getModelById($userId);
     // Update user status in the database
-    $data = [
-        'status' => 1,
-    ];
+    $userModel->setStatus(StatusEnums::ACTIVE);
 
-    $updateStatus = UserBUS::getInstance()->updateModelStatus($userId, $data);
+    $updateStatus = UserBUS::getInstance()->updateModel($userModel);
     $session = new session();
     if ($updateStatus) {
         $session->setFlash('msg', 'Kích hoạt tài khoản thành công!');

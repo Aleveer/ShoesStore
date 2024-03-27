@@ -69,13 +69,6 @@ class UserBUS implements BUSInterface
         return $result;
     }
 
-    public function updateModelStatus(int $id, $status): int
-    {
-        $user = $this->getModelById($id);
-        $user->setStatus($status);
-        return $this->updateModel($user);
-    }
-
     public function deleteModel($userModel): int
     {
         $result = UserDAO::getInstance()->delete($userModel);

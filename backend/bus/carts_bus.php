@@ -40,6 +40,9 @@ class CartsBUS implements BUSInterface
     {
         foreach ($this->cartsList as $carts) {
             if ($carts->getUserId() == $userId && $carts->getProductId() == $productId && $carts->getSizeId() == $sizeId) {
+                //If duplicated, increase the quantity by 1:
+                $carts->setQuantity($carts->getQuantity() + 1);
+                $this->updateModel($carts);
                 return $carts;
             }
         }

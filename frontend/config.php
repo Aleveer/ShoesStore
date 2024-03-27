@@ -6,7 +6,7 @@ const _CODE = true;
 
 // thông tin người dùng liên kết tới DB
 const _HOST = 'localhost';
-const _DB = 'quanlinguoidung';
+const _DB = 'shoesstore';
 const _USER = 'root';
 const _PASS = '';
 

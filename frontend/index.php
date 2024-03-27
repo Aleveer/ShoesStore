@@ -2,18 +2,18 @@
 session_start();
 
 // require config
-require_once './config.php';
+require __DIR__ . '/../frontend/config.php';
 
 // Thư viện PHP Mailer
-require_once 'includes/phpmailer/Exception.php';
-require_once 'includes/phpmailer/PHPMailer.php';
-require_once 'includes/phpmailer/SMTP.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 // require includes
-require_once 'includes/function.php';
-require_once 'includes/connect.php';
-require_once 'includes/database.php';
-require_once 'includes/session.php';
+require __DIR__ . '/../frontend/includes/function.php';
+require __DIR__ . '/../frontend/includes/connect.php';
+require __DIR__ . '/../frontend/includes/database.php';
+require __DIR__ . '/../backend/services/session.php';
 
 $module = _MODULE;
 $action = _ACTION;
@@ -30,10 +30,9 @@ if (!empty($_GET['action'])) {
     }
 }
 
-
 $path = 'modules\\' . $module . '\\' . $action . '.php';
 
-if (file_exists($path)) require_once ($path);
+if (file_exists($path)) require_once($path);
 else {
-    require_once ('modules\error\404.php');
+    require_once('modules\error\404.php');
 }

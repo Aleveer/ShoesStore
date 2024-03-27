@@ -1,6 +1,7 @@
-<!-- Đăng nhập tài khoản -->
 <?php
-// login.php
+require_once __DIR__.'/../../../backend/bus/user_bus.php';
+require_once __DIR__.'/../../../backend/bus/user_permission_bus.php';
+
 if (!defined('_CODE')) {
     die('Access denied');
 }
@@ -9,10 +10,8 @@ $data = [
     'pageTitle' => 'Đăng nhập'
 ];
 
-// Đã nhúng file function.php bên index.php
 layouts('header', $data);
 
-// Kiểm tra trạng thái đăng nhập
 if (isLogin()) {
     redirect('?module=indexphp&action=userhomepage');
 }
@@ -22,16 +21,13 @@ if (isPost()) {
     $response = ['success' => false, 'msg' => ''];
 
     if (!empty(trim($filterAll['email'])) && !empty(trim($filterAll['password']))) {
-        // Check login
         $email = $filterAll['email'];
         $password = $filterAll['password'];
 
-        // $userQuery = getRow("SELECT password, id FROM user WHERE email='$email'");
         $userQuery = UserBUS::getInstance()->getModelByField($email, 'email');
         if (!empty($userQuery)) {
             $passwordHash = $userQuery->getPassword();
             if (PasswordUtilities::getInstance()->verifyPassword($password, $passwordHash)) {
-                // Password is valid, start the session and store the user's ID
                 $_SESSION['userId'] = $userQuery['id'];
                 $response['success'] = true;
                 $response['msg'] = 'Login successful!';
@@ -45,9 +41,8 @@ if (isPost()) {
         $response['msg'] = 'Please enter email and password!';
     }
 }
-
-header('Content-Type: application/json');
-echo json_encode($response);
+//header('Content-Type: application/json');
+//echo json_encode($response);
 ?>
 
 <div class="row">
@@ -63,7 +58,7 @@ echo json_encode($response);
             </div>
             <div class="form-group mg-form">
                 <label class="cw" for="">Password</label>
-                <input name="password" type="password" class="form-control" placeholder="Mật khấu...">
+                <input name="password" type="password" class="form-control" placeholder="Mật khẩu...">
             </div>
 
             <button type="submit" class="btn btn-primary btn-block mg-form" style="width:100%; margin-top:16px;">Đăng nhập</button>

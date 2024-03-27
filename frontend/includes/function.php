@@ -1,8 +1,6 @@
 <!-- Các hàm xử lí chung của project -->
 
 <?php
-include __DIR__ . '/../backend/services/session.php';
-
 if (!defined('_CODE')) {
     die('Access denied');
 }
@@ -11,7 +9,6 @@ if (!defined('_CODE')) {
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-use services\session;
 
 // Hàm giúp nhúng header và footer nhanh hơn vào các file
 function layouts($layoutName = 'header', $data = [])
@@ -20,8 +17,6 @@ function layouts($layoutName = 'header', $data = [])
         require_once _WEB_PATH_TEMPLATE . '/layouts/' . $layoutName . '.php';
     }
 }
-
-
 
 // Hàm gửi mail 
 function sendMail($to, $subject, $content)
@@ -166,8 +161,6 @@ function formOldInfor($name, $duLieuDaNhap, $default = '')
 {
     return (!empty($duLieuDaNhap[$name])) ? $duLieuDaNhap[$name] : $default;
 }
-
-
 
 // Hàm kiểm tra trạng thái đăng nhập, sử dụng session php, không sử dụng token:
 function isLogin()

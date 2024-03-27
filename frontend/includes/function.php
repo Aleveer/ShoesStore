@@ -162,11 +162,14 @@ function formOldInfor($name, $duLieuDaNhap, $default = '')
     return (!empty($duLieuDaNhap[$name])) ? $duLieuDaNhap[$name] : $default;
 }
 
-// Hàm kiểm tra trạng thái đăng nhập, sử dụng session php, không sử dụng token:
 function isLogin()
 {
-    if (isset($_SESSION['userId'])) {
-        return true;
+    return isset($_SESSION['userId']);
+}
+
+function requireLogin()
+{
+    if (!isLogin()) {
+        redirect('login.php');
     }
-    return false;
 }

@@ -28,19 +28,4 @@ class PasswordUtilities
 
         return $hashedPassword;
     }
-
-    public static function isUserLoggedIn()
-    {
-        // Check if the user is logged in by checking the existence of the 'username' session variable
-        return isset($_SESSION['username']);
-    }
-
-    public static function requireLoggedInUser()
-    {
-        // Redirect the user to the login page if they are not logged in
-        if (!self::isUserLoggedIn()) {
-            header('Location: login.php');
-            exit;
-        }
-    }
 }

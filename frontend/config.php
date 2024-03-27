@@ -11,7 +11,7 @@ const _USER = 'root';
 const _PASS = '';
 
 // Thiết lập host
-define('_WEB_HOST', 'http://' . $_SERVER['HTTP_HOST'] . '/DoAn');
+define('_WEB_HOST', 'http://' . $_SERVER['HTTP_HOST'] . '/frontend');
 define('_WEB_HOST_TEMPLATE', _WEB_HOST . '/templates');
 
 

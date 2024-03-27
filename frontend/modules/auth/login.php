@@ -1,6 +1,10 @@
 <?php
-require_once __DIR__.'/../../../backend/bus/user_bus.php';
-require_once __DIR__.'/../../../backend/bus/user_permission_bus.php';
+require_once __DIR__ . '/../../../backend/bus/user_bus.php';
+require_once __DIR__ . '/../../../backend/bus/user_permission_bus.php';
+//require_once __DIR__.'/../../../backend/bus/permission_bus.php';
+require_once __DIR__ . '/../../../backend/bus/role_bus.php';
+//require_once __DIR__.'/../../../backend/bus/role_permission_bus.php';
+require_once __DIR__ . '/../../../backend/services/password-utilities.php';
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -23,12 +27,13 @@ if (isPost()) {
     if (!empty(trim($filterAll['email'])) && !empty(trim($filterAll['password']))) {
         $email = $filterAll['email'];
         $password = $filterAll['password'];
-
-        $userQuery = UserBUS::getInstance()->getModelByField($email, 'email');
+        //TODO: Double check the code if it's actually logged in successfully, after logging in successfully, redirect to the user's homepage:
+        //TODO: Fix weird bug that will never direct.
+        $userQuery = UserBUS::getInstance()->getModelByEmail($email);
         if (!empty($userQuery)) {
             $passwordHash = $userQuery->getPassword();
             if (PasswordUtilities::getInstance()->verifyPassword($password, $passwordHash)) {
-                $_SESSION['userId'] = $userQuery['id'];
+                $_SESSION['userId'] = $userQuery->getId();
                 $response['success'] = true;
                 $response['msg'] = 'Login successful!';
             } else {

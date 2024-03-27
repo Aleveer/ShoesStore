@@ -1,23 +1,20 @@
-<!-- Đăng kí tài khoản -->
-<!--TODO: Need some in-depth testing -->
 <?php
 
 use services\session;
 
-require_once 'backend/services/validation.php';
-require_once 'backend/services/session.php';
-require_once 'backend/bus/user_bus.php';
-require_once 'backend/models/user_model.php';
-require_once 'backend/enums/status_enums.php';
-require_once 'backend/enums/roles_enums.php';
-require_once 'backend/utils/password_utilities.php';
+require_once __DIR__ . '/../../../backend/services/validation.php';
+require_once __DIR__ . '/../../../backend/services/session.php';
+require_once __DIR__ . '/../../../backend/bus/user_bus.php';
+require_once __DIR__ . '/../../../backend/models/user_model.php';
+require_once __DIR__ . '/../../../backend/enums/status_enums.php';
+require_once __DIR__ . '/../../../backend/enums/roles_enums.php';
+require_once __DIR__ . '/../../../backend/services/password-utilities.php';
 
 if (!defined('_CODE')) {
     die('Access denied');
 }
-
 if (isPost()) {
-    //$id, $username, $password, $email, $name, $phone, $gender, $image, $roleId, $status, $address
+    $filterAll = filter();
     $userModel = new UserModel(
         null,
         $filterAll['username'],
@@ -31,78 +28,32 @@ if (isPost()) {
         StatusEnums::ACTIVE,
         $filterAll['address']
     );
-
+    //TODO: Fix the validate model section at backend:
     $count = UserBUS::getInstance()->validateModel($userModel);
-
-    // Phải $session->setFlash vì nếu không set thì sau khi reload (redirect) sẽ mất
-    // Đây là một trong những chức năng của session
-    if ($count == 0) {
-        $activeToken = sha1(uniqid() . time());
-        $dataInsert = [
-            'fullname' => $filterAll['fullname'],
-            'email' => $filterAll['email'],
-            'phone' => $filterAll['phone'],
-            'password' => password_hash($filterAll['password'], PASSWORD_DEFAULT),
-            'activeToken' => $activeToken,
-            'address' => $filterAll['address']
-        ];
-        $insertStatus = UserBUS::getInstance()->addModel($dataInsert);
-        //     if ($insertStatus) {
-        //         // Tạo link kích hoạt
-        //         $linkActive = _WEB_HOST . '?module=auth&action=active&token=' . $activeToken;
-        //         // Thiết lập gửi mail
-        //         $subject = $filterAll['fullname'] . ' vui lòng kích hoạt tài khoản!!!';
-        //         $content = 'Chào ' . $filterAll['fullname'] . '<br/>';
-        //         $content .= 'Vui lòng click vào đường link dưới đây để kích hoạt tài khoản:' . '<br/>';
-        //         $content .= $linkActive . '<br/>';
-        //         $content .= 'Trân trọng cảm ơn!!';
-
-
-        //         // Tiến hành gửi mail
-        //         $session = new session();
-        //         $sendMailStatus = sendMail($filterAll['email'], $subject, $content);
-        //         if ($sendMailStatus) {
-        //             $session->setFlash('msg', 'Đăng kí thành công, vui lòng kiểm tra email để kích hoạt tài khoản!');
-        //             $session->setFlash('msg_type', 'success');
-        //         } else {
-        //             $session->setFlash('msg', 'Hệ thống đang gặp sự cố, vui lòng thử lại sau');
-        //             $session->setFlash('msg_type', 'danger');
-        //         }
-        //     }
-        //     redirect('?module=auth&action=register');
-        // } else {
-        //     $session->setFlash('msg', 'Vui lòng kiểm tra lại dữ liệu!');
-        //     $session->setFlash('msg_type', 'danger');
-        //     $session->setFlash('errors', $errors);
-        //     $session->setFlash('duLieuDaNhap', $filterAll);
-        //     redirect('?module=auth&action=register');
-        // }
-
+    if ($count <= 0) {
+        $userModel->setPassword(password_hash($filterAll['password'], PASSWORD_DEFAULT));
+        $insertStatus = UserBUS::getInstance()->addModel($userModel);
         if ($insertStatus) {
-            // Store user ID in session
             $_SESSION['registerUserId'] = $insertStatus;
-
-            // Redirect to activation page
             redirect('?module=auth&action=active');
         } else {
-            // Registration failed, display error message
             $session->setFlash('msg', 'Registration failed!');
             $session->setFlash('msg_type', 'danger');
             redirect('?module=auth&action=register');
         }
     } else {
-        // Validation failed, display error message
+        $session = new session();
         $session->setFlash('msg', 'Validation failed!');
         $session->setFlash('msg_type', 'danger');
         redirect('?module=auth&action=register');
     }
 }
 
+$session = new session();
 $msg = $session->getFlash('msg');
 $msg_type = $session->getFlash('msg_type');
 $errors = $session->getFlash('errors');
 $duLieuDaNhap = $session->getFlash('duLieuDaNhap');
-
 
 $data = [
     'pageTitle' => 'Đăng ký'
@@ -121,6 +72,12 @@ layouts('header', $data);
                 <label for="">Họ tên</label>
                 <input name="fullname" class="form-control" type="text" placeholder="Họ tên..." value="<?php echo formOldInfor('fullname', $duLieuDaNhap) ?>">
                 <?php echo formError('fullname', $errors) ?>
+            </div>
+
+            <div class="form-group mg-form">
+                <label for="">Tên đăng nhập</label>
+                <input name="username" class="form-control" type="text" placeholder="Tên đăng nhập..." value="<?php echo formOldInfor('username', $duLieuDaNhap) ?>">
+                <?php echo formError('username', $errors) ?>
             </div>
 
             <div class="form-group mg-form">
@@ -153,11 +110,21 @@ layouts('header', $data);
                 <?php echo formError('password_confirm', $errors) ?>
             </div>
 
-            <!-- Add more fields here -->
+            <div class="form-group mg-form">
+                <label for="">Giới tính</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" value="male" <?php echo (formOldInfor('gender', $duLieuDaNhap) == 'male') ? 'checked' : ''; ?>>
+                    <label class="form-check-label" for="gender-male">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" value="female" <?php echo (formOldInfor('gender', $duLieuDaNhap) == 'female') ? 'checked' : ''; ?>>
+                    <label class="form-check-label" for="gender-female">Female</label>
+                </div>
+                <?php echo formError('gender', $errors) ?>
 
-            <button type="submit" class="btn btn-primary btn-block mg-form" style="width:100%; margin-top:16px;">Đăng ký</button>
-            <hr>
-            <p class="text-center"><a href="?module=auth&action=login">Đăng nhập</a></p>
+                <button type="submit" class="btn btn-primary btn-block mg-form" style="width:100%; margin-top:16px;">Đăng ký</button>
+                <hr>
+                <p class="text-center"><a href="?module=auth&action=login">Đăng nhập</a></p>
         </form>
     </div>
 </div>

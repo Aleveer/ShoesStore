@@ -1,6 +1,6 @@
 <!-- Kích hoạt tài khoản -->
 <?php
-
+require_once __DIR__.'/../../../backend/bus/user_bus.php';
 use services\session;
 
 if (!defined('_CODE')) {

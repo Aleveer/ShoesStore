@@ -2,6 +2,16 @@
 <!-- TODO: FIX -->
 <?php
 
+use services\session;
+
+require_once(__DIR__ . "/../../../ShoesStore/backend/services/validation.php");
+require_once(__DIR__ . "/../../../ShoesStore/backend/services/session.php");
+require_once(__DIR__ . "/../../../ShoesStore/backend/bus/user_bus.php");
+require_once(__DIR__ . "/../../../ShoesStore/backend/models/user_model.php");
+require_once(__DIR__ . "/../../../ShoesStore/backend/enums/status_enums.php");
+require_once(__DIR__ . "/../../../ShoesStore/backend/enums/roles_enums.php");
+require_once(__DIR__ . "/../../../ShoesStore/backend/services/password-utilities.php");
+
 if (!defined('_CODE')) {
     die('Access denied');
 }
@@ -40,7 +50,7 @@ if (!empty($token)) {
             }
 
 
-            // Phải setFlashData vì nếu không set thì sau khi reload (redirect) sẽ mất
+            // Phải $session->setFlash vì nếu không set thì sau khi reload (redirect) sẽ mất
             // Đây là một trong những chức năng của session
             if (empty($errors)) {
                 // Xử lí việc update mật khẩu
@@ -52,28 +62,28 @@ if (!empty($token)) {
                     'update_at' => date('Y-m-d H:i:s')
                 ];
 
-
-
+                $session = new session();
                 $updateStatus = update('user', $dataUpdate, "id = $tokenQuery[id]");
                 if ($updateStatus) {
-                    setFlashData('msg', 'Thay đổi mật khẩu thành công!!!');
-                    setFlashData('msg_type', 'success');
+                    $session->setFlash('msg', 'Thay đổi mật khẩu thành công!!!');
+                    $session->setFlash('msg_type', 'success');
                     redirect('?module=auth&action=login');
                 } else {
-                    setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
-                    setFlashData('msg_type', 'danger');
+                    $session->setFlash('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
+                    $session->setFlash('msg_type', 'danger');
                 }
             } else {
-                setFlashData('msg', 'Vui lòng kiểm tra lại dữ liệu!');
-                setFlashData('msg_type', 'danger');
-                setFlashData('errors', $errors);
+                $session->setFlash('msg', 'Vui lòng kiểm tra lại dữ liệu!');
+                $session->setFlash('msg_type', 'danger');
+                $session->setFlash('errors', $errors);
                 redirect("?module=auth&action=reset&token=$token");
             }
         }
+        $session = new session();
 
-        $msg = getFlashData('msg');
-        $msg_type = getFlashData('msg_type');
-        $errors = getFlashData('errors');
+        $msg = $session->getFlash('msg');
+        $msg_type = $session->getFlash('msg_type');
+        $errors = $session->getFlash('errors');
 ?>
         <!-- Bảng đặt lại mật khẩu -->
         <div class="row">

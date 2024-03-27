@@ -3,7 +3,7 @@
 <!-- Đăng nhập tài khoản -->
 
 <?php
-
+require_once __DIR__.'/../../../backend/bus/user_bus.php';
 use services\session;
 
 if (!defined('_CODE')) {
@@ -25,8 +25,7 @@ if (isLogin()) {
         $filterAll = filter();
         if (!empty($filterAll['email'])) {
             $email = $filterAll['email'];
-            //$userQuery = getRow("SELECT id FROM user WHERE email = '$email'");
-            $userQuery = UserBUS::getInstance()->getModelByField($email, 'email');
+            $userQuery = UserBUS::getInstance()->getModelByEmail($email);
             if (!empty($userQuery)) {
                 $userId = $userQuery->getId();
                 $_SESSION['forgotUserId'] = $userId;
@@ -47,6 +46,7 @@ if (isLogin()) {
     }
 }
 
+$session = new session();
 $msg = $session->getFlash('msg');
 $msgType = $session->getFlash('msg_type');
 
@@ -55,7 +55,8 @@ $msgType = $session->getFlash('msg_type');
 <div class="row">
     <div class="col-4" style="margin:50px auto;">
         <h2 style="text-align: center; text-transform: uppercase;">Quên mật khẩu</h2>
-        <?php if (!empty($msg)) {
+        <?php
+        if (!empty($msg)) {
             getMsg($msg, $msgType);
         } ?>
         <form action="" method="post">

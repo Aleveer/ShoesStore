@@ -2,7 +2,7 @@
 require_once(__DIR__ . "/../interfaces/bus_interface.php");
 require_once(__DIR__ . "/../dao/user_dao.php");
 require_once(__DIR__ . "/../models/user_model.php");
-require_once(__DIR__ . "/../services/validation.php");
+require_once(__DIR__ . "/../../../ShoesStore/backend/services/validation.php");
 class UserBUS implements BUSInterface
 {
     private $userList = array();
@@ -36,12 +36,14 @@ class UserBUS implements BUSInterface
         return UserDAO::getInstance()->getById($id);
     }
 
-    public function getModelByField(string $field, string $value)
+    public function getModelByEmail(string $email)
     {
-        $filteredModels = array_filter($this->userList, function ($user) use ($field, $value) {
-            return $user->$field === $value;
-        });
-        return reset($filteredModels);
+        for ($i = 0; $i < count($this->userList); $i++) {
+            if ($this->userList[$i]->getEmail() === $email) {
+                return $this->userList[$i];
+            }
+        }
+        return null;
     }
 
     public function addModel($userModel): int
@@ -90,64 +92,64 @@ class UserBUS implements BUSInterface
         return UserDAO::getInstance()->search($value, $columns);
     }
 
-    public function validateModel($userModel)
+    public function validateModel(UserModel $userModel)
     {
         $validation = Validation::getInstance();
         $errors = [];
 
         // Check for required fields:
-        if ($userModel->username === null || trim($userModel->username) === "") {
+        if ($userModel->getUsername() == null || trim($userModel->getUsername()) == "") {
             $errors[] = "Username is required";
         }
 
-        if ($userModel->password === null || trim($userModel->password) === "") {
+        if ($userModel->getPassword() == null || trim($userModel->getPassword()) == "") {
             $errors[] = "Password is required";
         }
 
-        if ($userModel->email === null || trim($userModel->email) === "") {
+        if ($userModel->getEmail() == null || trim($userModel->getEmail()) == "") {
             $errors[] = "Email is required";
         }
 
-        if ($userModel->name === null || trim($userModel->name) === "") {
+        if ($userModel->getName() == null || trim($userModel->getName()) ==  "") {
             $errors[] = "Name is required";
         }
 
         // Check for possibly taken properties in database:
-        if ($this->isUsernameTaken($userModel->username)) {
+        if ($this->isUsernameTaken($userModel->getUsername())) {
             $errors[] = "Username is taken";
         }
 
-        if ($this->isEmailTaken($userModel->email)) {
+        if ($this->isEmailTaken($userModel->getEmail())) {
             $errors[] = "Email is taken";
         }
 
-        if ($this->isPhoneTaken($userModel->phone)) {
+        if ($this->isPhoneTaken($userModel->getPhone())) {
             $errors[] = "Phone number is taken";
         }
 
         // Validate username and password
-        if (!$validation->isValidUsername($userModel->username)) {
+        if (!$validation->isValidUsername($userModel->getUsername())) {
             $errors[] = "Invalid username";
         }
 
-        if (!$validation->isValidPassword($userModel->password)) {
+        if (!$validation->isValidPassword($userModel->getPassword())) {
             $errors[] = "Invalid password";
         }
 
-        if (strlen($userModel->password) < 8) {
+        if (strlen($userModel->getPassword()) < 8) {
             $errors[] = "Password must be at least 8 characters";
         }
 
         // Validate email and name
-        if (!$validation->isValidEmail($userModel->email)) {
+        if (!$validation->isValidEmail($userModel->getEmail())) {
             $errors[] = "Invalid email";
         }
 
-        if (!$validation->isValidName($userModel->name)) {
+        if (!$validation->isValidName($userModel->getName())) {
             $errors[] = "Invalid name";
         }
 
-        if (strlen($userModel->name) < 6) {
+        if (strlen($userModel->getName()) < 6) {
             $errors[] = "Name must be at least 6 characters";
         }
 

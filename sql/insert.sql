@@ -168,9 +168,11 @@ VALUES
 --
 --  Insert Role value
 --
-INSERT INTO `roles` (`id`, `name`) VALUES ('1','admin'),
-INSERT INTO `roles` (`id`, `name`) VALUES ('2','manager'),
-INSERT INTO `roles` (`id`, `name`) VALUES ('3','employee');
+INSERT INTO roles (id, name) 
+VALUES 
+    ('1','admin'),
+    ('2','manager'),
+    ('3','employee');
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------

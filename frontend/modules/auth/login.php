@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../../backend/bus/user_bus.php';
 require_once __DIR__ . '/../../../backend/bus/user_permission_bus.php';
 require_once __DIR__ . '/../../../backend/bus/permission_bus.php';
 require_once __DIR__ . '/../../../backend/bus/role_bus.php';
-require_once __DIR__ . '/../../../backend/bus/role_permission_bus.php';
+require_once __DIR__ . '/../../../backend/bus/role_permissions_bus.php';
 require_once __DIR__ . '/../../../backend/services/password-utilities.php';
 
 if (!defined('_CODE')) {

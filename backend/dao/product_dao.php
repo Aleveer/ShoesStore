@@ -1,7 +1,7 @@
 <?php
-require_once 'backend/entities/product_model.php';
-require_once 'backend/utilities/db_connection.php';
-require_once 'backend/dao/dao_interface.php';
+require_once __DIR__ .'/../../backend/entities/product_model.php';
+require_once __DIR__ .'/../../backend/utilities/db_connection.php';
+require_once __DIR__ .'/../../backend/dao/dao_interface.php';
 
 class ProductDAO implements DAOInterface
 {

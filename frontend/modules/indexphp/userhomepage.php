@@ -6,8 +6,9 @@ if (!defined('_CODE')) {
 $data = [
     'pageTitle' => 'Trang chủ'
 ];
+
 // Đã nhúng file function.php bên index.php
-layouts('header', $data);
+require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'header' . '.php';
 
 
 

@@ -1,5 +1,4 @@
 <!-- Các hàm xử lí chung của project -->
-
 <?php
 if (!defined('_CODE')) {
     die('Access denied');

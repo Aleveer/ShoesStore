@@ -2,7 +2,7 @@
 session_start();
 
 // require config
-require __DIR__ . '/../frontend/config.php';
+require __DIR__ . '/config.php';
 
 // Thư viện PHP Mailer
 use PHPMailer\PHPMailer\PHPMailer;
@@ -10,10 +10,11 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 // require includes
-require __DIR__ . '/../frontend/includes/function.php';
-require __DIR__ . '/../frontend/includes/connect.php';
-require __DIR__ . '/../frontend/includes/database.php';
+require __DIR__ . '/includes/function.php';
+require __DIR__ . '/includes/connect.php';
+require __DIR__ . '/includes/database.php';
 require __DIR__ . '/../backend/services/session.php';
+
 
 $module = _MODULE;
 $action = _ACTION;

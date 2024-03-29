@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__ . "/../backend/dao/permission_dao.php");
-require_once(__DIR__ . "/../backend/interfaces/bus_interface.php");
-require_once(__DIR__ . "/../backend/models/permission_model.php");
+require_once(__DIR__ . "/../../backend/dao/permission_dao.php");
+require_once(__DIR__ . "/../../backend/interfaces/bus_interface.php");
+require_once(__DIR__ . "/../../backend/models/permission_model.php");
 class PermissionBUS implements BUSInterface
 {
     private $permissionList = array();

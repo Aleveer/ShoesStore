@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__ . "/../dao/database_connection.php");
 require_once(__DIR__ . "/../models/role_permissions_model.php");
-require_once(__DIR__ . "/../dao/dao_interface.php");
+require_once(__DIR__ . "/../interfaces/dao_interface.php");
 
 class RolePermissionDAO implements DAOInterface
 {

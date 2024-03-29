@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__ . "/../dao/coupons_dao.php");
-require_once(__DIR__ . "/../backend/models/coupons_model.php");
-require_once(__DIR__ . "/../backend/bus/BUSInterface.php");
+require_once(__DIR__ . "/../../backend/models/coupons_model.php");
+require_once(__DIR__ . "/../../backend/bus/BUSInterface.php");
 
 class CouponsBUS implements BUSInterface
 {

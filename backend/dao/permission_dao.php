@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . "/../dao/database_connection.php");
-require_once(__DIR__ . "/../models/permissions_model.php");
+require_once(__DIR__ . "/../models/permission_model.php");
 require_once(__DIR__ . "/../interfaces/dao_interface.php");
 
 

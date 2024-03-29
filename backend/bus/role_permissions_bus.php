@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__ . "/../dao/role_permission_dao.php");
+require_once(__DIR__ . "/../dao/role_permissions_dao.php");
 require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../models/role_permission_model.php");
+require_once(__DIR__ . "/../models/role_permissions_model.php");
 
 class RolePermissionBUS implements BUSInterface
 {

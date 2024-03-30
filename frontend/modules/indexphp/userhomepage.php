@@ -21,7 +21,7 @@ if (isLogin()) {
 ?>
 <!-- Header -->
 <div id="header">
-    <?php require("navigatormenu.php") ?>
+    <?php require("header.php") ?>
 </div>
 
 
@@ -35,8 +35,6 @@ if (isLogin()) {
 <div id="content">
     <?php require("navigatorcontent.php") ?>
 </div>
-
-
 
 <?php
 layouts('footer');

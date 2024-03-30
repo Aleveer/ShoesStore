@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../../../backend/bus/product_bus.php";
 //require_once __DIR__ . "/../backend/bus/size_items_bus.php";
-//require_once __DIR__.'/../../backend/models/product_model.php';
+require_once __DIR__ . "/../../../backend/models/product_model.php";
 
 $products = ProductBUS::getInstance()->getAllModels();
 //$sizeItemsProduct = SizeItemsBUS::getInstance()->getAllModels();
@@ -59,32 +59,26 @@ $products = ProductBUS::getInstance()->getAllModels();
         <div class="in__wrap">
             <ul id="content" class="products">
                 <?php
-                //TODO: Fix the UI, it only shows 1 item. The data is retrieved from the database successfully.
-                foreach ($products as $product) {
-                ?>
+                for ($i = 0; $i < count($products); $i++) {
+                    $product = $products[$i];
+                    echo '
                     <li>
                         <div class="product-item">
                             <div>
                                 <a href>
-                                    <img src="<?php echo $product->getImage(); ?>" alt>
+                                    <img src="' . $product->getImage() . '" alt>
                                 </a>
                             </div>
                             <div class="product-info">
-                                <a href="#" class="product-name"><?php echo $product->getName(); ?></a>
+                                <a href="#" class="product-name">' . $product->getName() . '</a>
                                 <div class="product-price">
-                                    <ul class="price"><span>$<?php echo $product->getPrice(); ?></span>
+                                    <ul class="price"><span>$' . $product->getPrice() . '</span>
                                         <a href="#"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
                                     </ul>
-                                    <!-- <ul class="star-rating">
-                                            <?php for ($i = 0; $i < $product->getRating(); $i++) : ?>
-                                                <i class="fa fa-star checked" style="color: #FFD43B;"></i>
-                                            <?php endfor; ?>
-                                            <span><?php echo $product->getReviewsCount(); ?>k</span>
-                                        </ul> -->
                                 </div>
                             </div>
                     </li>
-                <?php
+                    ';
                 }
                 ?>
             </ul>

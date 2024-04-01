@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../../backend/bus/user_permission_bus.php';
 require_once __DIR__ . '/../../../backend/bus/permission_bus.php';
 require_once __DIR__ . '/../../../backend/bus/role_bus.php';
 require_once __DIR__ . '/../../../backend/bus/role_permissions_bus.php';
+require_once __DIR__ . '/../../../backend/bus/token_login_bus.php';
 require_once __DIR__ . '/../../../backend/services/password-utilities.php';
 
 if (!defined('_CODE')) {
@@ -29,25 +30,47 @@ if (isPost()) {
         $password = $filterAll['password'];
         //TODO: Double check the code if it's actually logged in successfully, after logging in successfully, redirect to the user's homepage:
         //TODO: Fix weird bug that will never direct.
+
+
+        
         $userQuery = UserBUS::getInstance()->getModelByEmail($email);
         if (!empty($userQuery)) {
             $passwordHash = $userQuery->getPassword();
+            // Kiểm tra password verify
             if (PasswordUtilities::getInstance()->verifyPassword($password, $passwordHash)) {
-                $_SESSION['userId'] = $userQuery->getId();
-                $response['success'] = true;
-                $response['msg'] = 'Login successful!';
+                // Tạo tokenLogin
+                $tokenLogin = sha1(uniqid() . time());
+
+                $loginTkn = new TokenLoginModel($userQuery->getId(), $tokenLogin, date("Y-m-d H:i:s"));
+                $insertTokenLoginStatus = TokenLoginBUS::getInstance()->addModel($loginTkn);
+
+
+                if ($insertTokenLoginStatus) {
+                    setSession('tokenLogin', $tokenLogin);
+                    redirect('?module=indexphp&action=userhomepage');
+                } else {
+                    setFlashData('msg', 'Không thể đăng nhập, vui lòng thử lại sau!');
+                    setFlashData('msg_type', 'danger');
+                }
             } else {
-                $response['msg'] = 'Incorrect password!';
+                setFlashData('msg', 'Mật khẩu không chính xác!');
+                setFlashData('msg_type', 'danger');
             }
         } else {
-            $response['msg'] = 'Email does not exist!';
+            setFlashData('msg', 'Email không tồn tại!');
+            setFlashData('msg_type', 'danger');
         }
     } else {
-        $response['msg'] = 'Please enter email and password!';
+        setFlashData('msg', 'Vui lòng nhập email và password!');
+        setFlashData('msg_type', 'danger');
     }
+    // redirect('?module=auth&action=login');
 }
 //header('Content-Type: application/json');
 //echo json_encode($response);
+
+$msg = getFlashData('msg');
+$msgType = getFlashData('msg_type');
 ?>
 
 <div class="row">

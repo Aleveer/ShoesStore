@@ -135,7 +135,7 @@ function isPhone($phone)
 // Hàm in ra message
 function getMsg($msg, $type = 'sucess')
 {
-    echo "<div class='text-center alert alert-$type'>";
+    echo "<div class='cw text-center alert alert-$type'>";
     echo $msg;
     echo '</div>';
 }
@@ -163,7 +163,22 @@ function formOldInfor($name, $duLieuDaNhap, $default = '')
 
 function isLogin()
 {
-    return isset($_SESSION['userId']);
+    // Kiểm tra trạng thái đăng nhập
+    $checkLogin = false;
+    if (getSession('tokenLogin')) {
+        $tokenLogin = getSession('tokenLogin');
+
+        // Kiểm tra tokenLogin có giống token trong database không
+        $queryToken = getRow("SELECT user_id FROM tokenlogin WHERE token = '$tokenLogin'");
+
+        if (!empty($queryToken)) {
+            $checkLogin = true;
+        } else {
+            removeSession('tokenLogin');
+        }
+    }
+
+    return $checkLogin;
 }
 
 function requireLogin()

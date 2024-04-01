@@ -6,11 +6,10 @@ if (!defined('_CODE')) {
     die('Access denied');
 }
 
-if (isset($_SESSION['userId'])) {
-    unset($_SESSION['userId']);
+// Xoá token trong tokenLogin trong DB, đồng thời xoá token trong session khi đăng nhập tạo ra
+if (isLogin()) {
+    $token = getSession('tokenLogin');
+    delete('tokenLogin', "token = '$token'");
+    removeSession('tokenLogin');
+    redirect('?module=auth&action=login');
 }
-
-// Redirect to the login page after logout
-header("Location: login.php");
-exit();
-?>

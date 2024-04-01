@@ -22,3 +22,9 @@ var swiper = new Swiper(".swiper", {
         el: ".swiper-pagination",
     },
 });
+
+function showDetailUser() {
+    let userDropDownMenu = document.querySelector('.user__dropdown__menu');
+    userDropDownMenu.classList.toggle('hide');
+    // console.log(123);
+}

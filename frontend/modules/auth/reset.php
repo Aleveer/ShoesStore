@@ -4,13 +4,12 @@
 
 use services\session;
 
-require_once(__DIR__ . "/../../../ShoesStore/backend/services/validation.php");
-require_once(__DIR__ . "/../../../ShoesStore/backend/services/session.php");
-require_once(__DIR__ . "/../../../ShoesStore/backend/bus/user_bus.php");
-require_once(__DIR__ . "/../../../ShoesStore/backend/models/user_model.php");
-require_once(__DIR__ . "/../../../ShoesStore/backend/enums/status_enums.php");
-require_once(__DIR__ . "/../../../ShoesStore/backend/enums/roles_enums.php");
-require_once(__DIR__ . "/../../../ShoesStore/backend/services/password-utilities.php");
+require_once(__DIR__ . "/../../../backend/services/validation.php");
+require_once(__DIR__ . "/../../../backend/bus/user_bus.php");
+require_once(__DIR__ . "/../../../backend/models/user_model.php");
+require_once(__DIR__ . "/../../../backend/enums/status_enums.php");
+require_once(__DIR__ . "/../../../backend/enums/roles_enums.php");
+require_once(__DIR__ . "/../../../backend/services/password-utilities.php");
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -18,77 +17,54 @@ if (!defined('_CODE')) {
 $data = [
     'pageTitle' => 'Reset Password'
 ];
-layouts('header-login', $data);
+layouts('header', $data);
 
 if (!empty(filter()['token'])) $token = filter()['token'];
 
 
 
 if (!empty($token)) {
-    $tokenQuery = getRow("SELECT id, fullname, email FROM user WHERE forgotToken = '$token'");
-    if (!empty($tokenQuery)) {
+    $userQuery = UserBUS::getInstance()->getModelByForgotToken($token);
+    if (!empty($userQuery)) {
         if (isPost()) {
             $filterAll = filter();
             $errors = []; // Mảng chứa các lỗi
 
-            // Validate password: required, min-length = 8
-            if (empty($filterAll['password'])) {
-                $errors['password']['required'] = "Phải nhập mật khẩu!";
-            } else {
-                if (strlen($filterAll['password']) < 8) {
-                    $errors['password']['length'] = "Mật khẩu phải có tối thiểu 8 kí tự";
-                }
-            }
+            $errors = UserBUS::getInstance()->validateResetPassword($filterAll['password'], $filterAll['password_confirm']);
 
-            // Validate confirm password: required, giống password
-            if (empty($filterAll['password_confirm'])) {
-                $errors['password_confirm']['required'] = "Phải nhập lại mật khẩu!";
-            } else {
-                if (!($filterAll['password_confirm'] == $filterAll['password'])) {
-                    $errors['password_confirm']['match'] = "Mật khẩu nhập lại không đúng!";
-                }
-            }
-
-
-            // Phải $session->setFlash vì nếu không set thì sau khi reload (redirect) sẽ mất
+            // Phải setFlashData vì nếu không set thì sau khi reload (redirect) sẽ mất
             // Đây là một trong những chức năng của session
             if (empty($errors)) {
                 // Xử lí việc update mật khẩu
                 $passwordHash = password_hash($filterAll['password'], PASSWORD_DEFAULT);
 
-                $dataUpdate = [
-                    'password' => $passwordHash,
-                    'forgotToken' => null,
-                    'update_at' => date('Y-m-d H:i:s')
-                ];
-
-                $session = new session();
-                $updateStatus = update('user', $dataUpdate, "id = $tokenQuery[id]");
+                $userQuery->setPassword($passwordHash);
+                $userQuery->setForgotToken(null);
+                $userQuery->setUpdateAt(date('Y-m-d H:i:s'));
+                $updateStatus = UserBUS::getInstance()->updateModel($userQuery);
                 if ($updateStatus) {
-                    $session->setFlash('msg', 'Thay đổi mật khẩu thành công!!!');
-                    $session->setFlash('msg_type', 'success');
+                    setFlashData('msg', 'Thay đổi mật khẩu thành công!!!');
+                    setFlashData('msg_type', 'success');
                     redirect('?module=auth&action=login');
                 } else {
-                    $session->setFlash('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
-                    $session->setFlash('msg_type', 'danger');
+                    setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
+                    setFlashData('msg_type', 'danger');
                 }
             } else {
-                $session->setFlash('msg', 'Vui lòng kiểm tra lại dữ liệu!');
-                $session->setFlash('msg_type', 'danger');
-                $session->setFlash('errors', $errors);
+                setFlashData('msg', 'Vui lòng kiểm tra lại dữ liệu!');
+                setFlashData('msg_type', 'danger');
+                setFlashData('errors', $errors);
                 redirect("?module=auth&action=reset&token=$token");
             }
         }
-        $session = new session();
-
-        $msg = $session->getFlash('msg');
-        $msg_type = $session->getFlash('msg_type');
-        $errors = $session->getFlash('errors');
+        $msg = getFlashData('msg');
+        $msg_type = getFlashData('msg_type');
+        $errors = getFlashData('errors');
 ?>
         <!-- Bảng đặt lại mật khẩu -->
         <div class="row">
             <div class="col-4" style="margin: 24px auto;">
-                <form action="" method="post">
+                <form class="cw" action="" method="post">
                     <h2 style="text-align:center; text-transform: uppercase;">Đặt lại mật khấu</h2>
                     <?php if (!empty($msg)) {
                         getMsg($msg, $msg_type);
@@ -100,14 +76,14 @@ if (!empty($token)) {
                         <?php echo formError('password', $errors) ?>
                     </div>
 
-                    <div class="form-group mg-form">
+                    <div class="form-group mg-form mt-2">
                         <label for="">Nhập lại mật khẩu</label>
                         <input name="password_confirm" class="form-control" type="password" placeholder="Nhập lại mật khẩu...">
                         <?php echo formError('password_confirm', $errors) ?>
                     </div>
 
                     <input type="hidden" name="token" value="<?php echo $token ?>">
-                    <button type="submit" class="btn btn-primary btn-block mg-form" style="width:100%;">Gửi</button>
+                    <button type="submit" class="btn btn-primary btn-block mg-form mt-3" style="width:100%;">Gửi</button>
                     <hr>
                     <p class="text-center"><a href="?module=auth&action=login">Đăng nhập</a></p>
                 </form>
@@ -124,6 +100,6 @@ if (!empty($token)) {
 ?>
 
 <?php
-layouts('footer-login', $data);
+layouts('footer', $data);
 
 ?>

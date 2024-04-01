@@ -38,8 +38,29 @@ class UserBUS implements BUSInterface
 
     public function getModelByEmail(string $email)
     {
+        $this->userList = UserDAO::getInstance()->getAll();
         for ($i = 0; $i < count($this->userList); $i++) {
             if ($this->userList[$i]->getEmail() === $email) {
+                return $this->userList[$i];
+            }
+        }
+        return null;
+    }
+
+    public function getModelByActiveToken(string $token) {
+        $this->userList = UserDAO::getInstance()->getAll();
+        for ($i = 0; $i < count($this->userList); $i++) {
+            if ($this->userList[$i]->getActiveToken() === $token) {
+                return $this->userList[$i];
+            }
+        }
+        return null;
+    }
+
+    public function getModelByForgotToken(string $token) {
+        $this->userList = UserDAO::getInstance()->getAll();
+        for ($i = 0; $i < count($this->userList); $i++) {
+            if ($this->userList[$i]->getForgotToken() === $token) {
                 return $this->userList[$i];
             }
         }
@@ -92,58 +113,62 @@ class UserBUS implements BUSInterface
 
         // Check for required fields:
         if ($userModel->getUsername() == null || trim($userModel->getUsername()) == "") {
-            $errors[] = "Username is required";
+            $errors['username']['required'] = "Username is required";
         }
 
         if ($userModel->getPassword() == null || trim($userModel->getPassword()) == "") {
-            $errors[] = "Password is required";
+            $errors['password']['required'] = "Password is required";
         }
 
         if ($userModel->getEmail() == null || trim($userModel->getEmail()) == "") {
-            $errors[] = "Email is required";
+            $errors['email']['required'] = "Email is required";
         }
 
         if ($userModel->getName() == null || trim($userModel->getName()) ==  "") {
-            $errors[] = "Name is required";
+            $errors['fullname']['required'] = "Name is required";
+        }
+
+        if ($userModel->getGender() == null || trim($userModel->getGender()) == "") {
+            $errors['gender']['required'] = "Gender is required";
         }
 
         // Check for possibly taken properties in database:
         if ($this->isUsernameTaken($userModel->getUsername())) {
-            $errors[] = "Username is taken";
+            $errors['username']['taken'] = "Username is taken";
         }
 
         if ($this->isEmailTaken($userModel->getEmail())) {
-            $errors[] = "Email is taken";
+            $errors['email']['taken'] = "Email is taken";
         }
 
         if ($this->isPhoneTaken($userModel->getPhone())) {
-            $errors[] = "Phone number is taken";
+            $errors['phone']['taken'] = "Phone number is taken";
         }
 
         // Validate username and password
         if (!$validation->isValidUsername($userModel->getUsername())) {
-            $errors[] = "Invalid username";
+            $errors['username']['valid'] = "Invalid username";
         }
 
         if (!$validation->isValidPassword($userModel->getPassword())) {
-            $errors[] = "Invalid password";
+            $errors['password']['valid'] = "Invalid password";
         }
 
         if (strlen($userModel->getPassword()) < 8) {
-            $errors[] = "Password must be at least 8 characters";
+            $errors['password']['min-length'] = "Password must be at least 8 characters";
         }
 
         // Validate email and name
         if (!$validation->isValidEmail($userModel->getEmail())) {
-            $errors[] = "Invalid email";
+            $errors['email']['valid'] = "Invalid email";
         }
 
         if (!$validation->isValidName($userModel->getName())) {
-            $errors[] = "Invalid name";
+            $errors['fullname']['valid'] = "Invalid name";
         }
 
         if (strlen($userModel->getName()) < 6) {
-            $errors[] = "Name must be at least 6 characters";
+            $errors['fullname']['min-length'] = "Name must be at least 6 characters";
         }
 
         // Validate role
@@ -164,24 +189,40 @@ class UserBUS implements BUSInterface
 
         // Validate phone number and address
         if ($userModel->getPhone() !== null && !$validation->isValidPhoneNumber($userModel->getPhone())) {
-            $errors[] = "Invalid phone number";
+            $errors['phone']['valid'] = "Invalid phone number";
         }
 
         if ($userModel->getAddress() !== null && !$validation->isValidAddress($userModel->getAddress())) {
-            $errors[] = "Invalid address";
+            $errors['address']['valid'] = "Invalid address";
         }
 
         if ($userModel->getImage() === null) {
             // TODO: set default image, need a proper implementation.
         }
 
-        if (count($errors) > 0) {
-            //Output the error on and return error number count:
-            foreach ($errors as $error) {
-                echo $error . "<br>";
-            }
+        return $errors;
+    }
+
+    public function validateResetPassword($password, $password_confirm) {
+        $validation = Validation::getInstance();
+        $errors = [];
+
+        if ($password == null || trim($password) == "") {
+            $errors['password']['required'] = "Password is required";
         }
-        return count($errors);
+
+        if (!$validation->isValidPassword($password)) {
+            $errors['password']['valid'] = "Invalid password";
+        }
+
+        if (strlen($password) < 8) {
+            $errors['password']['min-length'] = "Password must be at least 8 characters";
+        }
+
+        if ($password != $password_confirm) {
+            $errors['password_confirm']['match'] = "Passwords do not match";
+        }
+        return $errors;
     }
 
     public function isUsernameTaken($username)

@@ -4,17 +4,16 @@ session_start();
 // require config
 require __DIR__ . '/config.php';
 
-// Thư viện PHP Mailer
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+require_once __DIR__ . '/includes/phpmailer/Exception.php';
+require_once __DIR__ . '/includes/phpmailer/PHPMailer.php';
+require_once __DIR__ . '/includes/phpmailer/SMTP.php';
 
 // require includes
 require __DIR__ . '/includes/function.php';
 require __DIR__ . '/includes/connect.php';
 require __DIR__ . '/includes/database.php';
+require __DIR__ . '/includes/session.php';
 require __DIR__ . '/../backend/services/session.php';
-
 
 $module = _MODULE;
 $action = _ACTION;

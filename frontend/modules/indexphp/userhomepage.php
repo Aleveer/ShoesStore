@@ -14,9 +14,9 @@ require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'header' . '.php';
 
 // Kiểm tra trạng thái đăng nhập
 
-if (isLogin()) {
-    redirect('?module=indexphp&action=userhomepage');
-}
+// if (!isLogin()) {
+//     redirect('?module=indexphp&action=userhomepage');
+// }
 
 ?>
 <!-- Header -->

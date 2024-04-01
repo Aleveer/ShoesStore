@@ -3,8 +3,7 @@
 <!-- Đăng nhập tài khoản -->
 
 <?php
-require_once __DIR__.'/../../../backend/bus/user_bus.php';
-use services\session;
+require_once __DIR__ . '/../../../backend/bus/user_bus.php';
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -15,11 +14,11 @@ $data = [
 ];
 
 // Đã nhúng file function.php bên index.php
-layouts('header-login', $data);
+layouts('header', $data);
 
 // Kiểm tra trạng thái đăng nhập
 if (isLogin()) {
-    redirect('?module=home&action=dashboard');
+    redirect('?module=indexphp&action=userhomepage');
 } else {
     if (isPost()) {
         $filterAll = filter();
@@ -27,33 +26,54 @@ if (isLogin()) {
             $email = $filterAll['email'];
             $userQuery = UserBUS::getInstance()->getModelByEmail($email);
             if (!empty($userQuery)) {
-                $userId = $userQuery->getId();
-                $_SESSION['forgotUserId'] = $userId;
-                redirect('?module=auth&action=reset');
+                // Tạo forgotToken
+                $forgotToken = sha1(uniqid() . time());
+
+                $userQuery->setForgotToken($forgotToken);
+                $updateStatus = UserBUS::getInstance()->updateModel($userQuery);
+
+                if ($updateStatus) {
+                    // Tạo link khôi phục mật khẩu
+                    $linkReset = _WEB_HOST . '?module=auth&action=reset&token=' . $forgotToken;
+
+                    $subject = 'Yêu cầu khôi phục mật khẩu!';
+                    $content = 'Chào bạn! <br/>';
+                    $content .= 'Chúng tôi nhận được yêu cầu khôi phục mật khẩu từ bạn, vui lòng click vào link sau để đổi lại mật khẩu: <br/>';
+                    $content .= $linkReset . '<br/>';
+                    $content .= 'Trân trọng cảm ơn!!';
+
+                    $sendMailStatus = sendMail($email, $subject, $content);
+                    if ($sendMailStatus) {
+                        setFlashData('msg', 'Vui lòng kiểm tra email để đặt lại mật khẩu!');
+                        setFlashData('msg_type', 'success');
+                    } else {
+                        setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!(email)');
+                        setFlashData('msg_type', 'danger');
+                    }
+                } else {
+                    setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
+                    setFlashData('msg_type', 'danger');
+                }
             } else {
-                $session = new session();
-                $session->setFlash('msg', 'Tài khoản không tồn tại!');
-                $session->setFlash('msg_type', 'danger');
-                redirect('?module=auth&action=forgot');
+                setFlashData('msg', 'Tài khoản không tồn tại!');
+                setFlashData('msg_type', 'danger');
             }
         } else {
             // Email not provided, display error message
-            $session = new session();
-            $session->setFlash('msg', 'Vui lòng nhập địa chỉ email!');
-            $session->setFlash('msg_type', 'danger');
-            redirect('?module=auth&action=forgot');
+            setFlashData('msg', 'Vui lòng nhập địa chỉ email!');
+            setFlashData('msg_type', 'danger');
         }
+        redirect('?module=auth&action=forgot');
     }
 }
 
-$session = new session();
-$msg = $session->getFlash('msg');
-$msgType = $session->getFlash('msg_type');
+$msg = getFlashData('msg');
+$msgType = getFlashData('msg_type');
 
 ?>
 
 <div class="row">
-    <div class="col-4" style="margin:50px auto;">
+    <div class="cw col-4" style="margin:50px auto;">
         <h2 style="text-align: center; text-transform: uppercase;">Quên mật khẩu</h2>
         <?php
         if (!empty($msg)) {
@@ -64,7 +84,7 @@ $msgType = $session->getFlash('msg_type');
                 <label for="">Email</label>
                 <input name="email" type="email" class="form-control" placeholder="Địa chỉ Email...">
             </div>
-            <button type="submit" class="btn btn-primary btn-block mg-form" style="width:100%;">Gửi</button>
+            <button type="submit" class="btn btn-primary btn-block mg-form mt-3" style="width:100%;">Gửi</button>
             <hr>
             <p class="text-center"><a href="?module=auth&action=login">Đăng nhập</a></p>
             <p class="text-center"><a href="?module=auth&action=register">Đăng kí tài khoản</a></p>
@@ -73,5 +93,5 @@ $msgType = $session->getFlash('msg_type');
 </div>
 
 <?php
-layouts('footer-login');
+layouts('footer');
 ?>

@@ -64,14 +64,30 @@
     </div>
 
     <div class="user header__content__item" style="height:100%">
-        <!-- <a href="#">
-            <img class="user__image" src="<?php echo _WEB_HOST_TEMPLATE ?>/images/avt.png" alt="">
-            <i class="fa-solid fa-chevron-down user__dropdown"></i>
-        </a>
-        <ul class="user__dropdown__menu">
-            
-        </ul> -->
-        <a class="btn btn-primary" href="?module=auth&action=login">Đăng nhập</a>
-        <a class="btn btn-primary ml8" href="?module=auth&action=register">Đăng ký</a>
+        <?php
+        if (isLogin()) :
+        ?>
+            <div class="user__logo" onclick="showDetailUser()">
+                <img class="user__image" src="<?php echo _WEB_HOST_TEMPLATE ?>/images/avt.png" alt="">
+                <i class="fa-solid fa-angle-down user__dropdown"></i>
+                <ul class="user__dropdown__menu hide">
+                    <li class="user__dropdown__menu__item">
+                        <a href="#">Thông tin</a>
+                    </li>
+                    <li class="user__dropdown__menu__item">
+                        <a href="?module=auth&action=logout">Đăng xuất</a>
+                    </li>
+                </ul>
+            </div>
+
+        <?php
+        else :
+        ?>
+            <a class="btn btn-primary" href="?module=auth&action=login">Đăng nhập</a>
+            <a class="btn btn-primary ml8" href="?module=auth&action=register">Đăng ký</a>
+        <?php
+        endif;
+        ?>
+
     </div>
 </div>

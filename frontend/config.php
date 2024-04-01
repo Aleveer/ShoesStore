@@ -20,4 +20,3 @@ define('_WEB_PATH', __DIR__);
 define('_WEB_PATH_TEMPLATE', _WEB_PATH . '/templates');
 
 
-

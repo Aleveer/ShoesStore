@@ -810,3 +810,26 @@ COMMIT;
 
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
 ;
+
+
+ALTER TABLE `users` 
+ADD COLUMN forgotToken VARCHAR(100);
+
+ALTER TABLE `users` 
+ADD COLUMN activeToken VARCHAR(100);
+
+ALTER TABLE `users`
+ADD COLUMN create_at DATETIME;
+
+ALTER TABLE `users`
+ADD COLUMN update_at DATETIME;
+
+
+CREATE TABLE tokenLogin(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	user_id INT,
+	token VARCHAR(100),
+	create_at DATETIME
+);
+
+ALTER TABLE tokenLogin ADD CONSTRAINT FK_tokenLogin_user FOREIGN KEY (user_id) REFERENCES `users`(id);

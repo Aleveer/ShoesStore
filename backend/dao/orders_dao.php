@@ -29,7 +29,7 @@ class OrdersDAO implements DAOInterface
         $customerId = $rs['customer_id'];
         $userId = $rs['user_id'];
         $orderDate = $rs['order_date'];
-        $totalAmount = $rs['   total_amount'];
+        $totalAmount = $rs['total_amount'];
         return new OrdersModel($id, $customerId, $userId, $orderDate, $totalAmount);
     }
 

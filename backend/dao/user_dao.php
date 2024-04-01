@@ -38,7 +38,11 @@ class UserDAO implements DAOInterface
         $roleId = $rs['role_id'];
         $address = $rs['address'];
         $status = strtoupper($rs['status']);
-        return new UserModel($id, $username, $password, $email, $name, $phone, $gender, $image, $roleId, $status, $address);
+        $forgotToken = $rs['forgotToken'];
+        $activeToken = $rs['activeToken'];
+        $create_at = $rs['create_at'];
+        $update_at = $rs['update_at'];
+        return new UserModel($id, $username, $password, $email, $name, $phone, $gender, $image, $roleId, $status, $address, $forgotToken, $activeToken, $create_at, $update_at);
     }
 
     public function getAll(): array
@@ -67,25 +71,7 @@ class UserDAO implements DAOInterface
 
     public function insert($user): int
     {
-        $insertSql = "INSERT INTO users (username, password, email, name, phone, gender, image, role_id, address, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $args = [
-            $user->getUsername(),
-            $user->getPassword(),
-            $user->getEmail(),
-            $user->getName(),
-            $user->getPhone(),
-            $user->getGender(),
-            $user->getImage(),
-            $user->getRoleId(),
-            $user->getAddress(),
-            strtoupper($user->getStatus())
-        ];
-        return DatabaseConnection::executeUpdate($insertSql, ...$args);
-    }
-
-    public function update($user): int
-    {
-        $updateSql = "UPDATE users SET username = ?, password = ?, email = ?, name = ?, phone = ?, gender = ?, image = ?, role_id = ?, address = ?, status = ? WHERE id = ?";
+        $insertSql = "INSERT INTO users (username, password, email, name, phone, gender, image, role_id, address, status, forgotToken, activeToken, create_at, update_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $args = [
             $user->getUsername(),
             $user->getPassword(),
@@ -97,6 +83,32 @@ class UserDAO implements DAOInterface
             $user->getRoleId(),
             $user->getAddress(),
             strtoupper($user->getStatus()),
+            $user->getForgotToken(),
+            $user->getActiveToken(),
+            $user->getCreateAt(),
+            $user->getUpdateAt()
+        ];
+        return DatabaseConnection::executeUpdate($insertSql, ...$args);
+    }
+
+    public function update($user): int
+    {
+        $updateSql = "UPDATE users SET username = ?, password = ?, email = ?, name = ?, phone = ?, gender = ?, image = ?, role_id = ?, address = ?, status = ?, forgotToken = ?, activeToken = ?, create_at = ?, update_at = ? WHERE id = ?";
+        $args = [
+            $user->getUsername(),
+            $user->getPassword(),
+            $user->getEmail(),
+            $user->getName(),
+            $user->getPhone(),
+            $user->getGender(),
+            $user->getImage(),
+            $user->getRoleId(),
+            $user->getAddress(),
+            strtoupper($user->getStatus()),
+            $user->getForgotToken(),
+            $user->getActiveToken(),
+            $user->getCreateAt(),
+            $user->getUpdateAt(),
             $user->getId()
         ];
         return DatabaseConnection::executeUpdate($updateSql, ...$args);

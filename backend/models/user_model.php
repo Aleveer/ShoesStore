@@ -13,8 +13,12 @@ class UserModel
     private $roleId;
     private $status;
     private $address;
+    private $forgotToken;
+    private $activeToken;
+    private $create_at;
+    private $update_at;
 
-    public function __construct($id, $username, $password, $email, $name, $phone, $gender, $image, $roleId, $status, $address)
+    public function __construct($id, $username, $password, $email, $name, $phone, $gender, $image, $roleId, $status, $address, $forgotToken, $activeToken, $create_at, $update_at)
     {
         $this->id = $id;
         $this->username = $username;
@@ -27,6 +31,10 @@ class UserModel
         $this->roleId = $roleId;
         $this->status = $status;
         $this->address = $address;
+        $this->forgotToken = $forgotToken;
+        $this->activeToken = $activeToken;
+        $this->create_at = $create_at;
+        $this->update_at = $update_at;
     }
 
     public function getId()
@@ -137,5 +145,37 @@ class UserModel
     public function setAddress($address)
     {
         $this->address = $address;
+    }
+
+    public function getForgotToken() {
+        return $this->forgotToken;
+    }
+
+    public function setForgotToken($forgotToken) {
+        $this->forgotToken = $forgotToken;
+    }
+
+    public function getActiveToken() {
+        return $this->activeToken;
+    }
+
+    public function setActiveToken($activeToken) {
+        $this->activeToken = $activeToken;
+    }
+
+    public function getCreateAt() {
+        return $this->create_at;
+    }
+
+    public function setCreateAt($create_at) {
+        $this->create_at = $create_at;
+    }
+
+    public function getUpdateAt() {
+        return $this->update_at;
+    }
+
+    public function setUpdateAt($update_at) {
+        $this->update_at = $update_at;
     }
 }

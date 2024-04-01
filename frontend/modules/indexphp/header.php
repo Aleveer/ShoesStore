@@ -23,20 +23,6 @@
         </li>
         <li class="navbar__item">
             <a href="#">
-                News
-                <i class="fa-sharp fa-solid fa-caret-down navbar__item__icon"></i>
-            </a>
-            <ul class="navbar__item__subnav">
-                <li class="navbar__item__subnav__subitem">
-                    <a href="#">News Archive</a>
-                </li>
-                <li class="navbar__item__subnav__subitem">
-                    <a href="#">Single News</a>
-                </li>
-            </ul>
-        </li>
-        <li class="navbar__item">
-            <a href="#">
                 Pages
                 <i class="fa-sharp fa-solid fa-caret-down navbar__item__icon"></i>
             </a>
@@ -46,9 +32,6 @@
                 </li>
                 <li class="navbar__item__subnav__subitem">
                     <a href="#">FAQ</a>
-                </li>
-                <li class="navbar__item__subnav__subitem">
-                    <a href="#">404 Page</a>
                 </li>
             </ul>
         </li>

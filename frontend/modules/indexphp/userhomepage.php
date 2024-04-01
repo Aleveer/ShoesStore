@@ -21,7 +21,7 @@ require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'header' . '.php';
 ?>
 <!-- Header -->
 <div id="header">
-    <?php require("navigatormenu.php") ?>
+    <?php require("header.php") ?>
 </div>
 
 
@@ -35,8 +35,6 @@ require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'header' . '.php';
 <div id="content">
     <?php require("navigatorcontent.php") ?>
 </div>
-
-
 
 <?php
 layouts('footer');

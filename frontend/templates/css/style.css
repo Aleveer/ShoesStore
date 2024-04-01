@@ -311,14 +311,19 @@ h1:hover {
 
 #content {
     height: auto;
+<<<<<<< HEAD
 
+=======
+    margin-top: 10px;
+>>>>>>> bc956d361e507c4ce66f5f1c68020c5d78db4db7
 }
 
 .text__content {
     display: flex;
     font-size: 18px;
     font-weight: 500;
-    height: 50px;
+    height: 60px;
+    padding-top: 20px;
     color: rgb(43, 40, 40);
     align-items: center;
     justify-content: center;

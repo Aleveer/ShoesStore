@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class ProductModel
 {
     private $id, $name, $categoryId, $price, $description, $image, $gender;

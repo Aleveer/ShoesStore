@@ -1,7 +1,13 @@
 <?php
-require_once(__DIR__ . "/../interfaces/dao_interface.php");
-require_once(__DIR__ . "/../models/user_model.php");
-require_once(__DIR__ . "/../dao/database_connection.php");
+
+namespace backend\dao;
+
+use Exception;
+use backend\interfaces\DAOInterface;
+use InvalidArgumentException;
+use backend\models\UserModel;
+use backend\services\DatabaseConnection;
+
 class UserDAO implements DAOInterface
 {
     private static $instance;

@@ -1,11 +1,16 @@
 <?php
-require_once(__DIR__ . "/../dao/user_permission_dao.php");
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../models/user_permission_model.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use backend\dao\UserPermissionDAO;
+
 class UserPermissionBUS implements BUSInterface
 {
     private $userPermissionList = array();
+
     private static $instance;
+
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -13,22 +18,27 @@ class UserPermissionBUS implements BUSInterface
         }
         return self::$instance;
     }
+
     private function __construct()
     {
         $this->userPermissionList = UserPermissionDAO::getInstance()->getAll();
     }
+
     public function getAllModels(): array
     {
         return $this->userPermissionList;
     }
+
     public function refreshData(): void
     {
         $this->userPermissionList = UserPermissionDAO::getInstance()->getAll();
     }
+
     public function getModelById(int $id)
     {
         return UserPermissionDAO::getInstance()->getById($id);
     }
+
     public function addModel($userPermissionModel): int
     {
         $this->validateModel($userPermissionModel);
@@ -39,6 +49,7 @@ class UserPermissionBUS implements BUSInterface
         }
         return $result;
     }
+
     public function updateModel($userPermissionModel): int
     {
         $this->validateModel($userPermissionModel);
@@ -50,6 +61,7 @@ class UserPermissionBUS implements BUSInterface
         }
         return $result;
     }
+
     public function deleteModel($userPermissionModel): int
     {
         $result = UserPermissionDAO::getInstance()->delete($userPermissionModel);

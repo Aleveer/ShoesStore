@@ -1,7 +1,11 @@
 <?php
-require_once(__DIR__ . "/../models/size_model.php");
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../dao/size_dao.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use backend\dao\SizeDAO;
+use Exception;
+
 class SizeBUS implements BUSInterface
 {
     private $sizeList = array();
@@ -74,7 +78,6 @@ class SizeBUS implements BUSInterface
         return true;
     }
 
-    //Note: Pass by name:
     public function getModelBySize($size)
     {
         $result = array();

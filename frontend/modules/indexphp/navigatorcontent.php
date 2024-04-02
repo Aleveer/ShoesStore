@@ -1,10 +1,6 @@
 <?php
-require_once __DIR__ . "/../../../backend/bus/product_bus.php";
-//require_once __DIR__ . "/../backend/bus/size_items_bus.php";
-require_once __DIR__ . "/../../../backend/models/product_model.php";
-
+use backend\bus\ProductBUS;
 $products = ProductBUS::getInstance()->getAllModels();
-//$sizeItemsProduct = SizeItemsBUS::getInstance()->getAllModels();
 ?>
 
 <div class="container">

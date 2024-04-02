@@ -1,5 +1,5 @@
 <?php
-
+namespace backend\models;
 class UserModel
 {
     private $id;

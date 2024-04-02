@@ -1,7 +1,12 @@
 <?php
-require_once(__DIR__ . "/../../backend/dao/permission_dao.php");
-require_once(__DIR__ . "/../../backend/interfaces/bus_interface.php");
-require_once(__DIR__ . "/../../backend/models/permission_model.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use backend\dao\PermissionDAO;
+use Exception;
+use backend\services\validation;
+
 class PermissionBUS implements BUSInterface
 {
     private $permissionList = array();

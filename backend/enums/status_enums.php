@@ -1,4 +1,5 @@
 <?php
+namespace backend\enums;
 class StatusEnums
 {
     const ACTIVE = 1;

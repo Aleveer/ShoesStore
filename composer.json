@@ -6,9 +6,7 @@
     "phpunit/phpunit": "^11.0"
   },
   "autoload": {
-    "classmap": [
-      "backend/"
-    ]
+    "classmap": ["backend/bus", "backend/dao", "backend/models", "backend/services", "backend/interfaces", "backend/enums"]
   },
   "require": {
     "symfony/error-handler": "^7.0",

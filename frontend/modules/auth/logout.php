@@ -5,9 +5,9 @@
 if (!defined('_CODE')) {
     die('Access denied');
 }
-require_once(__DIR__ . "/../backend/bus/token_login_bus.php");
 
-use services\session;
+use backend\bus\TokenLoginBUS;
+use backend\services\session;
 
 // Xoá token trong tokenLogin trong DB, đồng thời xoá token trong session khi đăng nhập tạo ra
 if (isLogin()) {

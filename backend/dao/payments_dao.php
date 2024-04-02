@@ -1,7 +1,12 @@
 <?php
-require_once(__DIR__ . "/../interfaces/dao_interface.php");
-require_once(__DIR__ . "/../models/payments_model.php");
-require_once(__DIR__ . "/../dao/database_connection.php");
+
+namespace backend\dao;
+
+use Exception;
+use backend\interfaces\DAOInterface;
+use InvalidArgumentException;
+use backend\models\PaymentsModel;
+use backend\services\DatabaseConnection;
 
 class PaymentsDAO implements DAOInterface
 {

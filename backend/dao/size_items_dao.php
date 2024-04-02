@@ -1,7 +1,12 @@
 <?php
-require_once(__DIR__ . "/../dao/database_connection.php");
-require_once(__DIR__ . "/../models/size_items_model.php");
-require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
+namespace backend\dao;
+
+use Exception;
+use backend\interfaces\DAOInterface;
+use InvalidArgumentException;
+use backend\models\SizeItemsModel;
+use backend\services\DatabaseConnection;
 
 class SizeItemsDAO implements DAOInterface
 {

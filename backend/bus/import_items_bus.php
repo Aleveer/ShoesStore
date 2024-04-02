@@ -1,7 +1,10 @@
 <?php
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../models/import_items_model.php");
-require_once(__DIR__ . "/../dao/import_items_dao.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use backend\dao\ImportItemsDAO;
+use Exception;
 
 class ImportItemsBUS implements BUSInterface
 {
@@ -33,12 +36,6 @@ class ImportItemsBUS implements BUSInterface
 
     public function getModelById(int $id)
     {
-        // foreach ($this->importItemsList as $importItems) {
-        //     if ($importItems->getId() == $id) {
-        //         return $importItems;
-        //     }
-        // }
-        // return null;
         return ImportItemsDAO::getInstance()->getById($id);
     }
 

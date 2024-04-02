@@ -1,7 +1,12 @@
 <?php
-require_once(__DIR__ . "/../dao/database_connection.php");
-require_once(__DIR__ . "/../models/token_login_model.php");
-require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
+namespace backend\dao;
+
+use Exception;
+use backend\interfaces\DAOInterface;
+use InvalidArgumentException;
+use backend\models\TokenLoginModel;
+use backend\services\DatabaseConnection;
 
 class TokenLoginDAO implements DAOInterface
 {
@@ -49,7 +54,8 @@ class TokenLoginDAO implements DAOInterface
         return $tokenLoginList;
     }
 
-    public function getById(int $id) {
+    public function getById(int $id)
+    {
         $query = "SELECT * FROM tokenlogin WHERE id = ?";
         $rs = DatabaseConnection::executeQuery($query, $id);
 

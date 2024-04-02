@@ -1,18 +1,22 @@
 <?php
 
-use services\session;
+// use services\validation;
+// use services\session;
+// use BUS\UserBUS;
+// use Models\UserModel;
+// use Enums\StatusEnums;
+// use Enums\RolesEnums;
+// use services\PasswordUtilities;
 
-require_once __DIR__ . '/../../../backend/services/validation.php';
-require_once __DIR__ . '/../../../backend/services/session.php';
-require_once __DIR__ . '/../../../backend/bus/user_bus.php';
-require_once __DIR__ . '/../../../backend/models/user_model.php';
-require_once __DIR__ . '/../../../backend/enums/status_enums.php';
-require_once __DIR__ . '/../../../backend/enums/roles_enums.php';
-require_once __DIR__ . '/../../../backend/services/password-utilities.php';
+use backend\services\session;
+use backend\bus\UserBUS;
+use backend\Enums\StatusEnums;
+use backend\Models\UserModel;
 
 if (!defined('_CODE')) {
     die('Access denied');
 }
+
 if (isPost()) {
     $filterAll = filter();
     $userModel = new UserModel(

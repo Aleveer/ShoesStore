@@ -1,7 +1,10 @@
 <?php
-require_once(__DIR__ . "/../dao/carts_dao.php");
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../models/carts_model.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use InvalidArgumentException;
+use backend\dao\CartsDAO;
 
 class CartsBUS implements BUSInterface
 {

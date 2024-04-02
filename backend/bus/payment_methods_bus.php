@@ -1,7 +1,9 @@
 <?php
-require_once(__DIR__ . "/../dao/database_connection.php");
-require_once(__DIR__ . "/../models/payment_method_model.php");
-require_once(__DIR__ . "/../interfaces/dao_interface.php");
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use backend\dao\PaymentMethodsDAO;
+use Exception;
 
 class PaymentMethodsBUS implements BUSInterface
 {

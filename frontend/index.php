@@ -1,20 +1,17 @@
 <?php
 session_start();
-
 // require config
 require __DIR__ . '/config.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-require_once __DIR__ . '/includes/phpmailer/Exception.php';
-require_once __DIR__ . '/includes/phpmailer/PHPMailer.php';
-require_once __DIR__ . '/includes/phpmailer/SMTP.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+use backend\services\session;
 
 // require includes
 require __DIR__ . '/includes/function.php';
-require __DIR__ . '/includes/connect.php';
-require __DIR__ . '/includes/database.php';
-require __DIR__ . '/includes/session.php';
-require __DIR__ . '/../backend/services/session.php';
-
+require __DIR__ . '/../vendor/autoload.php';
 $module = _MODULE;
 $action = _ACTION;
 

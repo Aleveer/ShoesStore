@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class SizeItemsModel
 {
     private $id;

@@ -1,4 +1,9 @@
 <?php
+namespace backend\services;
+
+use Exception;
+use mysqli;
+
 class DatabaseConnection
 {
     private $connection = null;

@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class ImportItemsModel
 {
     private $id, $importId, $productId, $sizeId, $quantity, $price;

@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class ReviewModel
 {
     private $id, $userId, $productId, $content, $rating;

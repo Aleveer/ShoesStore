@@ -1,14 +1,20 @@
 <!-- reset password -->
 <?php
 
-use services\session;
-
-require_once(__DIR__ . "/../../../backend/services/validation.php");
-require_once(__DIR__ . "/../../../backend/bus/user_bus.php");
-require_once(__DIR__ . "/../../../backend/models/user_model.php");
-require_once(__DIR__ . "/../../../backend/enums/status_enums.php");
-require_once(__DIR__ . "/../../../backend/enums/roles_enums.php");
-require_once(__DIR__ . "/../../../backend/services/password-utilities.php");
+// use services\session;
+// use BUS\UserBUS;
+// use services\validation;
+// use services\PasswordUtilities;
+// use Models\UserModel;
+// use Enums\StatusEnums;
+// use Enums\RolesEnums;
+use backend\services\session; // added backend\
+use backend\BUS\UserBUS; // added backend\
+use backend\services\validation; // added backend\
+use backend\services\PasswordUtilities; // added backend\
+use backend\Models\UserModel; // added backend\
+use backend\Enums\StatusEnums; // added backend\
+use backend\Enums\RolesEnums; // added backend\
 
 if (!defined('_CODE')) {
     die('Access denied');

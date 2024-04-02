@@ -1,6 +1,6 @@
 <?php
 
-namespace services;
+namespace backend\services;
 
 if (!defined('_CODE')) {
     die('Access denied');

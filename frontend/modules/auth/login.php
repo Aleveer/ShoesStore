@@ -1,14 +1,14 @@
 <?php
 
-use services\session;
-
-require_once __DIR__ . '/../../../backend/bus/user_bus.php';
-require_once __DIR__ . '/../../../backend/bus/user_permission_bus.php';
-require_once __DIR__ . '/../../../backend/bus/permission_bus.php';
-require_once __DIR__ . '/../../../backend/bus/role_bus.php';
-require_once __DIR__ . '/../../../backend/bus/role_permissions_bus.php';
-require_once __DIR__ . '/../../../backend/bus/token_login_bus.php';
-require_once __DIR__ . '/../../../backend/services/password-utilities.php';
+use backend\bus\UserBUS;
+use backend\bus\UserPermissionBUS;
+use backend\bus\PermissionBUS;
+use backend\bus\RoleBUS;
+use backend\bus\RolePermissionBUS;
+use backend\bus\TokenLoginBUS;
+use backend\services\PasswordUtilities;
+use backend\services\session;
+use backend\models\TokenLoginModel;
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -35,7 +35,7 @@ if (isPost()) {
         //TODO: Fix weird bug that will never direct.
 
 
-        
+
         $userQuery = UserBUS::getInstance()->getModelByEmail($email);
         if (!empty($userQuery)) {
             $passwordHash = $userQuery->getPassword();
@@ -44,9 +44,8 @@ if (isPost()) {
                 // Tạo tokenLogin
                 $tokenLogin = sha1(uniqid() . time());
 
-                $loginTkn = new TokenLoginModel($userQuery->getId(), $tokenLogin, date("Y-m-d H:i:s"));
+                $loginTkn = new TokenLoginModel(0, $userQuery->getId(), $tokenLogin, date("Y-m-d H:i:s"));
                 $insertTokenLoginStatus = TokenLoginBUS::getInstance()->addModel($loginTkn);
-
 
                 if ($insertTokenLoginStatus) {
                     session::getInstance()->setSession('tokenLogin', $tokenLogin);

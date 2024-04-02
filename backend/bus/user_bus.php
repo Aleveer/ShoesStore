@@ -1,8 +1,11 @@
 <?php
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../dao/user_dao.php");
-require_once(__DIR__ . "/../models/user_model.php");
-require_once(__DIR__ . "/../../../ShoesStore/backend/services/validation.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use backend\dao\UserDAO;
+use backend\services\validation;
+
 class UserBUS implements BUSInterface
 {
     private $userList = array();
@@ -47,7 +50,8 @@ class UserBUS implements BUSInterface
         return null;
     }
 
-    public function getModelByActiveToken(string $token) {
+    public function getModelByActiveToken(string $token)
+    {
         $this->userList = UserDAO::getInstance()->getAll();
         for ($i = 0; $i < count($this->userList); $i++) {
             if ($this->userList[$i]->getActiveToken() === $token) {
@@ -57,7 +61,8 @@ class UserBUS implements BUSInterface
         return null;
     }
 
-    public function getModelByForgotToken(string $token) {
+    public function getModelByForgotToken(string $token)
+    {
         $this->userList = UserDAO::getInstance()->getAll();
         for ($i = 0; $i < count($this->userList); $i++) {
             if ($this->userList[$i]->getForgotToken() === $token) {
@@ -106,7 +111,7 @@ class UserBUS implements BUSInterface
         return UserDAO::getInstance()->search($value, $columns);
     }
 
-    public function validateModel(UserModel $userModel)
+    public function validateModel($userModel)
     {
         $validation = Validation::getInstance();
         $errors = [];
@@ -203,7 +208,8 @@ class UserBUS implements BUSInterface
         return $errors;
     }
 
-    public function validateResetPassword($password, $password_confirm) {
+    public function validateResetPassword($password, $password_confirm)
+    {
         $validation = Validation::getInstance();
         $errors = [];
 

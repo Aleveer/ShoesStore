@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class CouponsModel
 {
     private $id, $code, $quantity, $required, $percent, $expired, $description;

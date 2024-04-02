@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class CustomerModel
 {
     private $id, $name, $phone, $email;

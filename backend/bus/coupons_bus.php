@@ -1,7 +1,9 @@
 <?php
-require_once(__DIR__ . "/../dao/coupons_dao.php");
-require_once(__DIR__ . "/../../backend/models/coupons_model.php");
-require_once(__DIR__ . "/../../backend/bus/BUSInterface.php");
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use InvalidArgumentException;
+use backend\dao\CouponsDAO;
 
 class CouponsBUS implements BUSInterface
 {
@@ -80,7 +82,7 @@ class CouponsBUS implements BUSInterface
             $couponsModel->getDiscount() == null ||
             $couponsModel->getExpirationDate() == null
         ) {
-            throw new Exception("Invalid coupons model");
+            throw new InvalidArgumentException("Invalid coupons model");
         }
     }
 

@@ -1,7 +1,12 @@
 <?php
-require_once(__DIR__ . "/../dao/database_connection.php");
-require_once(__DIR__ . "/../models/role_permissions_model.php");
-require_once(__DIR__ . "/../interfaces/dao_interface.php");
+
+namespace backend\dao;
+
+use Exception;
+use backend\interfaces\DAOInterface;
+use InvalidArgumentException;
+use backend\models\RolePermissionsModel;
+use backend\services\DatabaseConnection;
 
 class RolePermissionDAO implements DAOInterface
 {

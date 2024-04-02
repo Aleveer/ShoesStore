@@ -1,12 +1,17 @@
 <?php
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../models/token_login_model.php");
-require_once(__DIR__ . "/../dao/token_login_dao.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use InvalidArgumentException;
+use backend\dao\TokenLoginDAO;
+
 class TokenLoginBUS implements BUSInterface
 {
     private $tokenLoginList = array();
     private static $instance;
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance == null) {
             self::$instance = new TokenLoginBUS();
         }
@@ -18,19 +23,23 @@ class TokenLoginBUS implements BUSInterface
         $this->refreshData();
     }
 
-    public function getAllModels() : array {
+    public function getAllModels(): array
+    {
         return $this->tokenLoginList;
     }
 
-    public function refreshData() : void {
+    public function refreshData(): void
+    {
         $this->tokenLoginList = TokenLoginDAO::getInstance()->getAll();
     }
 
-    public function getModelById(int $id) {
+    public function getModelById(int $id)
+    {
         return TokenLoginDAO::getInstance()->getById($id);
     }
 
-    public function getModelByToken(string $token) {
+    public function getModelByToken(string $token)
+    {
         $this->tokenLoginList = TokenLoginDAO::getInstance()->getAll();
         for ($i = 0; $i < count($this->tokenLoginList); $i++) {
             if ($this->tokenLoginList[$i]->getToken() === $token) {

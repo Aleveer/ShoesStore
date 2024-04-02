@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class CartsModel
 {
     private $id, $userId, $productId, $quantity, $sizeId;

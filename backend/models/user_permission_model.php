@@ -1,5 +1,7 @@
 <?php
 
+namespace backend\models;
+
 class UserPermissionModel
 {
     private $id;

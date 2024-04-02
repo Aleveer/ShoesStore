@@ -1,7 +1,11 @@
 <?php
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../models/orders_model.php");
-require_once(__DIR__ . "/../dao/orders_dao.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use InvalidArgumentException;
+use backend\dao\OrdersDAO;
+
 class OrdersBUS implements BUSInterface
 {
     private $ordersList = array();

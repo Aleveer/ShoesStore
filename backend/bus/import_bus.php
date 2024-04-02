@@ -1,7 +1,11 @@
 <?php
-require_once(__DIR__ . "/../models/import_model.php");
-require_once(__DIR__ . "/../dao/import_dao.php");
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use backend\dao\ImportDAO;
+use Exception;
+
 class ImportBUS implements BUSInterface
 {
     private $importList = array();

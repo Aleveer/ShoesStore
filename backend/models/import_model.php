@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class ImportModel
 {
     private $id, $userId, $totalPrice, $importDate;

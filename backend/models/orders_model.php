@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class OrdersModel
 {
     private $id, $customerId, $userId, $orderDate, $totalAmount;

@@ -1,7 +1,9 @@
 <?php
-require_once(__DIR__ . "/../dao/categories_dao.php");
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . "/../models/categories_model.php");
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use InvalidArgumentException;
+use backend\dao\CategoriesDAO;
 
 class CategoriesBUS implements BUSInterface
 {

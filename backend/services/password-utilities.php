@@ -1,4 +1,5 @@
 <?php
+namespace backend\services;
 class PasswordUtilities
 {
     private static $instance;

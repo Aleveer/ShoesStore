@@ -1,9 +1,9 @@
 <!-- Kích hoạt tài khoản -->
 <?php
-require_once __DIR__ . '/../../../backend/bus/user_bus.php';
-require_once __DIR__ . '/../../../backend/enums/status_enums.php';
 
-use services\session;
+use backend\bus\UserBUS;
+use backend\enums\StatusEnums;
+use backend\services\session;
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -43,6 +43,5 @@ if (!empty($token)) {
     echo 456;
     getMsg('Liên kết không tồn tại hoặc đã hết hạn', 'danger');
 }
-
 
 layouts('footer');

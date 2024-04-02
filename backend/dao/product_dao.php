@@ -1,7 +1,12 @@
 <?php
-require_once __DIR__ .'/../../backend/models/product_model.php';
-require_once __DIR__ .'/../../backend/dao/database_connection.php';
-require_once __DIR__ .'/../../backend/interfaces/dao_interface.php';
+
+namespace backend\dao;
+
+use Exception;
+use backend\interfaces\DAOInterface;
+use InvalidArgumentException;
+use backend\models\ProductModel;
+use backend\services\DatabaseConnection;
 
 class ProductDAO implements DAOInterface
 {

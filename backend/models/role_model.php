@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class RoleModel
 {
     private $id;

@@ -9,9 +9,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-use services\session;
-
-require_once __DIR__."/../backend/bus/token_login_bus.php";
+use backend\bus\TokenLoginBUS;
+use backend\services\session;
 
 // Hàm giúp nhúng header và footer nhanh hơn vào các file
 function layouts($layoutName = 'header', $data = [])

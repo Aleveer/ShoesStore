@@ -1,8 +1,11 @@
 <?php
-require_once(__DIR__ . "/../models/customer_model.php");
-require_once(__DIR__ . "/../dao/customer_dao.php");
-require_once(__DIR__ . "/../interfaces/bus_interface.php");
-require_once(__DIR__ . '/../services/validation.php');
+
+namespace backend\bus;
+
+use backend\interfaces\BUSInterface;
+use backend\dao\CustomerDAO;
+use backend\services\validation;
+
 class CustomerBUS implements BUSInterface
 {
     private $customerList = array();

@@ -1,4 +1,5 @@
 <?php
+namespace backend\models;
 class PaymentMethodModel
 {
     private $id, $methodName;

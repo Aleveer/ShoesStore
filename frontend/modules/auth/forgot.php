@@ -3,9 +3,9 @@
 <!-- Đăng nhập tài khoản -->
 
 <?php
-require_once __DIR__ . '/../../../backend/bus/user_bus.php';
 
-use services\session;
+use backend\bus\UserBUS;
+use backend\services\session;
 
 if (!defined('_CODE')) {
     die('Access denied');

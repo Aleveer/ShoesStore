@@ -1,4 +1,7 @@
 <?php
+
+namespace backend\services;
+
 class validation
 {
     private static $instance;

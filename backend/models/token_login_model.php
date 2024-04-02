@@ -1,11 +1,12 @@
 <?php
-
+namespace backend\models;
 class TokenLoginModel
 {
     private $id, $user_id, $token, $create_at;
 
-    public function __construct($user_id, $token, $create_at)
+    public function __construct($id, $user_id, $token, $create_at)
     {
+        $this->id = $id;
         $this->user_id = $user_id;
         $this->token = $token;
         $this->create_at = $create_at;

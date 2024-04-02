@@ -35,8 +35,7 @@ if (isPost()) {
     //TODO: Fix the validate model section at backend:
     $errors = UserBUS::getInstance()->validateModel($userModel);
     if ($filterAll['password_confirm'] == null || trim($filterAll['password_confirm']) == "") {
-        $errors['password_confirm']['required'] = 'Password confirm is required!';   
-
+        $errors['password_confirm']['required'] = 'Password confirm is required!';
     }
     if (!($filterAll['password_confirm'] == $filterAll['password'])) {
         $errors['password_confirm']['comfirm'] = 'Confirm password does not match!';
@@ -50,11 +49,11 @@ if (isPost()) {
         if ($insertStatus) {
             $_SESSION['registerUserId'] = $insertStatus;
             // Tạo link kích hoạt
-            $linkActive = _WEB_HOST. '?module=auth&action=active&token='.$activeToken;
+            $linkActive = _WEB_HOST . '?module=auth&action=active&token=' . $activeToken;
             // Thiết lập gửi mail
-            $subject = $filterAll['fullname']. ' vui lòng kích hoạt tài khoản!!!';
-            $content = 'Chào '. $filterAll['fullname']. '<br/>';
-            $content .= 'Vui lòng click vào đường link dưới đây để kích hoạt tài khoản:'.'<br/>';
+            $subject = $filterAll['fullname'] . ' vui lòng kích hoạt tài khoản!!!';
+            $content = 'Chào ' . $filterAll['fullname'] . '<br/>';
+            $content .= 'Vui lòng click vào đường link dưới đây để kích hoạt tài khoản:' . '<br/>';
             $content .= $linkActive . '<br/>';
             $content .= 'Trân trọng cảm ơn!!';
 
@@ -63,27 +62,27 @@ if (isPost()) {
             $sendMailStatus = sendMail($filterAll['email'], $subject, $content);
 
             if ($sendMailStatus) {
-                setFlashData('msg', 'Đăng kí thành công, vui lòng kiểm tra email để kích hoạt tài khoản!');
-                setFlashData('msg_type', 'success');
+                session::getInstance()->setFlashData('msg', 'Đăng kí thành công, vui lòng kiểm tra email để kích hoạt tài khoản!');
+                session::getInstance()->setFlashData('msg_type', 'success');
             } else {
-                setFlashData('msg', 'Hệ thống đang gặp sự cố, vui lòng thử lại sau');
-                setFlashData('msg_type', 'danger');
+                session::getInstance()->setFlashData('msg', 'Hệ thống đang gặp sự cố, vui lòng thử lại sau');
+                session::getInstance()->setFlashData('msg_type', 'danger');
             }
         }
         redirect('?module=auth&action=register');
     } else {
-        setFlashData('msg', 'Vui lòng kiểm tra lại dữ liệu!');
-        setFlashData('msg_type', 'danger');
-        setFlashData('errors', $errors);
-        setFlashData('duLieuDaNhap', $filterAll);
+        session::getInstance()->setFlashData('msg', 'Vui lòng kiểm tra lại dữ liệu!');
+        session::getInstance()->setFlashData('msg_type', 'danger');
+        session::getInstance()->setFlashData('errors', $errors);
+        session::getInstance()->setFlashData('duLieuDaNhap', $filterAll);
         redirect('?module=auth&action=register');
     }
 }
 
-$msg = getFlashData('msg'); 
-$msg_type = getFlashData('msg_type');
-$errors = getFlashData('errors');
-$duLieuDaNhap = getFlashData('duLieuDaNhap');
+$msg = session::getInstance()->getFlashData('msg');
+$msg_type = session::getInstance()->getFlashData('msg_type');
+$errors = session::getInstance()->getFlashData('errors');
+$duLieuDaNhap = session::getInstance()->getFlashData('duLieuDaNhap');
 
 $data = [
     'pageTitle' => 'Đăng ký'

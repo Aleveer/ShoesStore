@@ -2,25 +2,51 @@
 
 namespace services;
 
+if (!defined('_CODE')) {
+    die('Access denied');
+}
 class session
 {
+    private static $instance = null;
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new session();
+        }
+        return self::$instance;
+    }
+
     public function __construct()
     {
     }
 
-    public function set($key, $value)
+    public function setSession($key, $value)
     {
         return $_SESSION[$key] = $value;
     }
 
-    public function get($key)
+    function getSession($key = '')
     {
-        return $_SESSION[$key] ?? null;
+        if (empty($key)) {
+            return $_SESSION;
+        } else {
+            if (!empty($_SESSION[$key])) {
+                return $_SESSION[$key];
+            }
+        }
     }
 
-    public function remove($key)
+    function removeSession($key = '')
     {
-        unset($_SESSION[$key]);
+        if (empty($key)) {
+            session_destroy();
+            return true;
+        } else {
+            if (!empty($_SESSION[$key])) {
+                unset($_SESSION[$key]);
+                return true;
+            }
+        }
     }
 
     public function destroy()
@@ -28,16 +54,20 @@ class session
         session_destroy();
     }
 
-    public function setFlash($key, $value)
+    function setFlashData($key, $value)
     {
-        $_SESSION["_flash"][$key] = $value;
+        $key = 'flash_' . $key;
+        return $this->setSession($key, $value);
     }
 
-    public function getFlash($key)
+
+    // Hàm đọc flash data 
+    function getFlashData($key)
     {
-        $value = $_SESSION["_flash"][$key] ?? null;
-        unset($_SESSION["_flash"][$key]);
-        return $value;
+        $key = 'flash_' . $key;
+        $data = $this->getSession($key);
+        $this->removeSession($key);
+        return $data;
     }
 
     public function __destruct()
@@ -47,17 +77,17 @@ class session
 
     public function __get($name)
     {
-        return $this->get($name);
+        return $this->getSession($name);
     }
 
     public function __set($name, $value)
     {
-        $this->set($name, $value);
+        $this->setSession($name, $value);
     }
 
     public function __unset($name)
     {
-        $this->remove($name);
+        $this->removeSession($name);
     }
 
     public function __isset($name)

@@ -5,6 +5,8 @@
 <?php
 require_once __DIR__ . '/../../../backend/bus/user_bus.php';
 
+use services\session;
+
 if (!defined('_CODE')) {
     die('Access denied');
 }
@@ -44,31 +46,31 @@ if (isLogin()) {
 
                     $sendMailStatus = sendMail($email, $subject, $content);
                     if ($sendMailStatus) {
-                        setFlashData('msg', 'Vui lòng kiểm tra email để đặt lại mật khẩu!');
-                        setFlashData('msg_type', 'success');
+                        session::getInstance()->setFlashData('msg', 'Vui lòng kiểm tra email để đặt lại mật khẩu!');
+                        session::getInstance()->setFlashData('msg_type', 'success');
                     } else {
-                        setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!(email)');
-                        setFlashData('msg_type', 'danger');
+                        session::getInstance()->setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!(email)');
+                        session::getInstance()->setFlashData('msg_type', 'danger');
                     }
                 } else {
-                    setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
-                    setFlashData('msg_type', 'danger');
+                    session::getInstance()->setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
+                    session::getInstance()->setFlashData('msg_type', 'danger');
                 }
             } else {
-                setFlashData('msg', 'Tài khoản không tồn tại!');
-                setFlashData('msg_type', 'danger');
+                session::getInstance()->setFlashData('msg', 'Tài khoản không tồn tại!');
+                session::getInstance()->setFlashData('msg_type', 'danger');
             }
         } else {
             // Email not provided, display error message
-            setFlashData('msg', 'Vui lòng nhập địa chỉ email!');
-            setFlashData('msg_type', 'danger');
+            session::getInstance()->setFlashData('msg', 'Vui lòng nhập địa chỉ email!');
+            session::getInstance()->setFlashData('msg_type', 'danger');
         }
         redirect('?module=auth&action=forgot');
     }
 }
 
-$msg = getFlashData('msg');
-$msgType = getFlashData('msg_type');
+$msg = session::getInstance()->getFlashData('msg');
+$msgType = session::getInstance()->getFlashData('msg_type');
 
 ?>
 

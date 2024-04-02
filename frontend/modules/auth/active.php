@@ -2,6 +2,9 @@
 <?php
 require_once __DIR__ . '/../../../backend/bus/user_bus.php';
 require_once __DIR__ . '/../../../backend/enums/status_enums.php';
+
+use services\session;
+
 if (!defined('_CODE')) {
     die('Access denied');
 }
@@ -25,12 +28,12 @@ if (!empty($token)) {
         $updateStatus = UserBUS::getInstance()->updateModel($userQuery);
 
         if ($updateStatus) {
-            setFlashData('msg', 'Kích hoạt tài khoản thành công!');
-            setFlashData('msg_type', 'success');
+            session::getInstance()->setFlashData('msg', 'Kích hoạt tài khoản thành công!');
+            session::getInstance()->setFlashData('msg_type', 'success');
             redirect('?module=auth&action=login');
         } else {
-            setFlashData('msg', 'Kích hoạt tài khoản thất bại, vui lòng liên hệ quản trị viên!');
-            setFlashData('msg_type', 'danger');
+            session::getInstance()->setFlashData('msg', 'Kích hoạt tài khoản thất bại, vui lòng liên hệ quản trị viên!');
+            session::getInstance()->setFlashData('msg_type', 'danger');
         }
     } else {
         echo 123;

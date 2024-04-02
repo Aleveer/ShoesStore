@@ -9,6 +9,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+use services\session;
+
+require_once __DIR__."/../backend/bus/token_login_bus.php";
+
 // Hàm giúp nhúng header và footer nhanh hơn vào các file
 function layouts($layoutName = 'header', $data = [])
 {
@@ -165,16 +169,16 @@ function isLogin()
 {
     // Kiểm tra trạng thái đăng nhập
     $checkLogin = false;
-    if (getSession('tokenLogin')) {
-        $tokenLogin = getSession('tokenLogin');
+    if (session::getInstance()->getSession('tokenLogin')) {
+        $tokenLogin = session::getInstance()->getSession('tokenLogin');
 
         // Kiểm tra tokenLogin có giống token trong database không
-        $queryToken = getRow("SELECT user_id FROM tokenlogin WHERE token = '$tokenLogin'");
+        $queryToken = TokenLoginBUS::getInstance()->getModelByToken($tokenLogin);
 
         if (!empty($queryToken)) {
             $checkLogin = true;
         } else {
-            removeSession('tokenLogin');
+            session::getInstance()->removeSession('tokenLogin');
         }
     }
 

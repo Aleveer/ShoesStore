@@ -1,4 +1,7 @@
 <?php
+
+use services\session;
+
 require_once __DIR__ . '/../../../backend/bus/user_bus.php';
 require_once __DIR__ . '/../../../backend/bus/user_permission_bus.php';
 require_once __DIR__ . '/../../../backend/bus/permission_bus.php';
@@ -46,31 +49,31 @@ if (isPost()) {
 
 
                 if ($insertTokenLoginStatus) {
-                    setSession('tokenLogin', $tokenLogin);
+                    session::getInstance()->setSession('tokenLogin', $tokenLogin);
                     redirect('?module=indexphp&action=userhomepage');
                 } else {
-                    setFlashData('msg', 'Không thể đăng nhập, vui lòng thử lại sau!');
-                    setFlashData('msg_type', 'danger');
+                    session::getInstance()->setFlashData('msg', 'Không thể đăng nhập, vui lòng thử lại sau!');
+                    session::getInstance()->setFlashData('msg_type', 'danger');
                 }
             } else {
-                setFlashData('msg', 'Mật khẩu không chính xác!');
-                setFlashData('msg_type', 'danger');
+                session::getInstance()->setFlashData('msg', 'Mật khẩu không chính xác!');
+                session::getInstance()->setFlashData('msg_type', 'danger');
             }
         } else {
-            setFlashData('msg', 'Email không tồn tại!');
-            setFlashData('msg_type', 'danger');
+            session::getInstance()->setFlashData('msg', 'Email không tồn tại!');
+            session::getInstance()->setFlashData('msg_type', 'danger');
         }
     } else {
-        setFlashData('msg', 'Vui lòng nhập email và password!');
-        setFlashData('msg_type', 'danger');
+        session::getInstance()->setFlashData('msg', 'Vui lòng nhập email và password!');
+        session::getInstance()->setFlashData('msg_type', 'danger');
     }
     // redirect('?module=auth&action=login');
 }
 //header('Content-Type: application/json');
 //echo json_encode($response);
 
-$msg = getFlashData('msg');
-$msgType = getFlashData('msg_type');
+$msg = session::getInstance()->getFlashData('msg');
+$msgType = session::getInstance()->getFlashData('msg_type');
 ?>
 
 <div class="row">

@@ -1,5 +1,4 @@
 <!-- reset password -->
-<!-- TODO: FIX -->
 <?php
 
 use services\session;
@@ -21,8 +20,6 @@ layouts('header', $data);
 
 if (!empty(filter()['token'])) $token = filter()['token'];
 
-
-
 if (!empty($token)) {
     $userQuery = UserBUS::getInstance()->getModelByForgotToken($token);
     if (!empty($userQuery)) {
@@ -43,23 +40,23 @@ if (!empty($token)) {
                 $userQuery->setUpdateAt(date('Y-m-d H:i:s'));
                 $updateStatus = UserBUS::getInstance()->updateModel($userQuery);
                 if ($updateStatus) {
-                    setFlashData('msg', 'Thay đổi mật khẩu thành công!!!');
-                    setFlashData('msg_type', 'success');
+                    session::getInstance()->setFlashData('msg', 'Thay đổi mật khẩu thành công!!!');
+                    session::getInstance()->setFlashData('msg_type', 'success');
                     redirect('?module=auth&action=login');
                 } else {
-                    setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
-                    setFlashData('msg_type', 'danger');
+                    session::getInstance()->setFlashData('msg', 'Lỗi hệ thống, vui lòng thử lại sau!');
+                    session::getInstance()->setFlashData('msg_type', 'danger');
                 }
             } else {
-                setFlashData('msg', 'Vui lòng kiểm tra lại dữ liệu!');
-                setFlashData('msg_type', 'danger');
-                setFlashData('errors', $errors);
+                session::getInstance()->setFlashData('msg', 'Vui lòng kiểm tra lại dữ liệu!');
+                session::getInstance()->setFlashData('msg_type', 'danger');
+                session::getInstance()->setFlashData('errors', $errors);
                 redirect("?module=auth&action=reset&token=$token");
             }
         }
-        $msg = getFlashData('msg');
-        $msg_type = getFlashData('msg_type');
-        $errors = getFlashData('errors');
+        $msg = session::getInstance()->getFlashData('msg');
+        $msg_type = session::getInstance()->getFlashData('msg_type');
+        $errors = session::getInstance()->getFlashData('errors');
 ?>
         <!-- Bảng đặt lại mật khẩu -->
         <div class="row">

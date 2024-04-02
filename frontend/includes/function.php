@@ -106,36 +106,6 @@ function filter()
     return $filterArr;
 }
 
-// Kiểm tra email
-function isEmail($email)
-{
-    $checkMail = filter_var($email, FILTER_VALIDATE_EMAIL);
-    return $checkMail;
-}
-
-// Kiểm tra số nguyên
-function isNumberInt($number)
-{
-    $checkNumberInt = filter_var($number, FILTER_VALIDATE_INT);
-    return $checkNumberInt;
-}
-
-
-
-// Kiểm tra số thực
-function isNumberFloat($number)
-{
-    $checkNumberFloat = filter_var($number, FILTER_VALIDATE_FLOAT);
-    return $checkNumberFloat;
-}
-
-// Kiểm tra sđt
-function isPhone($phone)
-{
-    $pattern = '/^(?:\+?84|0)(?:\d){9,10}$/';
-    return preg_match($pattern, $phone);
-}
-
 // Hàm in ra message
 function getMsg($msg, $type = 'sucess')
 {

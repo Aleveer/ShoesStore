@@ -93,4 +93,17 @@ class validation
         $currentDate = date("Y-m-d");
         return $expirationDate >= $currentDate;
     }
+
+    function isNumberInt($number)
+    {
+        $checkNumberInt = filter_var($number, FILTER_VALIDATE_INT);
+        return $checkNumberInt;
+    }
+
+    // Kiểm tra số thực
+    function isNumberFloat($number)
+    {
+        $checkNumberFloat = filter_var($number, FILTER_VALIDATE_FLOAT);
+        return $checkNumberFloat;
+    }
 }

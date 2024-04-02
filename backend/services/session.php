@@ -60,7 +60,6 @@ class session
         return $this->setSession($key, $value);
     }
 
-
     // Hàm đọc flash data 
     function getFlashData($key)
     {

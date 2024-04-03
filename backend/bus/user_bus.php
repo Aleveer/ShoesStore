@@ -251,7 +251,6 @@ class UserBUS implements BUSInterface
 
     public function imageUploadHandle($userId, $imageFile)
     {
-        //TODO: May need a fix on image store location
         $target_dir = __DIR__ . "/../uploads/";
         $target_file = $target_dir . basename($imageFile["name"]);
         $uploadOk = 1;

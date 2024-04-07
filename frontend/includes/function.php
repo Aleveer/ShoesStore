@@ -13,7 +13,7 @@ use backend\bus\TokenLoginBUS;
 use backend\services\session;
 
 // Hàm giúp nhúng header và footer nhanh hơn vào các file
-function layouts($layoutName = 'header', $data = [])
+function layouts($layoutName, $data = [])
 {
     if (file_exists(_WEB_PATH_TEMPLATE . '/layouts/' . $layoutName . '.php')) {
         require_once _WEB_PATH_TEMPLATE . '/layouts/' . $layoutName . '.php';

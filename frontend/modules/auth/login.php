@@ -74,7 +74,6 @@ if (isPost()) {
 $msg = session::getInstance()->getFlashData('msg');
 $msgType = session::getInstance()->getFlashData('msg_type');
 ?>
-
 <div class="row">
     <div class="col-4" style="margin:50px auto;">
         <h2 class="cw" style="text-align: center; text-transform: uppercase;">Đăng Nhập</h2>

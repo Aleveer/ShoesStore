@@ -55,29 +55,29 @@ INSERT INTO
 VALUES
     (
         '1',
-        'Brooks Adrenaline GTS 22',
-        '1',
-        '100000',
-        'Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.',
-        '../img/Running Shoes/Brooks Adrenaline GTS 22.jpg',
+        'Converse',
+        '5',
+        '100',
+        'The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.',
+        '../img/Basketball Shoes/Converse.jpg',
         '0'
     ),
     (
         '2',
-        'Hoka Clifton 9',
-        '1',
-        '100000',
-        'Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.',
-        '../img/Running Shoes/Hoka Clifton 9.jpg',
-        '1'
+        'Nike',
+        '5',
+        '110',
+        'The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.',
+        '../img/Basketball Shoes/Nike.jpg',
+        '0'
     ),
     (
         '3',
-        'New Balance Fresh Foam',
-        '1',
+        'Fashion',
+        '5',
         '100000',
-        'Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.',
-        '../img/Running Shoes/New Balance Fresh Foam.jpg',
+        'The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.',
+        '../img/Basketball Shoes/Fashion.jpg',
         '0'
     ),
     (

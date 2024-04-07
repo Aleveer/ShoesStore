@@ -8,7 +8,8 @@ $data = [
 ];
 
 // Đã nhúng file function.php bên index.php
-require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'header' . '.php';
+// require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'header' . '.php';
+// require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'footer' . '.php';
 
 
 
@@ -21,11 +22,9 @@ require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'header' . '.php';
 ?>
 <!-- Header -->
 <div id="header">
-    <?php require("header.php") ?>
+    <?php layouts("header") ?>
 </div>
-
-
-<!-- Slider -->
+    <!-- Slider -->
 <div id="slider">
     <?php require("navigatorslider.php") ?>
 </div>
@@ -34,8 +33,15 @@ require_once _WEB_PATH_TEMPLATE . '/layouts/' . 'header' . '.php';
 <!-- Content -->
 <div id="content">
     <?php require("navigatorcontent.php") ?>
+
+
 </div>
 
-<?php
-layouts('footer');
-?>
+
+<!--Footer-->
+<div id="footer">
+<?php layouts('footer') ?>
+
+</div>
+
+

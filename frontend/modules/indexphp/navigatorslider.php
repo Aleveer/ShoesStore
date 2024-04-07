@@ -1,5 +1,5 @@
 <div class="img__background">
-  <video autoplay muted loop id="background-video" src="../images/slider.mp4"></video>
+  <video autoplay muted loop id="background-video" src="<?php echo _WEB_HOST_TEMPLATE ?> /images/slider.mp4"></video>
   <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/slider.png" alt="" class="img__slider" />
   <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/slider1.png" alt="" class="overlay__img" />
 

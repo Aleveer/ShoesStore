@@ -3,7 +3,7 @@ use backend\bus\ProductBUS;
 $products = ProductBUS::getInstance()->getAllModels();
 ?>
 
-<div class="container">
+<div class="content">
     <div class="text__content">
         <ul>
             <i class="fa-sharp fa-regular fa-square-check" style="color: #0e5fec;"></i>
@@ -27,21 +27,21 @@ $products = ProductBUS::getInstance()->getAllModels();
         <div class="wrap">
             <div class="box__area">
                 <div class="box">
-                    <img src="../picture/class11.webp" alt>
+                    <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/class1.webp" alt>
                     <div class="overlay__box">
                         <h3>RUNNING</h3>
                         <p><a href>SEE PRODUCT</a></p>
                     </div>
                 </div>
                 <div class="box">
-                    <img src="../picture/class2.jpg" alt>
+                    <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/class2.jpg" alt>
                     <div class="overlay__box">
                         <h3>WOMAN</h3>
                         <p><a href>SEE PRODUCT</a></p>
                     </div>
                 </div>
                 <div class="box">
-                    <img src="../picture/class3.jpg" alt>
+                    <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/class3.jpg" alt>
                     <div class="overlay__box">
                         <h3>MAN</h3>
                         <p><a href>SEE PRODUCT</a></p>
@@ -50,12 +50,88 @@ $products = ProductBUS::getInstance()->getAllModels();
             </div>
         </div>
     </div>
-
     <div class="list__product">
+  <div class="in__wrap">
+      <ul id="content" class="products">
+        <?php
+        for ($i = 0; $i < 3; $i++) {
+            $product = $products[$i];
+            echo '
+            <li>
+                <div class="product-item">
+                    <div>
+                        <a href>
+                            <img src="' . $product->getImage() . '" alt>
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <a href="#" class="product-name">' . $product->getName() . '</a>
+                        <div class="product-price">
+                            <ul class="price"><span>$' . $product->getPrice() . '</span>
+                                <a href="#"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
+                            </ul>
+                            <ul class="star-rating">
+                            <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                            <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                            <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                            <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                            <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                            <span>3.2k</span>
+                        </ul>
+                        </div>
+                    </div>
+            </li>
+            ';
+        }
+        ?>
+         <li>
+              <div class="hot__product" style="background: url('<?php echo _WEB_HOST_TEMPLATE ?> /images/hotproduct.jpg');">
+                  <div class="overlay__product">
+                      <h3>HOT PRODUCT</h3>
+                      <p>Lorem ipsum dolor sit amet,
+                          consectetur adipiscing
+                          elit.
+                          <br> Ut elit tellus, luctus nec
+                          ullamcorper mattis,
+                          pulvinar dapibus leo.
+                      </p>
+                      <span><a href="#">SEE MORE <i class="fa-solid fa-arrow-right"></i></a></span>
+                  </div>
+              </div>
+          </li>
+      </ul>
+  </div>
+    <div class="logo__product">
+        <span>SNEAKER</span>
+        <span>ADIDAS</span>
+        <span>NIKE</span>
+        <span>CONVERSE</span>
+    </div>
+    <div class="slider__content">
+        <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/slidercontent.webp" alt>
+        <div class="overlay__content">
+            <h2>Makes Yourself Keep SPorty & Stylish</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetuer
+                adipiscing elit.
+                Aenean commodo ligula eget dolor. Aenean
+                massa. Cum sociis natoque penatibus et
+                magnis dis parturient montes, nascetur
+                ridiculus mus.
+            </p>
+        </div>
+    </div>
+    <div class="list__product">
+        <div class="see__more">
+            <span class="title">ALL OUR PRODUCT</span>
+            <div class="divider"></div>
+            <span><a href="#">SEE MORE <i class="fa-solid fa-arrow-right"></i></a></span>
+        </div>
+
         <div class="in__wrap">
             <ul id="content" class="products">
                 <?php
-                for ($i = 0; $i < count($products); $i++) {
+                for ($i = 0; $i < 8; $i++) {
                     $product = $products[$i];
                     echo '
                     <li>
@@ -71,6 +147,14 @@ $products = ProductBUS::getInstance()->getAllModels();
                                     <ul class="price"><span>$' . $product->getPrice() . '</span>
                                         <a href="#"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
                                     </ul>
+                                    <ul class="star-rating">
+                                    <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                                    <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                                    <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                                    <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                                    <i class="fa fa-star checked" style="color: #FFD43B;"></i>
+                                    <span>2.4k</span>
+                                </ul>
                                 </div>
                             </div>
                     </li>
@@ -123,7 +207,6 @@ $products = ProductBUS::getInstance()->getAllModels();
                     </div>
                     <!-- If we need pagination -->
                     <div class="swiper-pagination"></div>
-
                 </div>
             </div>
         </div>

@@ -23,7 +23,7 @@ if (!defined('_CODE')) {
      <div id="footer" class="footer">
           <div class="in-wrap">
                <div class="footer1">
-                    <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/logo.png" alt="">
+                    <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/logoShoes.jpg" alt="">
                     <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.<br> Aenean commodo ligula eget dolor.</p>
                     <h4>Follow Us</h4>
                     <div class="footer-icon">

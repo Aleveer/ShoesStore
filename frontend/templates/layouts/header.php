@@ -23,7 +23,7 @@ if (!defined('_CODE')) {
 
 <body>
 <div class="header__logo">
-    <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/logo.png" alt="Wait a minute!!">
+    <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/logoShoes.jpg" alt="Wait a minute!!">
 </div>
 <div class="header__content">
     <ul class="navbar header__content__item">

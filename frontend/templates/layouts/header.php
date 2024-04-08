@@ -32,8 +32,8 @@ if (!defined('_CODE')) {
         </li>
         <li class="navbar__item">
             <a href="#">
-                 Shop
-                 <!-- <i class="fa-sharp fa-solid fa-caret-down navbar__item__icon"></i>  -->
+                Shop
+                <!-- <i class="fa-sharp fa-solid fa-caret-down navbar__item__icon"></i>  -->
             </a>
 
             <ul class="navbar__item__subnav">
@@ -86,7 +86,6 @@ if (!defined('_CODE')) {
                     </li>
                 </ul>
             </div>
-
         <?php
         else :
         ?>

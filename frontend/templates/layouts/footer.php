@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('_CODE')) {
-    die('Access denied');
+     die('Access denied');
 }
 
 ?>
@@ -62,7 +62,6 @@ if (!defined('_CODE')) {
                </div>
           </div>
      </div>
-  
      </script>
 </body>
 

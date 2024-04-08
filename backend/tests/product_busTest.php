@@ -1,7 +1,9 @@
 <?php
-require_once(__DIR__ . "/../bus/product_bus.php");
-
+// require_once(__DIR__ . "/../bus/product_bus.php");
+use backend\models\ProductModel;
+use backend\bus\ProductBUS;
 use PHPUnit\Framework\TestCase;
+
 
 class ProductBUSTest extends TestCase
 {
@@ -30,7 +32,7 @@ class ProductBUSTest extends TestCase
 
     public function testAddModel()
     {
-        $productModel = new ProductModel();
+        $productModel = new ProductModel(null, null, null, null, null, null, null);
         $productModel->setName("Test Product");
         $productModel->setCategoryId(1);
         $productModel->setPrice(10.99);
@@ -47,7 +49,7 @@ class ProductBUSTest extends TestCase
         $this->assertEquals($productModel, $productList[0], "Added product should match the retrieved product");
 
         // Test invalid product model
-        $invalidProductModel = new ProductModel();
+        $invalidProductModel = new ProductModel(null, null, null, null, null, null, null);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Please fill in all fields");
         $this->productBUS->addModel($invalidProductModel);
@@ -55,7 +57,7 @@ class ProductBUSTest extends TestCase
 
     public function testUpdateModel()
     {
-        $productModel = new ProductModel();
+        $productModel = new ProductModel(null, null, null, null, null, null, null);
         $productModel->setId(1);
         $productModel->setName("Updated Product");
         $productModel->setCategoryId(2);
@@ -72,7 +74,7 @@ class ProductBUSTest extends TestCase
         $this->assertEquals($productModel, $updatedProduct, "Updated product should match the retrieved product");
 
         // Test invalid product model
-        $invalidProductModel = new ProductModel();
+        $invalidProductModel = new ProductModel(null, null, null, null, null, null, null);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Please fill in all fields");
         $this->productBUS->updateModel($invalidProductModel);

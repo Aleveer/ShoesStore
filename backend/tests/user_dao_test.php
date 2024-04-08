@@ -1,6 +1,8 @@
 <?php
 require_once(__DIR__ . "/../dao/user_dao.php");
 
+use backend\dao\UserDAO;
+use backend\models\UserModel;
 use PHPUnit\Framework\TestCase;
 
 class user_dao_test extends TestCase

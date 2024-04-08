@@ -9,4 +9,4 @@
 <script src="../../../../../node_modules/chart.js/dist/chart.umd.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script> -->
 
-<script src="./js/dashboard.js"></script>
+<script src="../js/dashboard.js"></script>

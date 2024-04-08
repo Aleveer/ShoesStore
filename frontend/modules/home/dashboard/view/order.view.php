@@ -1,9 +1,15 @@
 <?php
-$title = 'Orders';
-include ('../inc/head.php');
+    $title = 'Orders';
+
+    include ('../inc/head.php');
+
+    // Namespace
+    use backend\bus\OrdersBUS;
+    use backend\bus\OrderItemsBUS;
 ?>
 
 <body>
+    <!-- HEADER -->
     <?php include ('../inc/header.php'); ?>
 
     <div class="container-fluid">
@@ -22,7 +28,6 @@ include ('../inc/head.php');
                     <div class="btn-toolbar mb-2 mb-md-0">
 
                         <!-- Function Button -->
-
                         <!-- Drop Down Menu -->
                         <!-- TODO: Fix this piece of shit that doesn't drop down, wtf -->
                         <div class="dropdown">
@@ -66,6 +71,7 @@ include ('../inc/head.php');
 
                         <!-- BODY DATABASE -->
                         <tbody>
+                            <!-- TESTING STATIC -->
                             <tr class="align-middle">
                                 <td>1,001</td>
                                 <td>random</td>
@@ -83,6 +89,8 @@ include ('../inc/head.php');
                                     </button>
                                 </td>
                             </tr>
+
+                            <?php ?>
                         </tbody>
                     </table>
                 </div>

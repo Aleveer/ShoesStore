@@ -6,7 +6,7 @@ if (!defined('_CODE')) {
     die('Access denied');
 }
 $data = [
-    'page_title' => 'DashBoard'
+    'page_title' => 'Dashboard'
 ];
 layouts('header', $data);
 

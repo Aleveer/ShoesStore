@@ -4,21 +4,18 @@ if (!isset($title)) {
 }
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title>
-        <?= $title ?>
-    </title>
+    <title>Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../../../../../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Responsive -->
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -34,6 +31,7 @@ if (!isset($title)) {
             }
         }
     </style>
+
 
     <!-- Custom styles for this template -->
     <link href="../css/global.css" rel="stylesheet">

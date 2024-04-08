@@ -176,27 +176,6 @@ CREATE TABLE `products` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
---
--- Table structure for table `reviews`
---
-CREATE TABLE `reviews` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `content` text NOT NULL,
-  `rating` int(11) DEFAULT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
--- --------------------------------------------------------
---
--- Table structure for table `review_status`
---
-CREATE TABLE `review_status` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `status` int(11) NOT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
 -- --------------------------------------------------------
 --
 -- Table structure for table `roles`
@@ -811,25 +790,34 @@ COMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
 ;
 
+ALTER TABLE
+  `users`
+ADD
+  COLUMN forgotToken VARCHAR(100);
 
-ALTER TABLE `users` 
-ADD COLUMN forgotToken VARCHAR(100);
+ALTER TABLE
+  `users`
+ADD
+  COLUMN activeToken VARCHAR(100);
 
-ALTER TABLE `users` 
-ADD COLUMN activeToken VARCHAR(100);
+ALTER TABLE
+  `users`
+ADD
+  COLUMN create_at DATETIME;
 
-ALTER TABLE `users`
-ADD COLUMN create_at DATETIME;
-
-ALTER TABLE `users`
-ADD COLUMN update_at DATETIME;
-
+ALTER TABLE
+  `users`
+ADD
+  COLUMN update_at DATETIME;
 
 CREATE TABLE tokenLogin(
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	user_id INT,
-	token VARCHAR(100),
-	create_at DATETIME
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT,
+  token VARCHAR(100),
+  create_at DATETIME
 );
 
-ALTER TABLE tokenLogin ADD CONSTRAINT FK_tokenLogin_user FOREIGN KEY (user_id) REFERENCES `users`(id);
+ALTER TABLE
+  tokenLogin
+ADD
+  CONSTRAINT FK_tokenLogin_user FOREIGN KEY (user_id) REFERENCES `users`(id);

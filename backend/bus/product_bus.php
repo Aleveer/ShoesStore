@@ -114,6 +114,28 @@ class ProductBUS implements BUSInterface
         return $result;
     }
 
+    public function searchByMinimalPrice($min)
+    {
+        $result = [];
+        foreach ($this->productList as $product) {
+            if ($product->getPrice() >= $min) {
+                $result[] = $product;
+            }
+        }
+        return $result;
+    }
+
+    public function searchByMaximalPrice($max)
+    {
+        $result = [];
+        foreach ($this->productList as $product) {
+            if ($product->getPrice() <= $max) {
+                $result[] = $product;
+            }
+        }
+        return $result;
+    }
+
     public function getRandomRecommendProducts()
     {
         $result = [];

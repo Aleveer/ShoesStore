@@ -24,7 +24,8 @@ $data = [
 <div id="header">
     <?php layouts("header") ?>
 </div>
-    <!-- Slider -->
+
+<!-- Slider -->
 <div id="slider">
     <?php require("navigatorslider.php") ?>
 </div>
@@ -33,15 +34,11 @@ $data = [
 <!-- Content -->
 <div id="content">
     <?php require("navigatorcontent.php") ?>
-
-
 </div>
-
 
 <!--Footer-->
 <div id="footer">
-<?php layouts('footer') ?>
-
+    <?php layouts('footer') ?>
 </div>
 
 

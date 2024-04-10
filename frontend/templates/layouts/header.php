@@ -28,12 +28,11 @@ if (!defined('_CODE')) {
 <div class="header__content">
     <ul class="navbar header__content__item">
         <li class="navbar__item">
-            <a href="#">Home</a>
+            <a href="?module=indexphp">Home</a>
         </li>
         <li class="navbar__item">
-            <a href="#">
+            <a href="?module=indexphp&action=product">
                 Shop
-                <!-- <i class="fa-sharp fa-solid fa-caret-down navbar__item__icon"></i>  -->
             </a>
 
             <ul class="navbar__item__subnav">

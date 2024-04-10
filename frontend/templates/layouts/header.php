@@ -34,15 +34,6 @@ if (!defined('_CODE')) {
             <a href="?module=indexphp&action=product">
                 Shop
             </a>
-
-            <ul class="navbar__item__subnav">
-                <li class="navbar__item__subnav__subitem">
-                    <a href="#">Product Archive</a>
-                </li>
-                <li class="navbar__item__subnav__subitem">
-                    <a href="#">Single Product</a>
-                </li>
-            </ul>
         </li>
         <li class="navbar__item">
             <a href="#">

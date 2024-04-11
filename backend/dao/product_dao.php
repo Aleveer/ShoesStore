@@ -104,7 +104,7 @@ class ProductDAO implements DAOInterface
     public function search(string $condition, $columnNames): array
     {
         if (empty($condition)) {
-            throw new InvalidArgumentException("Search condition cannot be empty or null");
+            return [];
         }
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
@@ -125,7 +125,7 @@ class ProductDAO implements DAOInterface
             array_push($productList, $productModel);
         }
         if (count($productList) === 0) {
-            throw new Exception("No records found for the given condition: " . $condition);
+            return [];
         }
         return $productList;
     }

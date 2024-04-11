@@ -70,15 +70,14 @@ class OrdersBUS implements BUSInterface
     {
         if (
             empty($ordersModel->getUserId()) ||
-            empty($ordersModel->getTotal()) ||
-            empty($ordersModel->getPaymentMethod()) ||
-            empty($ordersModel->getPaymentStatus()) ||
-            empty($ordersModel->getOrderStatus()) ||
+            empty($ordersModel->getTotalAmount()) ||
+            empty($ordersModel->getOrderDate()) ||
+            empty($ordersModel->getCustomerId()) ||
             $ordersModel->getUserId() == null ||
-            $ordersModel->getTotal() == null ||
-            $ordersModel->getPaymentMethod() == null ||
-            $ordersModel->getPaymentStatus() == null ||
-            $ordersModel->getOrderStatus() == null
+            $ordersModel->getTotalAmount() == null ||
+            $ordersModel->getTotalAmount() < 1 ||
+            $ordersModel->getOrderDate() == null ||
+            $ordersModel->getCustomerId() == null
         ) {
             throw new InvalidArgumentException("Please fill in all fields");
         }

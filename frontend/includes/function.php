@@ -1,5 +1,7 @@
 <!-- Các hàm xử lí chung của project -->
 <?php
+use backend\enums\StatusEnums;
+
 if (!defined('_CODE')) {
     die('Access denied');
 }
@@ -10,6 +12,7 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 use backend\bus\TokenLoginBUS;
+use backend\bus\UserBUS;
 use backend\services\session;
 
 // Hàm giúp nhúng header và footer nhanh hơn vào các file
@@ -31,12 +34,12 @@ function sendMail($to, $subject, $content)
         $mail->CharSet = "UTF-8";
         $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'manshpypro@gmail.com';                     //SMTP username
-        $mail->Password   = 'ztbwjqcpunymawdz';                               //SMTP password
+        $mail->Host = 'smtp.gmail.com';                     //Set the SMTP server to send through
+        $mail->SMTPAuth = true;                                   //Enable SMTP authentication
+        $mail->Username = 'manshpypro@gmail.com';                     //SMTP username
+        $mail->Password = 'ztbwjqcpunymawdz';                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->Port = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
         $mail->setFrom('manshpypro@gmail.com', 'ManDuong');
@@ -45,7 +48,7 @@ function sendMail($to, $subject, $content)
         //Content
         $mail->isHTML(true);                                  //Set email format to HTML
         $mail->Subject = $subject;
-        $mail->Body    = $content;
+        $mail->Body = $content;
 
 
         $sendMailStatus = $mail->send();
@@ -62,14 +65,16 @@ function sendMail($to, $subject, $content)
 // Kiểm tra phương thức GET
 function isGet()
 {
-    if ($_SERVER['REQUEST_METHOD'] == 'GET') return true;
+    if ($_SERVER['REQUEST_METHOD'] == 'GET')
+        return true;
     return false;
 }
 
 // Kiểm tra phương thức POST
 function isPost()
 {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') return true;
+    if ($_SERVER['REQUEST_METHOD'] == 'POST')
+        return true;
     return false;
 }
 
@@ -146,6 +151,9 @@ function isLogin()
 
         if (!empty($queryToken)) {
             $checkLogin = true;
+            $userModel = UserBUS::getInstance()->getModelById($queryToken->getUserId());
+            $userModel->setStatus(StatusEnums::ACTIVE);
+            UserBUS::getInstance()->updateModel($userModel);
         } else {
             session::getInstance()->removeSession('tokenLogin');
         }
@@ -157,6 +165,6 @@ function isLogin()
 function requireLogin()
 {
     if (!isLogin()) {
-        redirect('login.php');
+        redirect('?module=auth&action=login');
     }
 }

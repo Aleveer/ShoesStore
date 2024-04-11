@@ -1,9 +1,15 @@
+div
 <?php
 use backend\bus\ProductBUS;
 use backend\bus\SizeBUS;
 use backend\bus\SizeItemsBUS;
 use backend\bus\CategoriesBUS;
+use backend\bus\TokenLoginBUS;
+use backend\bus\UserBUS;
+use backend\models\CartsModel;
 use backend\services\session;
+use backend\bus\CartsBUS;
+use backend\enums\StatusEnums;
 
 global $id;
 $categoriesList = CategoriesBUS::getInstance()->getAllModels();
@@ -12,10 +18,11 @@ $id = $_GET['id'];
 $product = ProductBUS::getInstance()->getModelById($id);
 $sizeItemsProduct = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id']);
 if (isLogin()) {
-    $userModel = $_SESSION['user'];
+    $token = session::getInstance()->getSession('tokenLogin');
+    $tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
+    $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
 }
 ?>
-
 <div id="header">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,8 +46,8 @@ if (isLogin()) {
 
         $(document).ready(function () {
             $('.squish-in').click(function () {
-                $('.squish-in').css('color', ''); // Remove the color from all buttons
-                $(this).css('color', 'black'); // Add the color to the clicked button
+                $('.squish-in').css('color', '');
+                $(this).css('color', 'black');
             });
         });
     </script>
@@ -88,7 +95,7 @@ if (isLogin()) {
                     $check = 0;
                     foreach ($sizeItemsProduct as $s) {
                         if ($s->getQuantity() > 0) {
-                            echo '<div class="button-container"><button class="squish-in">' . $s->getSizeId() . '</button></div>';
+                            echo '<div class="button-container"><button id="sizeItemProduct" class="squish-in" name="sizeItem" data-quantity="' . $s->getQuantity() . '">' . $s->getSizeId() . '</button></div>';
                             $check = 1;
                         }
                     }
@@ -99,16 +106,22 @@ if (isLogin()) {
                 </div>
                 <div class="quantity">
                     <label for="pquantity">Quantity :</label>
-                    <input type="number" name="pquantity" id="pquantity" placeholder="1" min="1">
+                    <input type="number" name="pquantity" id="pquantity" placeholder="1" min="1" required>
                 </div>
                 <?php
+                if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->getRoleId() == 3) {
+                    //Hide button add to cart:
+                    echo '<button class="addtocart" name="addToCart" style="display:none;">';
+                    //Lock the quantity input:
+                    echo '<script>document.getElementById("pquantity").disabled = true;</script>';
+                }
                 if ($check == 0) {
                     //Hide button add to cart:
-                    echo '<button class="addtocart" style="display:none;">';
+                    echo '<button class="addtocart" name="addToCart" style="display:none;">';
                     //Lock the quantity input:
                     echo '<script>document.getElementById("pquantity").disabled = true;</script>';
                 } else {
-                    echo '<button class="addtocart">';
+                    echo '<button class="addtocart" name="addToCart">';
                 }
                 ?>
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -116,8 +129,76 @@ if (isLogin()) {
                 echo 'Thêm vô giỏ';
                 ?>
                 </button>
+                <?php
+                if (isPost()) {
+                    if ($userModel->getStatus() == StatusEnums::BANNED) {
+                        echo '<script>alert("Tài khoản của bạn đã bị khóa. Bạn không thể thực hiện chức năng này")</script>';
+                        echo '<script>window.location.href = "?module=indexphp";</script>';
+                        die();
+                    }
+
+                    if ($userModel->getStatus() == StatusEnums::INACTIVE) {
+                        echo '<script>alert("Tài khoản của bạn chưa được kích hoạt. Bạn không thể thực hiện chức năng này")</script>';
+                        echo '<script>window.location.href = "?module=indexphp";</script>';
+                        die();
+                    }
+
+                    if (isset($_POST['addtocart'])) {
+                        if (isLogin()) {
+                            $filterAll = filter();
+                            $sizeId = $filterAll['sizeItem'];
+                            if ($sizeId == null) {
+                                echo '<script>alert("Bạn cần chọn kích cỡ sản phẩm")</script>';
+                                die();
+                            }
+                            $quantity = $filterAll['pquantity'];
+                            $cartItemForUser = CartsBUS::getInstance()->getModelByUserId($userModel->getId());
+                            //Check for quantity of product in cart, it can't go exceed sizeItems quantity:
+                            foreach ($cartItemForUser as $cartItem) {
+                                if ($cartItem->getProductId() == $product->getId() && $cartItem->getSizeId() == $sizeId) {
+                                    $sizeItems = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id', $sizeId]);
+                                    foreach ($sizeItems as $sizeItem) {
+                                        if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
+                                            header('Content-Type: application/json');
+                                            echo json_encode(['message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm còn lại']);
+                                            die();
+                                        } else {
+                                            //If quantity is valid, break the loop, before that, increase the quantity into cart:
+                                            header('Content-Type: application/json');
+                                            echo json_encode(['message' => 'Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm']);
+                                            $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
+                                            CartsBUS::getInstance()->updateModel($cartItem);
+                                            CartsBUS::getInstance()->refreshData();
+                                            die();
+                                        }
+                                    }
+                                }
+                            }
+
+                            $cart = CartsBUS::getInstance()->checkDuplicateProduct($userModel->getId(), $product->getId(), $sizeId);
+                            if ($cart !== null) {
+                                header('Content-Type: application/json');
+                                echo json_encode(['message' => 'Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm 1']);
+                                CartsBUS::getInstance()->refreshData();
+                            }
+                            if ($cart === null) {
+                                $cart = new CartsModel(null, null, null, null, null);
+                                $cart->setUserId($userModel->getId());
+                                $cart->setProductId($product->getId());
+                                $cart->setSizeId($sizeId);
+                                $cart->setQuantity($quantity);
+                                CartsBUS::getInstance()->addModel($cart);
+                                CartsBUS::getInstance()->refreshData();
+                            }
+                        } else {
+                            echo '<script>alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng")</script>';
+                        }
+                    }
+                }
+                ?>
             </div>
         </div>
+        <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/add_to_cart.js"></script>
     </div>
 </body>
 

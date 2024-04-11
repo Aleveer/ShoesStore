@@ -56,9 +56,20 @@ if (!defined('_CODE')) {
     <div class="search header__content__item">
         <i class="fa-sharp fa-solid fa-magnifying-glass search__icon"></i>
     </div>
-    <div class="cart header__content__item">
-        <i class="fa-sharp fa-solid fa-cart-shopping cart__icon"></i>
-    </div>
+
+    <?php 
+    if(isLogin()) {
+        echo '<div class="cart header__content__item">
+        <a href="?module=cartsection&action=cart">
+            <i class="fa-sharp fa-solid fa-cart-shopping cart__icon"></i>
+        </a></div>';
+    } else {
+        echo '<div class="cart header__content__item">
+        <a href="?module=auth&action=login">
+            <i class="fa-sharp fa-solid fa-cart-shopping cart__icon"></i>
+        </a></div>';
+    }
+    ?>
 
     <div class="user header__content__item" style="height:100%">
         <?php

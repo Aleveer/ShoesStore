@@ -100,6 +100,9 @@ class ProductBUS implements BUSInterface
 
     public function searchModel(string $condition, $columnNames): array
     {
+        if(empty($condition)) {
+            return [];
+        }
         return ProductDAO::getInstance()->search($condition, $columnNames);
     }
 

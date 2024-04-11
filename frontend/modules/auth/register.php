@@ -10,8 +10,8 @@
 
 use backend\services\session;
 use backend\bus\UserBUS;
-use backend\Enums\StatusEnums;
-use backend\Models\UserModel;
+use backend\enums\StatusEnums;
+use backend\models\UserModel;
 
 if (!defined('_CODE')) {
     die('Access denied');

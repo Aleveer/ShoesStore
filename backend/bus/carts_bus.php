@@ -34,9 +34,21 @@ class CartsBUS implements BUSInterface
         $this->cartsList = CartsDAO::getInstance()->getAll();
     }
 
-    public function getModelById(int $id)
+    public function getModelById($id)
     {
         return CartsDAO::getInstance()->getById($id);
+    }
+
+    public function getModelByUserId(int $userId)
+    {
+        $this->cartsList = CartsDAO::getInstance()->getAll();
+        $result = array();
+        foreach ($this->cartsList as $carts) {
+            if ($carts->getUserId() == $userId) {
+                $result[] = $carts;
+            }
+        }
+        return $result;
     }
 
     public function checkDuplicateProduct($userId, $productId, $sizeId)

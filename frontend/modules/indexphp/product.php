@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -155,10 +156,24 @@
                 <fieldset>
                     <legend>Price</legend>
                     <label for="price">Price:</label>
-                    <input type="number" name="price" min="100000" placeholder="100000">
+                    <input type="number" name="price" min="100000"> -
+                    <input type="number" name="price" min="100000">
                 </fieldset>
             </div> 
             <div class="container_pagination">
+                <div class="sort">
+                    <label for="alphabet">Chữ Cái :</label>
+                    <select name="alphabet">
+                        <option value="A_Z">A-Z</option>
+                        <option value="Z_A">Z_A</option>
+                    </select>
+                    <label for="price">Theo Gía:</label>
+                    <select >
+                        <option value="high">High</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+
                 <div class="areaproduct">
                     <div class="pitem">
                         <div class="imgitem">
@@ -300,8 +315,11 @@
 
 
 
+
     </div>
     <!-- Đây là cho slider nghen -->
     <script src="../../templates/js/product_slider.js"></script>
 </body>
 </html>
+
+

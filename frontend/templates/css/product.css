@@ -87,6 +87,7 @@
 
 /*Hiệu ứng bộ lọc*/
 .container_filter_pagination .filter{
+
     width: 18vw;  
     font-size: 2.5vh;
 }
@@ -108,7 +109,21 @@
     color: #000;
     text-align: center;
     height: 23px;
+    width: 5.2vw;
 }
+/*Sắp Xếp*/
+.sort label{
+    font-size: 2.9vh;
+    font-weight: bold;
+}
+.sort select{
+    width: 10vh;
+    height: 25px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
 
 
 
@@ -122,7 +137,7 @@
 }
 .container_filter_pagination .areaproduct{
     justify-content: center;
-    width: 82vw;
+    width: 80vw;
     height: auto;
     margin: 0 auto;
     margin-top: 10px;
@@ -135,7 +150,7 @@
 }
 .areaproduct .pitem{
     width: 20vw;
-    height: 60vh;
+    height: 40vh;
     background-color:white;
     border: 1px solid black;
     border-radius: 20px;
@@ -145,27 +160,30 @@
 
 .areaproduct .pitem .content{
     width: 20vw;
-    height: 22vh;
+    height: 15vh;
     color: #000;
 }
 /*HIỆU ỨNG ẢNH*/
 .pitem .imgitem {
     overflow: hidden;
     width: 20vw;
-    height: 38vh;
+    height: 25vh;
 
 }
 .areaproduct .pitem img{
     width: 20vw;
-    height: 38vh;
+    height: 25vh;
     object-fit: cover;
     
 }
 
-
 .areaproduct .pitem .content .name{
     font-size: 2.7vh;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  
 }
 .areaproduct .pitem .content .price{
     font-size: 2.3vh;
@@ -414,6 +432,8 @@
         .container_pagination .page{
             width: 100vw;
         }
-        
+        .container_filter_pagination .filter input[type=number]{
+            width: 15vw;
+        }
       
     }

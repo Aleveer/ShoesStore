@@ -53,9 +53,6 @@ if (!defined('_CODE')) {
             <a href="#">Contact Us</a>
         </li>
     </ul>
-    <div class="search header__content__item">
-        <i class="fa-sharp fa-solid fa-magnifying-glass search__icon"></i>
-    </div>
 
     <?php 
     if(isLogin()) {

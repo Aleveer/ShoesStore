@@ -85,7 +85,8 @@ class TokenLoginDAO implements DAOInterface
     public function delete(int $id): int
     {
         $query = "DELETE FROM tokenlogin WHERE id = ?";
-        return DatabaseConnection::executeUpdate($query, $id);
+        $args = [$id];
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function search(string $condition, array $columnNames): array
@@ -96,7 +97,7 @@ class TokenLoginDAO implements DAOInterface
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
             $query = "SELECT * FROM tokenlogin WHERE id LIKE ? OR user_id LIKE ? OR token LIKE ? OR create_at LIKE ?";
-            $args = array_fill(0,  5, "%" . $condition . "%");
+            $args = array_fill(0, 5, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM tokenlogin WHERE $column LIKE ?";

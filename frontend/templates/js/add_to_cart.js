@@ -45,8 +45,8 @@ $(document).ready(function () {
                 dataType: "html",
                 data: {
                     addtocart: true,
-                    sizeItem: sizeId, // Adjusted parameter name
-                    pquantity: quantity, // Adjusted parameter name
+                    sizeItem: sizeId,
+                    pquantity: quantity, 
                 },
 
                 success: function (response) {

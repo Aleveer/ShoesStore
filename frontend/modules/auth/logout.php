@@ -18,7 +18,7 @@ if (isLogin()) {
     $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
     $userModel->setStatus(StatusEnums::INACTIVE);
     UserBUS::getInstance()->updateModel($userModel);
-    TokenLoginBUS::getInstance()->deleteModel($tokenModel);
+    TokenLoginBUS::getInstance()->deleteModel($tokenModel->getId());
     session::getInstance()->removeSession('tokenLogin');
     redirect('?module=auth&action=login');
 }

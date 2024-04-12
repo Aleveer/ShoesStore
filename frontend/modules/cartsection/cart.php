@@ -101,7 +101,8 @@ if (isPost()) {
                 <?php
                 foreach ($cartList as $cart) {
                     $product = ProductBUS::getInstance()->getModelById($cart->getProductId());
-                    if ($product == null) {
+                    $sizeItems = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($cart->getSizeId(), $cart->getProductId());
+                    if ($product != null && $sizeItems->getQuantity() == 0) {
                         //Possible case: The product is deleted by the admin / out of stock / unavailable
                         //If the product is not found, delete that product from the cart and refresh the data:
                         //Possibly tell user that the product is out of stock / unavailable:

@@ -151,9 +151,9 @@ class UserBUS implements BUSInterface
         }
 
         // Validate username and password
-        if (!$validation->isValidUsername($userModel->getUsername())) {
-            $errors['username']['valid'] = "Invalid username";
-        }
+        // if (!$validation->isValidUsername($userModel->getUsername())) {
+        //     $errors['username']['valid'] = "Invalid username";
+        // }
 
         // if (!$validation->isValidPassword($userModel->getPassword())) {
         //     $errors['password']['valid'] = "Invalid password";

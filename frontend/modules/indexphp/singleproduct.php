@@ -109,11 +109,13 @@ if (isLogin()) {
                     <input type="number" name="pquantity" id="pquantity" placeholder="1" min="1" required>
                 </div>
                 <?php
-                if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->getRoleId() == 3) {
-                    //Hide button add to cart:
-                    echo '<button class="addtocart" name="addToCart" style="display:none;">';
-                    //Lock the quantity input:
-                    echo '<script>document.getElementById("pquantity").disabled = true;</script>';
+                if (isLogin()) {
+                    if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->getRoleId() == 3) {
+                        //Hide button add to cart:
+                        echo '<button class="addtocart" name="addToCart" style="display:none;">';
+                        //Lock the quantity input:
+                        echo '<script>document.getElementById("pquantity").disabled = true;</script>';
+                    }
                 }
                 if ($check == 0) {
                     //Hide button add to cart:
@@ -130,58 +132,56 @@ if (isLogin()) {
                 ?>
                 </button>
                 <?php
-                if (isPost()) {
-                    if ($userModel->getStatus() == StatusEnums::BANNED) {
-                        echo '<script>alert("Tài khoản của bạn đã bị khóa. Bạn không thể thực hiện chức năng này")</script>';
-                        echo '<script>window.location.href = "?module=indexphp";</script>';
-                        die();
-                    }
+                if (!isLogin()) {
+                    echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng")});</script>';
+                    die();
+                } else {
+                    if (isPost()) {
+                        if ($userModel->getStatus() == StatusEnums::BANNED) {
+                            echo '<script>alert("Tài khoản của bạn đã bị khóa. Bạn không thể thực hiện chức năng này")</script>';
+                            echo '<script>window.location.href = "?module=indexphp";</script>';
+                            die();
+                        }
 
-                    if ($userModel->getStatus() == StatusEnums::INACTIVE) {
-                        echo '<script>alert("Tài khoản của bạn chưa được kích hoạt. Bạn không thể thực hiện chức năng này")</script>';
-                        echo '<script>window.location.href = "?module=indexphp";</script>';
-                        die();
-                    }
+                        if ($userModel->getStatus() == StatusEnums::INACTIVE) {
+                            echo '<script>alert("Tài khoản của bạn chưa được kích hoạt. Vui lòng đăng nhập lại để kích hoạt tài khoản!")</script>';
+                            $userModel->setStatus(StatusEnums::INACTIVE);
+                            UserBUS::getInstance()->updateModel($userModel);
+                            TokenLoginBUS::getInstance()->deleteModel($tokenModel);
+                            session::getInstance()->removeSession('tokenLogin');
+                            redirect('?module=auth&action=login');
+                            die();
+                        }
 
-                    if (isset($_POST['addtocart'])) {
-                        if (isLogin()) {
+                        if (isset($_POST['addtocart'])) {
                             $filterAll = filter();
                             $sizeId = $filterAll['sizeItem'];
                             if ($sizeId == null) {
                                 echo '<script>alert("Bạn cần chọn kích cỡ sản phẩm")</script>';
                                 die();
                             }
+
                             $quantity = $filterAll['pquantity'];
                             $cartItemForUser = CartsBUS::getInstance()->getModelByUserId($userModel->getId());
-                            //Check for quantity of product in cart, it can't go exceed sizeItems quantity:
-                            foreach ($cartItemForUser as $cartItem) {
-                                if ($cartItem->getProductId() == $product->getId() && $cartItem->getSizeId() == $sizeId) {
-                                    $sizeItems = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id', $sizeId]);
-                                    foreach ($sizeItems as $sizeItem) {
-                                        if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
-                                            header('Content-Type: application/json');
-                                            echo json_encode(['message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm còn lại']);
-                                            die();
-                                        } else {
-                                            //If quantity is valid, break the loop, before that, increase the quantity into cart:
-                                            header('Content-Type: application/json');
-                                            echo json_encode(['message' => 'Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm']);
-                                            $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
-                                            CartsBUS::getInstance()->updateModel($cartItem);
-                                            CartsBUS::getInstance()->refreshData();
-                                            die();
+                            if ($cartItemForUser != null) {
+                                foreach ($cartItemForUser as $cartItem) {
+                                    if ($cartItem->getProductId() == $product->getId() && $cartItem->getSizeId() == $sizeId) {
+                                        $sizeItems = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id', $sizeId]);
+                                        foreach ($sizeItems as $sizeItem) {
+                                            if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
+                                                echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm còn lại")});</script>';
+                                                die();
+                                            } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
+                                                echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm")});</script>';
+                                                $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
+                                                CartsBUS::getInstance()->updateModel($cartItem);
+                                                CartsBUS::getInstance()->refreshData();
+                                                die();
+                                            }
                                         }
                                     }
                                 }
-                            }
-
-                            $cart = CartsBUS::getInstance()->checkDuplicateProduct($userModel->getId(), $product->getId(), $sizeId);
-                            if ($cart !== null) {
-                                header('Content-Type: application/json');
-                                echo json_encode(['message' => 'Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm 1']);
-                                CartsBUS::getInstance()->refreshData();
-                            }
-                            if ($cart === null) {
+                            } else if ($cartItemForUser == null) {
                                 $cart = new CartsModel(null, null, null, null, null);
                                 $cart->setUserId($userModel->getId());
                                 $cart->setProductId($product->getId());
@@ -190,6 +190,7 @@ if (isLogin()) {
                                 CartsBUS::getInstance()->addModel($cart);
                                 CartsBUS::getInstance()->refreshData();
                             }
+
                         } else {
                             echo '<script>alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng")</script>';
                         }

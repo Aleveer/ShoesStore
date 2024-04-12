@@ -90,7 +90,7 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                                 ullamcorper mattis,
                                 pulvinar dapibus leo.
                             </p>
-                            <span><a href="#">SEE MORE <i class="fa-solid fa-arrow-right"></i></a></span>
+                            <span><a href="?module=indexphp&action=product">SEE MORE <i class="fa-solid fa-arrow-right"></i></a></span>
                         </div>
                     </div>
                 </li>

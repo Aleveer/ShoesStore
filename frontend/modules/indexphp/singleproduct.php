@@ -137,31 +137,30 @@ if (isLogin()) {
                     die();
                 } else {
                     if (isPost()) {
+                        ob_start();
                         if ($userModel->getStatus() == StatusEnums::BANNED) {
                             echo '<script>alert("Tài khoản của bạn đã bị khóa. Bạn không thể thực hiện chức năng này")</script>';
                             echo '<script>window.location.href = "?module=indexphp";</script>';
-                            die();
+                            $output = ob_get_clean();
+                            die($output);
                         }
 
                         if ($userModel->getStatus() == StatusEnums::INACTIVE) {
                             echo '<script>alert("Tài khoản của bạn chưa được kích hoạt. Vui lòng đăng nhập lại để kích hoạt tài khoản!")</script>';
+                            $output = ob_get_clean();
                             $userModel->setStatus(StatusEnums::INACTIVE);
                             UserBUS::getInstance()->updateModel($userModel);
                             TokenLoginBUS::getInstance()->deleteModel($tokenModel);
                             session::getInstance()->removeSession('tokenLogin');
                             redirect('?module=auth&action=login');
-                            die();
+                            die($output);
                         }
 
                         if (isset($_POST['addtocart'])) {
                             $filterAll = filter();
                             $sizeId = $filterAll['sizeItem'];
-                            if ($sizeId == null) {
-                                echo '<script>alert("Bạn cần chọn kích cỡ sản phẩm")</script>';
-                                die();
-                            }
-
                             $quantity = $filterAll['pquantity'];
+
                             $cartItemForUser = CartsBUS::getInstance()->getModelByUserId($userModel->getId());
                             if ($cartItemForUser != null) {
                                 foreach ($cartItemForUser as $cartItem) {
@@ -170,13 +169,15 @@ if (isLogin()) {
                                         foreach ($sizeItems as $sizeItem) {
                                             if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
                                                 echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm còn lại")});</script>';
-                                                die();
+                                                $output = ob_get_clean();
+                                                die($output);
                                             } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
                                                 echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm")});</script>';
                                                 $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
                                                 CartsBUS::getInstance()->updateModel($cartItem);
                                                 CartsBUS::getInstance()->refreshData();
-                                                die();
+                                                $output = ob_get_clean();
+                                                die($output);
                                             }
                                         }
                                     }
@@ -189,10 +190,9 @@ if (isLogin()) {
                                 $cart->setQuantity($quantity);
                                 CartsBUS::getInstance()->addModel($cart);
                                 CartsBUS::getInstance()->refreshData();
+                                echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Thêm sản phẩm vào giỏ hàng thành công")});</script>';
+                                $output = ob_get_clean();
                             }
-
-                        } else {
-                            echo '<script>alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng")</script>';
                         }
                     }
                 }

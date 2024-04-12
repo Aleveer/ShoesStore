@@ -36,7 +36,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
     echo 'alert("Bạn không có quyền truy cập vào trang này!")';
     echo '</script>';
     echo '<script>';
-    echo 'window.location.href = "?module=index.php&action=product"';
+    echo 'window.location.href = "?module=indexphp&action=product"';
     echo '</script>';
     die();
 }
@@ -75,7 +75,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
             </div>
             <div class="col-6">
                 <label for="inputAddress" class="form-label">Address</label>
-                <input type="text" class="form-control form-control-sm" id="inputAddress" placeholder="1234 Main St"
+                <input type="text" class="form-control form-control-sm" id="inputAddressId" name="inputAddress" placeholder="1234 Main St"
                     name="inputAddress" value="<?php echo $userModel->getAddress(); ?>">
             </div>
             <div class="col-2">
@@ -205,7 +205,9 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
                 echo 'alert("Đã áp dụng mã giảm giá!")';
                 echo '</script>';
                 echo '<script>';
-                echo 'updateTotalPrice(' . $discountModel->getDiscount() . ')';
+                echo '$.post("?module=cartsection&action=order", { discount: ' . $discountModel->getDiscount() . ' }, function(discountedPrice) {';
+                echo 'updateTotalPrice(discountedPrice);';
+                echo '});';
                 echo '</script>';
             }
 
@@ -248,21 +250,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
     }
     ?>
     </div>
-    <script>
-        // Function to update the total price when applying discount
-        function updateTotalPrice(discount) {
-            var totalPrice = <?php echo $totalPrice; ?>;
-            var discountedPrice;
-            if (discount != null) {
-                var discountedPrice = totalPrice - (totalPrice * discount / 100);
-            } else {
-                discountedPrice = totalPrice;
-            }
-            var formattedPrice = discountedPrice.toLocaleString('en-US');
-            document.getElementById("totalPrice").innerHTML = 'Total: ' + formattedPrice + ' VND';
-        }
-    </script>
-
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/order_processing.js"></script>
     </div>
 </body>
 

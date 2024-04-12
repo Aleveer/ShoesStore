@@ -38,6 +38,10 @@ if (isPost()) {
         $cartId = $_POST['cartId'];
         CartsBUS::getInstance()->deleteModel($cartId);
         CartsBUS::getInstance()->refreshData();
+        //Refresh the page:
+        echo '<script>';
+        echo 'window.location.href = "?module=cartsection&action=cart"';
+        echo '</script>';
     }
 }
 ?>

@@ -40,22 +40,7 @@ if (!defined('_CODE')) {
                 </a>
             </li>
             <li class="navbar__item">
-                <a href="#">
-                    Pages
-                    <!-- <i class="fa-sharp fa-solid fa-caret-down navbar__item__icon"></i> -->
-                </a>
-                <ul class="navbar__item__subnav">
-                    <li class="navbar__item__subnav__subitem">
-                        <a href="#">About Us</a>
-                    </li>
-                    <li class="navbar__item__subnav__subitem">
-                        <a href="?module=indexphp&action=FAQ">FAQ</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="navbar__item">
-                <a href="#">Contact Us</a>
-            </li>
+                <a href="?module=indexphp&action=FAQ">FAQ</a>
         </ul>
 
         <?php

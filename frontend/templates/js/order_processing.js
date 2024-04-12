@@ -2,21 +2,18 @@
 $(document).ready(function () {
     $('#order-confirm-submit').click(function (e) {
         e.preventDefault();
-        var inputName = $('#inputNameId').val();
-        var inputPhoneNumber = $('#inputPhoneNumberId').val();
-        var inputAddress = $('#inputAddress').val();
-        var inputDiscount = $('#inputDiscountId').val();
         var submitOrderButton = $('#order-confirm-submit');
         if (submitOrderButton.length) {
             submitOrderButton.on('click', function () {
                 var inputName = $('#inputNameId').val();
                 var inputPhoneNumber = $('#inputPhoneNumberId').val();
-                var inputAddress = $('#inputAddress').val();
+                var inputAddress = $('#inputAddressId').val();
                 var inputDiscount = $('#inputDiscountId').val();
                 if (!inputName) {
                     alert('Vui lòng nhập tên');
                     return;
                 }
+
                 if (!inputPhoneNumber) {
                     alert('Vui lòng nhập số điện thoại');
                     return;
@@ -25,26 +22,17 @@ $(document).ready(function () {
                     alert('Vui lòng nhập địa chỉ');
                     return;
                 }
-                if (!inputDiscount) {
-                    alert('Vui lòng nhập mã giảm giá');
-                    return;
-                }
+
                 if (isNaN(inputPhoneNumber)) {
                     alert('Vui lòng nhập số điện thoại là số');
                     return;
                 }
-                if (isNaN(inputDiscount)) {
-                    alert('Vui lòng nhập mã giảm giá là số');
-                    return;
-                }
-                if (inputDiscount < 0) {
-                    alert('Mã giảm giá không hợp lệ');
-                    return;
-                }
+
                 $.ajax({
                     url: '?module=cartsection&action=order',
                     type: 'POST',
                     data: {
+                        submitOrderButton: true,
                         inputName: inputName,
                         inputPhoneNumber: inputPhoneNumber,
                         inputAddress: inputAddress,
@@ -53,6 +41,7 @@ $(document).ready(function () {
                     success: function (response) {
                         // Handle the response from the server
                         console.log('the button is clicked');
+                        alert('Đặt hàng thành công');
                     },
                     error: function (error) {
                         // Handle any errors

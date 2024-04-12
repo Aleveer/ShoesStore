@@ -139,8 +139,8 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
     <?php
     //button to submit the order :
     if (isPost()) {
+        $filterAll = filter();
         if (isset($_POST['submitButton'])) {
-            $filterAll = filter();
             $orderModel = new OrdersModel(null, null, null, null, null);
             $orderModel->setCustomerId($userModel->getId());
             $customerModel = CustomerBUS::getInstance()->getModelById($userModel->getId());

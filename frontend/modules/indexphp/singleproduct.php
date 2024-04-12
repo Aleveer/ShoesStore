@@ -1,4 +1,3 @@
-div
 <?php
 use backend\bus\ProductBUS;
 use backend\bus\SizeBUS;

@@ -1,4 +1,4 @@
--- Active: 1711178820034@@127.0.0.1@3306@shoesstore
+-- Active: 1708420841815@@127.0.0.1@3306@shoesstore
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
@@ -73,17 +73,6 @@ CREATE TABLE `coupons` (
 
 -- --------------------------------------------------------
 --
--- Table structure for table `customers`
---
-CREATE TABLE `customers` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `phone` varchar(11) DEFAULT NULL,
-  `email` varchar(100) NOT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
--- --------------------------------------------------------
---
 -- Table structure for table `import`
 --
 CREATE TABLE `import` (
@@ -112,7 +101,6 @@ CREATE TABLE `import_items` (
 --
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
-  `customer_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `order_date` datetime NOT NULL DEFAULT current_timestamp(),
   `total_amount` double NOT NULL
@@ -182,7 +170,7 @@ CREATE TABLE `products` (
 --
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
-  `name` enum('admin', 'manager', 'employee') NOT NULL DEFAULT 'employee'
+  `name` enum('admin', 'manager', 'employee', 'customer') NOT NULL DEFAULT 'customer'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -193,16 +181,6 @@ CREATE TABLE `roles_permissions` (
   `id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL,
   `role_id` int(11) DEFAULT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
--- --------------------------------------------------------
---
--- Table structure for table `settings`
---
-CREATE TABLE `settings` (
-  `id` int(11) NOT NULL,
-  `name` text NOT NULL,
-  `value` text NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -288,14 +266,6 @@ ADD
   PRIMARY KEY (`id`);
 
 --
--- Indexes for table `customers`
---
-ALTER TABLE
-  `customers`
-ADD
-  PRIMARY KEY (`id`);
-
---
 -- Indexes for table `import`
 --
 ALTER TABLE
@@ -326,8 +296,6 @@ ALTER TABLE
   `orders`
 ADD
   PRIMARY KEY (`id`),
-ADD
-  KEY `customer_id` (`customer_id`, `user_id`),
 ADD
   KEY `user_id` (`user_id`);
 
@@ -384,28 +352,6 @@ ADD
   KEY `category_id` (`category_id`);
 
 --
--- Indexes for table `reviews`
---
-ALTER TABLE
-  `reviews`
-ADD
-  PRIMARY KEY (`id`),
-ADD
-  KEY `user_id` (`user_id`, `product_id`),
-ADD
-  KEY `product_id` (`product_id`);
-
---
--- Indexes for table `review_status`
---
-ALTER TABLE
-  `review_status`
-ADD
-  PRIMARY KEY (`id`),
-ADD
-  KEY `product_id` (`product_id`);
-
---
 -- Indexes for table `roles`
 --
 ALTER TABLE
@@ -424,14 +370,6 @@ ADD
   KEY `permission_id` (`permission_id`, `role_id`),
 ADD
   KEY `role_id` (`role_id`);
-
---
--- Indexes for table `settings`
---
-ALTER TABLE
-  `settings`
-ADD
-  PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `sizes`
@@ -505,14 +443,6 @@ MODIFY
   `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `customers`
---
-ALTER TABLE
-  `customers`
-MODIFY
-  `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `import`
 --
 ALTER TABLE
@@ -577,22 +507,6 @@ MODIFY
   `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `reviews`
---
-ALTER TABLE
-  `reviews`
-MODIFY
-  `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `review_status`
---
-ALTER TABLE
-  `review_status`
-MODIFY
-  `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE
@@ -605,14 +519,6 @@ MODIFY
 --
 ALTER TABLE
   `roles_permissions`
-MODIFY
-  `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `settings`
---
-ALTER TABLE
-  `settings`
 MODIFY
   `id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -689,9 +595,7 @@ ADD
 ALTER TABLE
   `orders`
 ADD
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-ADD
-  CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`);
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `order_items`
@@ -724,30 +628,12 @@ ADD
   CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
 
 --
--- Constraints for table `reviews`
+-- Constraints for table `users`
 --
 ALTER TABLE
-  `reviews`
+  `users`
 ADD
-  CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-ADD
-  CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
-
---
--- Constraints for table `review_status`
---
-ALTER TABLE
-  `review_status`
-ADD
-  CONSTRAINT `review_status_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
-
---
--- Constraints for table `roles`
---
-ALTER TABLE
-  `roles`
-ADD
-  CONSTRAINT `roles_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users` (`role_id`);
+  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
 
 --
 -- Constraints for table `roles_permissions`

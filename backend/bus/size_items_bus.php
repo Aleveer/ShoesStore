@@ -91,4 +91,15 @@ class SizeItemsBUS implements BUSInterface
         }
         return null;
     }
+
+    public function getModelByProductId($productId)
+    {
+        $result = [];
+        foreach ($this->sizeItemsList as $sizeItems) {
+            if ($sizeItems->getProductId() == $productId) {
+                $result[] = $sizeItems;
+            }
+        }
+        return $result;
+    }
 }

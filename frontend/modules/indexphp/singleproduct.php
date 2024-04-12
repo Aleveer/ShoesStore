@@ -15,7 +15,7 @@ $categoriesList = CategoriesBUS::getInstance()->getAllModels();
 $size = SizeBUS::getInstance()->getAllModels();
 $id = $_GET['id'];
 $product = ProductBUS::getInstance()->getModelById($id);
-$sizeItemsProduct = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id']);
+$sizeItemsProduct = SizeItemsBUS::getInstance()->getModelByProductId($id);
 if (isLogin()) {
     $token = session::getInstance()->getSession('tokenLogin');
     $tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
@@ -64,7 +64,7 @@ if (isLogin()) {
         <hr>
         <div class="pitem">
             <figure class="pimg">
-                <img src="<?php $product->getImage() ?>" alt="">
+                <img src="<?php echo $product->getImage() ?>" alt="">
                 <figcaption>
                     <h3>Information</h3>
                     <p>
@@ -89,7 +89,7 @@ if (isLogin()) {
                     </fieldset>
                 </div>
                 <div class="psize">
-                    Size :
+                    Size:
                     <?php
                     $check = 0;
                     foreach ($sizeItemsProduct as $s) {

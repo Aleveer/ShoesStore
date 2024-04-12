@@ -73,35 +73,38 @@ $msg = session::getInstance()->getFlashData('msg');
 $msgType = session::getInstance()->getFlashData('msg_type');
 ?>
 
-<?php
-layouts('header');
-?>
-
-<div class="row">
-    <div class="col-4" style="margin:50px auto;">
-        <h2 class="cw" style="text-align: center; text-transform: uppercase;">Đăng Nhập</h2>
-        <?php if (!empty($msg)) {
-            getMsg($msg, $msgType);
-        } ?>
-        <form action="" method="post">
-            <div class="form-group mg-form">
-                <label class="cw" for="">Email</label>
-                <input name="email" type="email" class="form-control" placeholder="Địa chỉ Email...">
-            </div>
-            <div class="form-group mg-form">
-                <label class="cw" for="">Password</label>
-                <input name="password" type="password" class="form-control" placeholder="Mật khẩu...">
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-block mg-form" style="width:100%; margin-top:16px;">Đăng
-                nhập</button>
-            <hr>
-            <p class="text-center"><a href="?module=auth&action=forgot">Quên mật khẩu</a></p>
-            <p class="text-center"><a href="?module=auth&action=register">Đăng kí tài khoản</a></p>
-        </form>
-    </div>
+<div id="header">
+    <?php layouts('header', $data); ?>
 </div>
 
-<?php
-layouts('footer');
-?>
+<body>
+    <div class="row">
+        <div class="col-4" style="margin:50px auto;">
+            <h2 class="cw" style="text-align: center; text-transform: uppercase;">Đăng Nhập</h2>
+            <?php if (!empty($msg)) {
+                getMsg($msg, $msgType);
+            } ?>
+            <form action="" method="post">
+                <div class="form-group mg-form">
+                    <label class="cw" for="">Email</label>
+                    <input name="email" type="email" class="form-control" placeholder="Địa chỉ Email...">
+                </div>
+                <div class="form-group mg-form">
+                    <label class="cw" for="">Password</label>
+                    <input name="password" type="password" class="form-control" placeholder="Mật khẩu...">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block mg-form"
+                    style="width:100%; margin-top:16px;">Đăng
+                    nhập</button>
+                <hr>
+                <p class="text-center"><a href="?module=auth&action=forgot">Quên mật khẩu</a></p>
+                <p class="text-center"><a href="?module=auth&action=register">Đăng kí tài khoản</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+
+<div id="footer">
+    <?php layouts('footer'); ?>
+</div>

@@ -15,9 +15,6 @@ $data = [
     'pageTitle' => 'Quên mật khẩu'
 ];
 
-// Đã nhúng file function.php bên index.php
-layouts('header', $data);
-
 // Kiểm tra trạng thái đăng nhập
 if (isLogin()) {
     redirect('?module=indexphp&action=userhomepage');
@@ -74,26 +71,31 @@ $msgType = session::getInstance()->getFlashData('msg_type');
 
 ?>
 
-<div class="row">
-    <div class="cw col-4" style="margin:50px auto;">
-        <h2 style="text-align: center; text-transform: uppercase;">Quên mật khẩu</h2>
-        <?php
-        if (!empty($msg)) {
-            getMsg($msg, $msgType);
-        } ?>
-        <form action="" method="post">
-            <div class="form-group mg-form">
-                <label for="">Email</label>
-                <input name="email" type="email" class="form-control" placeholder="Địa chỉ Email...">
-            </div>
-            <button type="submit" class="btn btn-primary btn-block mg-form mt-3" style="width:100%;">Gửi</button>
-            <hr>
-            <p class="text-center"><a href="?module=auth&action=login">Đăng nhập</a></p>
-            <p class="text-center"><a href="?module=auth&action=register">Đăng kí tài khoản</a></p>
-        </form>
-    </div>
+<div id="footer">
+    <?php layouts('footer'); ?>
 </div>
 
-<?php
-layouts('footer');
-?>
+<body>
+    <div class="row">
+        <div class="cw col-4" style="margin:50px auto;">
+            <h2 style="text-align: center; text-transform: uppercase;">Quên mật khẩu</h2>
+            <?php
+            if (!empty($msg)) {
+                getMsg($msg, $msgType);
+            } ?>
+            <form action="" method="post">
+                <div class="form-group mg-form">
+                    <label for="">Email</label>
+                    <input name="email" type="email" class="form-control" placeholder="Địa chỉ Email...">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mg-form mt-3" style="width:100%;">Gửi</button>
+                <hr>
+                <p class="text-center"><a href="?module=auth&action=login">Đăng nhập</a></p>
+                <p class="text-center"><a href="?module=auth&action=register">Đăng kí tài khoản</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+<div id="footer">
+    <?php layouts('footer'); ?>
+</div>

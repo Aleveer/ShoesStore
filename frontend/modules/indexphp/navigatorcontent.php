@@ -59,23 +59,23 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                 for ($i = 0; $i < 3; $i++) {
                     $product = $randomProducts[$i];
                     echo '
-            <li>
-                <div class="product-item">
-                    <div>
-                        <a href>
-                            <img src="' . $product->getImage() . '" alt>
-                        </a>
+        <li>
+            <div class="product-item">
+                <div>
+                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '">
+                        <img src="' . $product->getImage() . '" alt>
+                    </a>
+                </div>
+                <div class="product-info">
+                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '" class="product-name">' . $product->getName() . '</a>
+                    <div class="product-price">
+                        <ul class="price"><span>$' . $product->getPrice() . '</span>
+                            <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
+                        </ul>
                     </div>
-                    <div class="product-info">
-                        <a href="#" class="product-name">' . $product->getName() . '</a>
-                        <div class="product-price">
-                            <ul class="price"><span>$' . $product->getPrice() . '</span>
-                                <a href="#"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
-                            </ul>
-                        </div>
-                    </div>
-            </li>
-            ';
+                </div>
+        </li>
+    ';
                 }
                 ?>
                 <li>
@@ -90,7 +90,8 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                                 ullamcorper mattis,
                                 pulvinar dapibus leo.
                             </p>
-                            <span><a href="?module=indexphp&action=product">SEE MORE <i class="fa-solid fa-arrow-right"></i></a></span>
+                            <span><a href="?module=indexphp&action=product">SEE MORE <i
+                                        class="fa-solid fa-arrow-right"></i></a></span>
                         </div>
                     </div>
                 </li>
@@ -129,23 +130,23 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                     for ($i = 0; $i < 8; $i++) {
                         $product = $products[$i];
                         echo '
-                    <li>
-                        <div class="product-item">
-                            <div>
-                                <a href>
-                                    <img src="' . $product->getImage() . '" alt>
-                                </a>
-                            </div>
-                            <div class="product-info">
-                                <a href="#" class="product-name">' . $product->getName() . '</a>
-                                <div class="product-price">
-                                    <ul class="price"><span>$' . $product->getPrice() . '</span>
-                                        <a href="#"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
-                                    </ul>
-                                </div>
-                            </div>
-                    </li>
-                    ';
+        <li>
+            <div class="product-item">
+                <div>
+                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '">
+                        <img src="' . $product->getImage() . '" alt>
+                    </a>
+                </div>
+                <div class="product-info">
+                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '" class="product-name">' . $product->getName() . '</a>
+                    <div class="product-price">
+                        <ul class="price"><span>$' . $product->getPrice() . '</span>
+                            <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
+                        </ul>
+                    </div>
+                </div>
+        </li>
+    ';
                     }
                     ?>
                 </ul>

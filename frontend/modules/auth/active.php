@@ -18,7 +18,7 @@ layouts('header', $data);
 
 if (!empty(filter()['token']))  $token = filter()['token'];
 if (!empty($token)) {
-    // nếu có tồn tại token thì truy vấn và CSDL để check xem có trùng activeToken trong user hay không
+    //Nếu có tồn tại token thì truy vấn và CSDL để check xem có trùng activeToken trong user hay không
     $userQuery = UserBUS::getInstance()->getModelByActiveToken($token);
     $userList = UserBUS::getInstance()->getAllModels();
     if (!empty($userQuery)) {

@@ -201,7 +201,7 @@ VALUES
         '3',
         '300000',
         'Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.',
-        '../img/Tennis Shoes/NikeCourt Air Zoom Vapor Pro 2 (Nữ).avif',
+        '../img/Tennis Shoes/NikeCourt Air Zoom Vapor Pro 2.avif',
         '1'
     ),
     (

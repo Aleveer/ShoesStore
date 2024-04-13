@@ -94,7 +94,10 @@
         </div>
     </div>
 
-    <?php     include('../inc/script.php');  ?>
+    <?php
+        include ('../inc/app/app.php');
+        include ('../inc/chart.php')
+    ?>
 </body>
 
 </html>

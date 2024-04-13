@@ -81,28 +81,45 @@
                                     </button>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Order ID: </h1>
+                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Order ID: 1,001</h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body text-start">
-                                                    <div class="row p-3">
-                                                        <div class="border border-black p-2">
-                                                            <div class="col-6 border-end border-black">
-                                                                <h5>Customer ID: </h5>
-                                                                <p>User ID: </p>
-                                                                <p>Order Date: </p>
-                                                                <p>Total Amount: </p>
-                                                                <hr class="border-black">
-                                                                <p>Product ID: </p>
-                                                                <p>Quantity: </p>
-                                                                <p>Price: </p>
+                                                    <div class="row p-3 overflow-hidden">
+                                                        <div style="display: flex; flex-direction: row; justify-content: space-between;" class="border border-black p-2">
+                                                            <div class="col-5">
+                                                                <h5 class="p-0">Customer ID: 01</h5>
+                                                                <p>User ID: 101</p>
+                                                                <p>Order Date: 03/03/2025</p>
+                                                                <p>Total Amount: 1.000.0000 Đ</p>
                                                             </div>
-                                                            <div class="col-3">
-                                                                <img src="" alt="img">
+                                                            <div class="scrollbar-listItem col-7 overflow-y-scroll">
+                                                                <div>
+                                                                    <p>Product ID: 20</p>
+                                                                    <p>Quantity: 1</p>
+                                                                    <p>Price: 1.000.0000 Đ</p>
+                                                                    <img
+                                                                            style="width: 200px; border-radius: 16px"
+                                                                            src="../../../../../img/Running%20Shoes/Asics%20Gel-Excite%209.avif"
+                                                                            alt="IMG"
+                                                                    >
+                                                                    <hr>
+                                                                </div>
+                                                                <div>
+                                                                    <p>Product ID: 20</p>
+                                                                    <p>Quantity: 1</p>
+                                                                    <p>Price: 1.000.0000 Đ</p>
+                                                                    <img
+                                                                            style="width: 200px; border-radius: 16px"
+                                                                            src="../../../../../img/Running%20Shoes/Asics%20Gel-Excite%209.avif"
+                                                                            alt="IMG"
+                                                                    >
+                                                                    <hr>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -124,7 +141,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </td>
                             </tr>
                         </tbody>

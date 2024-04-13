@@ -1,0 +1,14 @@
+.scrollbar-listItem {
+    height: 350px;
+}
+
+.scrollbar-listItem::-webkit-scrollbar {
+    width: 5px;
+    background: gray;
+    border-radius: 8px;
+}
+
+.scrollbar-listItem::-webkit-scrollbar-thumb {
+    background: aquamarine;
+    border-radius: 8px;
+}

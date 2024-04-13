@@ -34,7 +34,11 @@ class OrdersDAO implements DAOInterface
         $userId = $rs['user_id'];
         $orderDate = $rs['order_date'];
         $totalAmount = $rs['total_amount'];
-        return new OrdersModel($id, $userId, $orderDate, $totalAmount);
+        $customerName = $rs['customer_name'];
+        $customerPhone = $rs['customer_phone'];
+        $customerAddress = $rs['customer_address'];
+        $status = $rs['status'];
+        return new OrdersModel($id, $userId, $orderDate, $totalAmount, $customerName, $customerPhone, $customerAddress, $status);
     }
 
     public function getAll(): array
@@ -74,17 +78,35 @@ class OrdersDAO implements DAOInterface
 
     public function insert($ordersModel): int
     {
-        $query = "INSERT INTO orders (user_id, order_date, total_amount) VALUES (?, ?, ?)";
-        $args = [$ordersModel->getUserId(), $ordersModel->getOrderDate(), $ordersModel->getTotalAmount()];
-        return DatabaseConnection::executeUpdate(  $query, ...$args);
+        $query = "INSERT INTO orders (user_id, order_date, total_amount, customer_name, customer_phone, customer_address, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $args = [
+            $ordersModel->getUserId(),
+            $ordersModel->getOrderDate(),
+            $ordersModel->getTotalAmount(),
+            $ordersModel->getCustomerName(),
+            $ordersModel->getCustomerPhone(),
+            $ordersModel->getCustomerAddress(),
+            $ordersModel->getStatus()
+        ];
+        return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($ordersModel): int
     {
-        $query = "UPDATE orders SET user_id = ?, order_date = ?, total_amount = ? WHERE id = ?";
-        $args = [$ordersModel->getUserId(), $ordersModel->getOrderDate(), $ordersModel->getTotalAmount(), $ordersModel->getId()];
+        $query = "UPDATE orders SET user_id = ?, order_date = ?, total_amount = ?, customer_name = ?, customer_phone = ?, customer_address = ?, status = ? WHERE id = ?";
+        $args = [
+            $ordersModel->getUserId(),
+            $ordersModel->getOrderDate(),
+            $ordersModel->getTotalAmount(),
+            $ordersModel->getCustomerName(),
+            $ordersModel->getCustomerPhone(),
+            $ordersModel->getCustomerAddress(),
+            $ordersModel->getStatus(),
+            $ordersModel->getId()
+        ];
         return DatabaseConnection::executeUpdate($query, ...$args);
     }
+
     public function delete(int $id): int
     {
         $query = "DELETE FROM orders WHERE id = ?";
@@ -98,7 +120,7 @@ class OrdersDAO implements DAOInterface
         }
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM orders WHERE id LIKE ? OR user_id LIKE ? OR order_date LIKE ? OR total_amount LIKE ?";
+            $query = "SELECT * FROM orders WHERE id LIKE ? OR user_id LIKE ? OR order_date LIKE ? OR total_amount LIKE ? or customer_name LIKE ? or customer_phone LIKE ? or customer_address like ?";
             $args = array_fill(0, 5, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];

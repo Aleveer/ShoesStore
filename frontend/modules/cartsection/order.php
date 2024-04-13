@@ -4,6 +4,7 @@ use backend\bus\ProductBUS;
 use backend\bus\CartsBUS;
 use backend\bus\UserBUS;
 use backend\bus\TokenLoginBUS;
+use backend\enums\OrderStatusEnums;
 use backend\models\OrderItemsModel;
 use backend\models\OrdersModel;
 use backend\services\session;
@@ -14,6 +15,7 @@ use backend\bus\OrderItemsBUS;
 use backend\bus\CouponsBUS;
 use backend\models\PaymentsModel;
 use backend\bus\PaymentsBUS;
+use backend\services\validation;
 
 requireLogin();
 CartsBUS::getInstance()->refreshData();
@@ -215,10 +217,59 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
             }
 
             //Create the order:
-            $orderModel = new OrdersModel(null, null, null, null);
+            $orderModel = new OrdersModel(null, null, null, null, null, null, null, null);
             $orderModel->setUserId($userModel->getId());
             $orderModel->setOrderDate($currentTime);
             $orderModel->setTotalAmount($totalPrice);
+
+            $customerName = $_POST['inputName'];
+            $customerPhone = $_POST['inputPhoneNumber'];
+            $customerAddress = $_POST['inputAddress'];
+
+            if (empty($customerName) || empty($customerPhone) || empty($customerAddress)) {
+                echo '<script>';
+                echo 'alert("Vui lòng nhập đầy đủ thông tin!")';
+                echo '</script>';
+                echo '<script>';
+                echo 'window.location.href = "?module=cartsection&action=order"';
+                echo '</script>';
+                die();
+            }
+
+            if (validation::isValidPhoneNumber($customerPhone) == false) {
+                echo '<script>';
+                echo 'alert("Số điện thoại không hợp lệ!")';
+                echo '</script>';
+                echo '<script>';
+                echo 'window.location.href = "?module=cartsection&action=order"';
+                echo '</script>';
+                die();
+            }
+
+            if (validation::isValidName($customerName) == false) {
+                echo '<script>';
+                echo 'alert("Tên không hợp lệ!")';
+                echo '</script>';
+                echo '<script>';
+                echo 'window.location.href = "?module=cartsection&action=order"';
+                echo '</script>';
+                die();
+            }
+
+            if (validation::isValidAddress($customerAddress) == false) {
+                echo '<script>';
+                echo 'alert("Địa chỉ không hợp lệ!")';
+                echo '</script>';
+                echo '<script>';
+                echo 'window.location.href = "?module=cartsection&action=order"';
+                echo '</script>';
+                die();
+            }
+
+            $orderModel->setCustomerName($customerName);
+            $orderModel->setCustomerPhone($customerPhone);
+            $orderModel->setCustomerAddress($customerAddress);
+            $orderModel->setStatus(OrderStatusEnums::PENDING);
             OrdersBUS::getInstance()->addModel($orderModel);
             OrdersBUS::getInstance()->refreshData();
 

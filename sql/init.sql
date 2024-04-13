@@ -102,7 +102,11 @@ CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `order_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `total_amount` double NOT NULL
+  `total_amount` double NOT NULL,
+  `customer_name` varchar(50) NOT NULL,
+  `customer_phone` varchar(10) NOT NULL,
+  `customer_address` varchar(255) NOT NULL,
+  `status` enum('pending', 'accepted', 'completed', 'shipping', 'canceled') NOT NULL DEFAULT 'pending'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------

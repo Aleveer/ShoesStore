@@ -183,7 +183,7 @@ if (isLogin()) {
                                             die($output);
                                         }
                                 }
-                            } else if ($cartItemForUser == null) {
+                            } else if ($cartItem == null) {
                                 $cart = new CartsModel(null, null, null, null, null);
                                 $cart->setUserId($userModel->getId());
                                 $cart->setProductId($product->getId());

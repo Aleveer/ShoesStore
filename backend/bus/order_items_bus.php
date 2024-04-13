@@ -80,10 +80,12 @@ class OrderItemsBUS implements BUSInterface
             empty($orderItemsModel->getProductId()) ||
             empty($orderItemsModel->getQuantity()) ||
             empty($orderItemsModel->getPrice()) ||
+            empty($orderItemsModel->getSizeId()) ||
             $orderItemsModel->getOrderId() == null ||
             $orderItemsModel->getProductId() == null ||
             $orderItemsModel->getQuantity() == null ||
-            $orderItemsModel->getPrice() == null
+            $orderItemsModel->getPrice() == null ||
+            $orderItemsModel->getSizeId() == null
         ) {
             throw new InvalidArgumentException("Please fill in all fields");
         }

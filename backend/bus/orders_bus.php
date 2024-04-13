@@ -33,16 +33,25 @@ class OrdersBUS implements BUSInterface
     {
         return OrdersDAO::getInstance()->getById($id);
     }
+
     public function addModel($ordersModel): int
     {
         $this->validateModel($ordersModel);
         $result = OrdersDAO::getInstance()->insert($ordersModel);
         if ($result) {
+            $ordersModel->setId($result);
             $this->ordersList[] = $ordersModel;
             $this->refreshData();
+            return $result;
         }
-        return $result;
+        return 0;
     }
+
+    public function getLastInsertId()
+    {
+        return OrdersDAO::getInstance()->getLastOrderId();
+    }
+
     public function updateModel($ordersModel): int
     {
         $this->validateModel($ordersModel);
@@ -72,12 +81,10 @@ class OrdersBUS implements BUSInterface
             empty($ordersModel->getUserId()) ||
             empty($ordersModel->getTotalAmount()) ||
             empty($ordersModel->getOrderDate()) ||
-            empty($ordersModel->getCustomerId()) ||
             $ordersModel->getUserId() == null ||
             $ordersModel->getTotalAmount() == null ||
             $ordersModel->getTotalAmount() < 1 ||
-            $ordersModel->getOrderDate() == null ||
-            $ordersModel->getCustomerId() == null
+            $ordersModel->getOrderDate() == null
         ) {
             throw new InvalidArgumentException("Please fill in all fields");
         }

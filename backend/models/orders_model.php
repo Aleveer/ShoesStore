@@ -1,12 +1,12 @@
 <?php
 namespace backend\models;
+
 class OrdersModel
 {
-    private $id, $customerId, $userId, $orderDate, $totalAmount;
-    public function __construct($id, $customerId, $userId, $orderDate, $totalAmount)
+    private $id, $userId, $orderDate, $totalAmount;
+    public function __construct($id, $userId, $orderDate, $totalAmount)
     {
         $this->id = $id;
-        $this->customerId = $customerId;
         $this->userId = $userId;
         $this->orderDate = $orderDate;
         $this->totalAmount = $totalAmount;
@@ -15,11 +15,6 @@ class OrdersModel
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getCustomerId()
-    {
-        return $this->customerId;
     }
 
     public function getUserId()
@@ -42,11 +37,6 @@ class OrdersModel
         $this->id = $id;
     }
 
-    public function setCustomerId($customerId)
-    {
-        $this->customerId = $customerId;
-    }
-
     public function setUserId($userId)
     {
         $this->userId = $userId;
@@ -61,4 +51,5 @@ class OrdersModel
     {
         $this->totalAmount = $totalAmount;
     }
+
 }

@@ -42,6 +42,7 @@ class SizeItemsBUS implements BUSInterface
         }
         return $result;
     }
+
     public function updateModel($sizeItemsModel): int
     {
         $this->validateModel($sizeItemsModel);
@@ -53,6 +54,7 @@ class SizeItemsBUS implements BUSInterface
         }
         return $result;
     }
+
     public function deleteModel($sizeItemsModel): int
     {
         $result = SizeItemsDAO::getInstance()->delete($sizeItemsModel);

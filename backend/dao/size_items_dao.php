@@ -77,14 +77,16 @@ class SizeItemsDAO implements DAOInterface
 
     public function update($sizeItem): int
     {
-        $updateSql = "UPDATE size_items SET product_id = ?, size_id = ? WHERE quantity = ?";
+        $updateSql = "UPDATE size_items SET product_id = ?, size_id = ?, quantity = ? WHERE id = ?";
         $args = [
             $sizeItem->getProductId(),
             $sizeItem->getSizeId(),
             $sizeItem->getQuantity(),
+            $sizeItem->getId(),
         ];
         return DatabaseConnection::executeUpdate($updateSql, ...$args);
     }
+
 
     public function delete(int $id): int
     {
@@ -100,7 +102,7 @@ class SizeItemsDAO implements DAOInterface
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
             $query = "SELECT * FROM size_items WHERE id LIKE ? OR product_id LIKE ? OR size_id LIKE ? OR quantity LIKE ?";
-            $args = array_fill(0,  4, "%" . $condition . "%");
+            $args = array_fill(0, 4, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM size_items WHERE $column LIKE ?";

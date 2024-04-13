@@ -33,11 +33,10 @@ class CouponsDAO implements DAOInterface
         $id = $rs['id'];
         $code = $rs['code'];
         $quantity = $rs['quantity'];
-        $required = $rs['required'];
         $percent = $rs['percent'];
         $expired = $rs['expired'];
         $description = $rs['description'];
-        return new CouponsModel($id, $code, $quantity, $required, $percent, $expired, $description);
+        return new CouponsModel($id, $code, $quantity, $percent, $expired, $description);
     }
 
     public function getAll(): array
@@ -66,15 +65,15 @@ class CouponsDAO implements DAOInterface
 
     public function insert($couponsModel): int
     {
-        $query = "INSERT INTO coupons (code, quantity, required, percent, expired, description) VALUES (?, ?, ?, ?, ?, ?)";
-        $args = [$couponsModel->getCode(), $couponsModel->getQuantity(), $couponsModel->getRequired(), $couponsModel->getPercent(), $couponsModel->getExpired(), $couponsModel->getDescription()];
+        $query = "INSERT INTO coupons (code, quantity, percent, expired, description) VALUES (?, ?, ?, ?, ?, ?)";
+        $args = [$couponsModel->getCode(), $couponsModel->getQuantity(), $couponsModel->getPercent(), $couponsModel->getExpired(), $couponsModel->getDescription()];
         return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($couponsModel): int
     {
-        $query = "UPDATE coupons SET code = ?, quantity = ?, required = ?, percent = ?, expired = ?, description = ? WHERE id = ?";
-        $args = [$couponsModel->getCode(), $couponsModel->getQuantity(), $couponsModel->getRequired(), $couponsModel->getPercent(), $couponsModel->getExpired(), $couponsModel->getDescription(), $couponsModel->getId()];
+        $query = "UPDATE coupons SET code = ?, quantity = ?, percent = ?, expired = ?, description = ? WHERE id = ?";
+        $args = [$couponsModel->getCode(), $couponsModel->getQuantity(), $couponsModel->getPercent(), $couponsModel->getExpired(), $couponsModel->getDescription(), $couponsModel->getId()];
         return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
@@ -91,8 +90,8 @@ class CouponsDAO implements DAOInterface
         }
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM coupons WHERE id LIKE ? OR code LIKE ? OR quantity LIKE ? OR required LIKE ? OR percent LIKE ? OR expired LIKE ? OR description LIKE ?";
-            $args = array_fill(0,  7, "%" . $condition . "%");
+            $query = "SELECT * FROM coupons WHERE id LIKE ? OR code LIKE ? OR quantity LIKE ? OR percent LIKE ? OR expired LIKE ? OR description LIKE ?";
+            $args = array_fill(0, 7, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM coupons WHERE $column LIKE ?";

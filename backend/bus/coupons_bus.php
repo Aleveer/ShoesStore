@@ -86,11 +86,15 @@ class CouponsBUS implements BUSInterface
     {
         if (
             empty($couponsModel->getCode()) ||
-            empty($couponsModel->getDiscount()) ||
-            empty($couponsModel->getExpirationDate()) ||
+            empty($couponsModel->getQuantity()) ||
+            empty($couponsModel->getPercent()) ||
+            empty($couponsModel->getExpired()) ||
+            empty($couponsModel->getDescription()) ||
             $couponsModel->getCode() == null ||
-            $couponsModel->getDiscount() == null ||
-            $couponsModel->getExpirationDate() == null
+            $couponsModel->getQuantity() == null ||
+            $couponsModel->getPercent() == null ||
+            $couponsModel->getExpired() == null ||
+            $couponsModel->getDescription() == null
         ) {
             throw new InvalidArgumentException("Invalid coupons model");
         }

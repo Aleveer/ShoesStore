@@ -1,4 +1,5 @@
 <?php
+use backend\bus\PaymentMethodsBUS;
 use backend\bus\ProductBUS;
 use backend\bus\CartsBUS;
 use backend\bus\UserBUS;
@@ -11,6 +12,8 @@ use backend\bus\SizeBUS;
 use backend\bus\OrdersBUS;
 use backend\bus\OrderItemsBUS;
 use backend\bus\CouponsBUS;
+use backend\models\PaymentsModel;
+use backend\bus\PaymentsBUS;
 
 requireLogin();
 CartsBUS::getInstance()->refreshData();
@@ -78,9 +81,8 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
             </div>
             <div class="col-2">
                 <label for="inputPayment" class="form-label">Payment Method</label>
-                <select id="inputPayment" class="form-select form-select-sm">
+                <select id="inputPaymentId" class="form-select form-select-sm">
                     <option selected>Cash</option>
-                    <option>ATM</option>
                     <option>Credit Card</option>
                 </select>
             </div>
@@ -130,82 +132,92 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
         <div class="btn-group ">
             <input type="button" id="btnBack" value="Back"
                 onclick="window.location.href='?module=cartsection&action=cart'">
-            <p id="totalPrice"> </p>
+                <p id="totalPrice">Final price:</p>
             <input type="submit" name="submitButton" id="order-confirm-submit" value="Submit">
         </div>
     </form>
     <?php
     //button to submit the order :
     if (isPost()) {
+        $totalPrice = null;
         if (isset($_POST['submitButton'])) {
-            // $filterAll = filter();
-            // $inputName = $filterAll['inputName'];
-            // $inputPhoneNumber = $filterAll['inputPhoneNumber'];
-            // $inputAddress = $filterAll['inputAddress'];
-            // $inputDiscount = $filterAll['inputDiscount'];
-    
+            //Get current time:
+            $currentDate = date('Y-m-d');
+            $currentTime = date('Y-m-d H:i:s');
+
+            //Calculate the total price:
+            $totalPrice = 0;
+            foreach ($cartListFromUser as $cartModel) {
+                $productModel = ProductBUS::getInstance()->getModelById($cartModel->getProductId());
+                $totalPrice += $productModel->getPrice() * $cartModel->getQuantity();
+            }
+
             //Check for discount:
-            // if(isset($_POST['discount-code'])) {
-            //     $discountCode = $_POST['discount-code'];
-            // } else {
-            //     $discountCode = null;
-            // }
-    
-            // if ($discountCode != null) {
-            //     //Check if the discount code is valid:
-            //     $discountModel = CouponsBUS::getInstance()->getModelByCode($discountCode);
-            //     //Check if the discount code is expired:
-            //     if ($discountModel->getExpiredDate() < $currentTime) {
-            //         echo '<script>';
-            //         echo 'alert("Mã giảm giá đã hết hạn!")';
-            //         echo '</script>';
-            //         die();
-            //     }
-    
-            //     //Check if the discount code is valid:
-            //     if ($discountModel == null || trim($discountCode) == "") {
-            //         echo '<script>';
-            //         echo 'alert("Mã giảm giá không hợp lệ!")';
-            //         echo '</script>';
-            //         die();
-            //     }
-    
-            //     //Check if the discount code has remaining quantity = 0
-            //     if ($discountModel->getRemainingQuantity() == 0) {
-            //         echo '<script>';
-            //         echo 'alert("Mã giảm giá đã hết lượt sử dụng!")';
-            //         echo '</script>';
-            //         die();
-            //     }
-    
-            //     //If valid, apply the discount to the total price, getDiscount is percentage:
-            //     $totalPrice = $totalPrice - ($totalPrice * $discountModel->getDiscount() / 100);
-            //     echo '<script>';
-            //     echo 'alert("Đã áp dụng mã giảm giá!")';
-            //     echo '</script>';
-            //     echo '<script>';
-            //     echo '$.post("?module=cartsection&action=order", { discount: ' . $discountModel->getDiscount() . ' }, function(discountedPrice) {';
-            //     echo 'updateTotalPrice(discountedPrice);';
-            //     echo '});';
-            //     echo '</script>';
-    
-            //     //Update the coupon remaining quantity:
-            //     $discountModel->setRemainingQuantity($discountModel->getRemainingQuantity() - 1);
-            //     CouponsBUS::getInstance()->updateModel($discountModel);
-            //     CouponsBUS::getInstance()->refreshData();
-            // }
-    
+            if (isset($_POST['discount-code'])) {
+                $discountCode = $_POST['discount-code'];
+            } else {
+                $discountCode = null;
+            }
+
+            if ($discountCode != null) {
+                //Check if the discount code is valid:
+                $discountModel = CouponsBUS::getInstance()->getModelByCode($discountCode);
+                //Check if the discount code is valid:
+                if ($discountModel == null || trim($discountCode) == "") {
+                    echo '<script>';
+                    echo 'alert("Mã giảm giá không hợp lệ!")';
+                    echo '</script>';
+                    echo '<script>';
+                    echo 'window.location.href = "?module=cartsection&action=order"';
+                    echo '</script>';
+                    die();
+                }
+
+                //Check if the discount code has remaining quantity = 0
+                if ($discountModel->getQuantity() == 0) {
+                    echo '<script>';
+                    echo 'alert("Mã giảm giá đã hết lượt sử dụng!")';
+                    echo '</script>';
+                    echo '<script>';
+                    echo 'window.location.href = "?module=cartsection&action=order"';
+                    echo '</script>';
+                    die();
+                }
+
+
+                //Check if the discount code is expired:
+                if ($discountModel->getExpired() < $currentDate) {
+                    echo '<script>';
+                    echo 'alert("Mã giảm giá đã hết hạn!")';
+                    echo '</script>';
+                    //Reload the page:
+                    echo '<script>';
+                    echo 'window.location.href = "?module=cartsection&action=order"';
+                    echo '</script>';
+                    die();
+                }
+
+                //If valid, apply the discount to the total price, getPercent is percentage:
+                $totalPrice = $totalPrice - ($totalPrice * $discountModel->getPercent() / 100);
+                echo '<script>';
+                echo 'alert("Đã áp dụng mã giảm giá thành công!")';
+                echo '</script>';
+                // echo '<script>';
+                // echo '$.POST("?module=cartsection&action=order", { discount: ' . $discountModel->getDiscount() . ' }, function(discountedPrice) {';
+                // echo 'updateTotalPrice(discountedPrice);';
+                // echo '});';
+                // echo '</script>';
+
+                //Update the coupon remaining quantity:
+                $discountModel->setQuantity($discountModel->getQuantity() - 1);
+                CouponsBUS::getInstance()->updateModel($discountModel);
+                CouponsBUS::getInstance()->refreshData();
+            }
+
             //Create the order:
             $orderModel = new OrdersModel(null, null, null, null);
             $orderModel->setUserId($userModel->getId());
-            //Get current time:
-            $currentTime = date('Y-m-d H:i:s');
             $orderModel->setOrderDate($currentTime);
-            //Calulate the total price:
-            $totalPrice = 0;
-            foreach ($cartListFromUser as $cartModel) {
-                $totalPrice += $cartModel->getQuantity() * ProductBUS::getInstance()->getModelById($cartModel->getProductId())->getPrice();
-            }
             $orderModel->setTotalAmount($totalPrice);
             OrdersBUS::getInstance()->addModel($orderModel);
             OrdersBUS::getInstance()->refreshData();
@@ -221,6 +233,29 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
                 $orderItemModel->setPrice(ProductBUS::getInstance()->getModelById($cartModel->getProductId())->getPrice() * $cartModel->getQuantity());
                 OrderItemsBUS::getInstance()->addModel($orderItemModel);
                 OrderItemsBUS::getInstance()->refreshData();
+            }
+
+            $paymentMethod = isset($_POST['inputPaymentMethod']) ? $_POST['inputPaymentMethod'] : null;
+            error_log('Payment model: ' . json_encode($paymentMethod));
+            echo $paymentMethod;
+
+            if($paymentMethod == "Cash") {
+                $paymentModel = new PaymentsModel(null, null, null, null, null);
+                $paymentModel->setOrderId($lastOrderId);
+                $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(1)->getId());
+                $paymentModel->setPaymentDate($currentTime);
+                $paymentModel->setTotalPrice($totalPrice);
+                error_log('Payment model: ' . json_encode($paymentModel));
+                PaymentsBUS::getInstance()->addModel($paymentModel);
+                PaymentsBUS::getInstance()->refreshData();
+            } else if ($paymentMethod == "Credit Card") {
+                $paymentModel = new PaymentsModel(null, null, null, null, null);
+                $paymentModel->setOrderId($lastOrderId);
+                $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(2)->getId());
+                $paymentModel->setPaymentDate($currentTime);
+                $paymentModel->setTotalPrice($totalPrice);
+                PaymentsBUS::getInstance()->addModel($paymentModel);
+                PaymentsBUS::getInstance()->refreshData();
             }
 
             // When everything is successful, update the quantity in product, check for sizesItem as well:

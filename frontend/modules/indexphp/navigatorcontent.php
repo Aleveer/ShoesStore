@@ -42,7 +42,7 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                     <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/class2.jpg" alt>
                     <div class="overlay__box">
                         <h3>WOMAN</h3>
-                        <form method="POST" action="?module=indexphp&amp;action=product">
+                        <form method="POST" action="?module=indexphp&action=product">
                             <input type="hidden" name="gender" value="Female">
                             <p><button type="submit">SEE PRODUCT</button></p>
                         </form>
@@ -52,7 +52,7 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                     <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/class3.jpg" alt>
                     <div class="overlay__box">
                         <h3>MAN</h3>
-                        <form method="POST" action="?module=indexphp&amp;action=product">
+                        <form method="POST" action="?module=indexphp&action=product">
                             <input type="hidden" name="gender" value="Male">
                             <p><button type="submit">SEE PRODUCT</button></p>
                         </form>
@@ -60,6 +60,7 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                 </div>
             </div>
         </div>
+        <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/navigator_content_redirect.js"></script>
     </div>
 </div>
 <div class="list__product">

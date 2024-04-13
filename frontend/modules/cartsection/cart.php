@@ -111,7 +111,7 @@ if (isPost()) {
                         //If the product is not found, delete that product from the cart and refresh the data:
                         //Possibly tell user that the product is out of stock / unavailable:
                         echo '<script>';
-                        echo 'alert("Sản phẩm ' . $cart->getProductId() . ' không tồn tại hoặc đã hết hàng!")';
+                        echo 'alert("Sản phẩm với mã' . $cart->getProductId() . ' không tồn tại hoặc đã hết hàng!")';
                         echo '</script>';
                         CartsBUS::getInstance()->deleteModel($cart->getId());
                         CartsBUS::getInstance()->refreshData();

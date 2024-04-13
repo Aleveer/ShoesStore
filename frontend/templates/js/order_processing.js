@@ -8,6 +8,7 @@ $(document).ready(function () {
             var inputPhoneNumber = $('#inputPhoneNumberId').val();
             var inputAddress = $('#inputAddressId').val();
             var inputDiscount = $('#inputDiscountId').val();
+            var inputPaymentMethod = $('#inputPaymentId').val();
 
             if (!inputName) {
                 alert('Vui lòng nhập tên');
@@ -20,6 +21,11 @@ $(document).ready(function () {
             }
             if (!inputAddress) {
                 alert('Vui lòng nhập địa chỉ');
+                return;
+            }
+
+            if(!inputPaymentMethod) {
+                alert('Vui lòng chọn phương thức thanh toán');
                 return;
             }
 
@@ -39,20 +45,17 @@ $(document).ready(function () {
                     inputName: inputName,
                     inputPhoneNumber: inputPhoneNumber,
                     inputAddress: inputAddress,
-                    inputDiscount: inputDiscount
+                    inputDiscount: inputDiscount,
+                    inputPaymentMethod: inputPaymentMethod,
                 },
                 success: function (response) {
-                    // Parse the response (assuming it's JSON)
                     var data = JSON.parse(response);
-                    // Check if the order was successful
                     if (data.success) {
                         alert('Đặt hàng thành công!');
                     } else {
                         alert('Đặt hàng thất bại: ' + data.message);
                     }
-                },
-                error: function (error) {
-                    // Handle any errors
+                    console.log(inputPaymentMethod);
                 },
             });
         });

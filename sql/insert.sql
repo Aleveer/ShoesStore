@@ -1197,3 +1197,54 @@ VALUES
     (10, 5, 'ACTIVE'),
     (10, 6, 'INACTIVE'),
     (10, 7, 'INACTIVE');
+
+INSERT INTO
+    coupons (
+        id,
+        code,
+        quantity,
+        percent,
+        expired,
+        description
+    )
+VALUES
+    (
+        1,
+        'SALE10',
+        100,
+        10,
+        '2022-12-31',
+        'Giảm 10% cho tất cả sản phẩm'
+    ),
+    (
+        2,
+        'SALE20',
+        100,
+        20,
+        '2022-12-31',
+        'Giảm 20% cho tất cả sản phẩm'
+    ),
+    (
+        3,
+        'SALE30',
+        100,
+        30,
+        '2022-12-31',
+        'Giảm 30% cho tất cả sản phẩm'
+    ),
+    (
+        4,
+        'SALE40',
+        100,
+        40,
+        '2022-12-31',
+        'Giảm 40% cho tất cả sản phẩm'
+    ),
+    (
+        5,
+        'SALE50',
+        100,
+        50,
+        '2022-12-31',
+        'Giảm 50% cho tất cả sản phẩm'
+    );

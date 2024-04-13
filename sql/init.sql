@@ -65,7 +65,6 @@ CREATE TABLE `coupons` (
   `id` int(11) NOT NULL,
   `code` varchar(50) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `required` int(11) NOT NULL,
   `percent` int(3) NOT NULL,
   `expired` date NOT NULL,
   `description` varchar(255) NOT NULL

@@ -81,7 +81,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
             </div>
             <div class="col-2">
                 <label for="inputPayment" class="form-label">Payment Method</label>
-                <select id="inputPaymentId" class="form-select form-select-sm">
+                <select id="inputPaymentId" class="form-select form-select-sm" name="inputPaymentMethod">
                     <option selected>Cash</option>
                     <option>Credit Card</option>
                 </select>
@@ -132,7 +132,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
         <div class="btn-group ">
             <input type="button" id="btnBack" value="Back"
                 onclick="window.location.href='?module=cartsection&action=cart'">
-                <p id="totalPrice">Final price:</p>
+            <p id="totalPrice">Final price:</p>
             <input type="submit" name="submitButton" id="order-confirm-submit" value="Submit">
         </div>
     </form>
@@ -146,7 +146,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
             $currentTime = date('Y-m-d H:i:s');
 
             //Calculate the total price:
-            $totalPrice = 0;
+    
             foreach ($cartListFromUser as $cartModel) {
                 $productModel = ProductBUS::getInstance()->getModelById($cartModel->getProductId());
                 $totalPrice += $productModel->getPrice() * $cartModel->getQuantity();
@@ -207,7 +207,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
                 // echo 'updateTotalPrice(discountedPrice);';
                 // echo '});';
                 // echo '</script>';
-
+    
                 //Update the coupon remaining quantity:
                 $discountModel->setQuantity($discountModel->getQuantity() - 1);
                 CouponsBUS::getInstance()->updateModel($discountModel);
@@ -235,28 +235,28 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
                 OrderItemsBUS::getInstance()->refreshData();
             }
 
-            $paymentMethod = isset($_POST['inputPaymentMethod']) ? $_POST['inputPaymentMethod'] : null;
-            error_log('Payment model: ' . json_encode($paymentMethod));
-            echo $paymentMethod;
-
-            if($paymentMethod == "Cash") {
-                $paymentModel = new PaymentsModel(null, null, null, null, null);
-                $paymentModel->setOrderId($lastOrderId);
-                $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(1)->getId());
-                $paymentModel->setPaymentDate($currentTime);
-                $paymentModel->setTotalPrice($totalPrice);
-                error_log('Payment model: ' . json_encode($paymentModel));
-                PaymentsBUS::getInstance()->addModel($paymentModel);
-                PaymentsBUS::getInstance()->refreshData();
-            } else if ($paymentMethod == "Credit Card") {
-                $paymentModel = new PaymentsModel(null, null, null, null, null);
-                $paymentModel->setOrderId($lastOrderId);
-                $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(2)->getId());
-                $paymentModel->setPaymentDate($currentTime);
-                $paymentModel->setTotalPrice($totalPrice);
-                PaymentsBUS::getInstance()->addModel($paymentModel);
-                PaymentsBUS::getInstance()->refreshData();
+            //Create payment:
+            $paymentModel = new PaymentsModel(null, null, null, null, null);
+            $paymentModel->setOrderId($lastOrderId);
+            //Check isset for payment method:
+            if (isset($_POST['inputPaymentMethod'])) {
+                $paymentMethod = $_POST['inputPaymentMethod'];
+            } else {
+                $paymentMethod = null;
             }
+            if ($paymentMethod == null) {
+                //Set default cash payment method:
+                $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(1)->getId());
+            } else {
+                if ($paymentMethod == "Credit Card") {
+                    $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(2)->getId());
+                }
+            }
+
+            $paymentModel->setPaymentDate($currentTime);
+            $paymentModel->setTotalPrice($totalPrice);
+            PaymentsBUS::getInstance()->addModel($paymentModel);
+            PaymentsBUS::getInstance()->refreshData();
 
             // When everything is successful, update the quantity in product, check for sizesItem as well:
             foreach ($cartListFromUser as $cartModel) {

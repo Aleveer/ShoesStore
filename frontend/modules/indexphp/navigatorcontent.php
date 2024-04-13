@@ -34,7 +34,6 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                         <h3>RUNNING</h3>
                         <form method="POST" action="?module=indexphp&action=product">
                             <input type="hidden" name="category" value="Running Shoes">
-                            <p><button type="submit">SEE PRODUCT</button></p>
                         </form>
                     </div>
                 </div>
@@ -44,7 +43,6 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                         <h3>WOMAN</h3>
                         <form method="POST" action="?module=indexphp&action=product">
                             <input type="hidden" name="gender" value="Female">
-                            <p><button type="submit">SEE PRODUCT</button></p>
                         </form>
                     </div>
                 </div>
@@ -54,7 +52,6 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                         <h3>MAN</h3>
                         <form method="POST" action="?module=indexphp&action=product">
                             <input type="hidden" name="gender" value="Male">
-                            <p><button type="submit">SEE PRODUCT</button></p>
                         </form>
                     </div>
                 </div>

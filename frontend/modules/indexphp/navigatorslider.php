@@ -7,8 +7,10 @@
     <h1>XTREMA 3</h1>
     <h3>COMFY AND TRENDY</h3>
     <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-      Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
+      Experience the perfect blend of comfort and style with XTREMA 3.<br/>
+      Our products are designed with utmost attention to detail, <br/>
+      ensuring not just a trendy look, but also an
+      unparalleled comfort.
     </p>
 
     <div class="overlay">

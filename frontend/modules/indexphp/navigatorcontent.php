@@ -32,27 +32,18 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                     <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/class1.webp" alt>
                     <div class="overlay__box">
                         <h3>RUNNING</h3>
-                        <form method="POST" action="?module=indexphp&action=product">
-                            <input type="hidden" name="category" value="Running Shoes">
-                        </form>
                     </div>
                 </div>
                 <div class="box">
                     <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/class2.jpg" alt>
                     <div class="overlay__box">
                         <h3>WOMAN</h3>
-                        <form method="POST" action="?module=indexphp&action=product">
-                            <input type="hidden" name="gender" value="Female">
-                        </form>
                     </div>
                 </div>
                 <div class="box">
                     <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/class3.jpg" alt>
                     <div class="overlay__box">
                         <h3>MAN</h3>
-                        <form method="POST" action="?module=indexphp&action=product">
-                            <input type="hidden" name="gender" value="Male">
-                        </form>
                     </div>
                 </div>
             </div>
@@ -91,13 +82,9 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                     style="background: url('<?php echo _WEB_HOST_TEMPLATE ?> /images/hotproduct.jpg');">
                     <div class="overlay__product">
                         <h3>HOT PRODUCT</h3>
-                        <p>Lorem ipsum dolor sit amet,
-                            consectetur adipiscing
-                            elit.
-                            <br> Ut elit tellus, luctus nec
-                            ullamcorper mattis,
-                            pulvinar dapibus leo.
-                        </p>
+                        <p>Introducing our latest hot product, designed with cutting-edge technology and unparalleled
+                            craftsmanship. This product is the epitome of innovation and style, setting a new standard
+                            in the industry. Experience the difference with our hot product today.</p>
                         <span><a href="?module=indexphp&action=product">SEE MORE <i
                                     class="fa-solid fa-arrow-right"></i></a></span>
                     </div>
@@ -114,14 +101,11 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
     <div class="slider__content">
         <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/slidercontent.webp" alt>
         <div class="overlay__content">
-            <h2>Makes Yourself Keep SPorty & Stylish</h2>
+            <h2>Makes Yourself Keep Sporty & Stylish</h2>
             <p>
-                Lorem ipsum dolor sit amet, consectetuer
-                adipiscing elit.
-                Aenean commodo ligula eget dolor. Aenean
-                massa. Cum sociis natoque penatibus et
-                magnis dis parturient montes, nascetur
-                ridiculus mus.
+                Embrace the perfect blend of athleticism and fashion with our products. Our offerings are designed to
+                enhance your performance while keeping you chic and stylish. Experience the fusion of sporty
+                functionality and elegant style like never before.
             </p>
         </div>
     </div>
@@ -199,7 +183,6 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                                 <span>Naked Wolfe</span>
                             </div>
                         </div>
-
                     </div>
                     <!-- If we need pagination -->
                     <div class="swiper-pagination"></div>

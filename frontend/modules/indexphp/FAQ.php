@@ -17,7 +17,7 @@
     .background {
         text-align: center;
         padding-top: 50px;
-        background: url(../indexphp/FAQ.jpg);
+        background: url("<?php echo _WEB_HOST_TEMPLATE ?> /images/FAQ.jpg");
 
     }
 
@@ -25,7 +25,7 @@
         line-height: 1.5;
     }
 
-    h1 {
+    .header h1 {
         text-shadow:
             -1px -1px 0,
             5px -1px 0 rgb(255, 113, 57),
@@ -36,13 +36,13 @@
         font-weight: bold;
     }
 
-    h3 {
+    .header h3 {
         font-size: 40px;
         color: rgb(255, 113, 57);
         font-weight: bold;
     }
 
-    h4 {
+   .box h4 {
         color: aliceblue;
         font-size: 30px;
         text-shadow:
@@ -54,14 +54,15 @@
         opacity: 0.9;
     }
 
-    h5 {
+    .box h5 {
         color: orange;
         font-size: 15px;
     }
 
     p {
+        font-weight: 700;
         color: #ddd;
-        font-size: 10px;
+        font-size: 10px !important;
     }
 
     .text {
@@ -94,20 +95,9 @@
         font-weight: bolder;
         line-height: 2;
         color: aliceblue;
+        height: 300px;
         text-align: left;
-    }
-
-    input {
-        width: 400px;
-        border-radius: 5px;
-        opacity: 0.6;
-        background-color: aqua;
-    }
-
-    button {
-        padding: 10px;
-        background-color: aquamarine;
-        border-radius: 5px;
+        opacity: 0.8;
     }
 
     .shopping-item .hover-show {
@@ -116,7 +106,7 @@
 
     .shopping-item:hover .hover-show {
         display: block;
-        transition: all .4s ease-in-out;
+        transition: all .5s ease-in-out;
     }
 
     h5 {

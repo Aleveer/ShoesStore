@@ -140,7 +140,7 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                 for ($i = 0; $i < 8; $i++) {
                     $product = $products[$i];
                     echo '
-        <li>
+        <li class="tbay">
             <div class="product-item">
                 <div>
                     <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '">

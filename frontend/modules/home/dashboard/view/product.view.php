@@ -33,7 +33,7 @@
             </main>
 
 
-            <?php include ('../inc/script.php'); ?>
+            <?php include('../inc/app.php'); ?>
 </body>
 
 </html>

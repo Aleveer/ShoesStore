@@ -35,4 +35,8 @@ if (!isset($title)) {
 
     <!-- Custom styles for this template -->
     <link href="../css/global.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/scrollbar.css">
+
+    <!-- Feather Icon -->
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>

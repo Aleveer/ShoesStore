@@ -47,12 +47,12 @@ class ProductBUS implements BUSInterface
             empty($productModel->getDescription()) ||
             empty($productModel->getImage()) ||
             empty($productModel->getGender() ||
-                $productModel->getName() == null ||
-                $productModel->getCategoryId() == null ||
-                $productModel->getPrice() == null ||
-                $productModel->getDescription() == null ||
-                $productModel->getImage() == null ||
-                $productModel->getGender() == null)
+            $productModel->getName() == null ||
+            $productModel->getCategoryId() == null ||
+            $productModel->getPrice() == null ||
+            $productModel->getDescription() == null ||
+            $productModel->getImage() == null ||
+            $productModel->getGender() == null)
         ) {
             throw new InvalidArgumentException("Please fill in all fields");
         }
@@ -100,7 +100,7 @@ class ProductBUS implements BUSInterface
 
     public function searchModel(string $condition, $columnNames): array
     {
-        if(empty($condition)) {
+        if (empty($condition)) {
             return [];
         }
         return ProductDAO::getInstance()->search($condition, $columnNames);

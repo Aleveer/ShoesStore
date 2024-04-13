@@ -12,7 +12,9 @@ $products = ProductBUS::getInstance()->getAllModels();
 
 global $searchResult;
 global $resultsBasedOnPrice;
-
+global $page;
+global $total_pages;
+global $productToDisplayPerPage;
 ?>
 
 <?php
@@ -38,6 +40,7 @@ function displayProduct($product)
         ';
 }
 ?>
+
 
 <div id="header">
     <meta charset="UTF-8">
@@ -173,7 +176,8 @@ function displayProduct($product)
         <form method="POST">
             <div class="psearch">
                 <input type="text" name="searchbox" placeholder="Nhập sản phẩm bạn muốn tìm kiếm" required>
-                <button class="custom-btn btn-14" name="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="custom-btn btn-14" name="searchBtn" id="searchBtnId" onchange="this.form.submit"><i
+                        class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </form>
         <?php
@@ -181,13 +185,8 @@ function displayProduct($product)
             $filterAll = filter();
             $searchQuery = isset($filterAll['searchbox']) ? $filterAll['searchbox'] : '';
             $searchResult = array();
-            if ($searchQuery !== '') {
+            if ($searchQuery !== '' && $searchQuery !== null) {
                 $searchResult = ProductBUS::getInstance()->searchModel($searchQuery, ['name']);
-                if (count($searchResult) == 0) {
-                    echo '<script>alert("Không tìm thấy sản phẩm với nội dung ' . $searchQuery . '")</script>';
-                } else {
-                    echo '<div class="search_result">Search results for "' . $searchQuery . '"</div>';
-                }
             }
         }
         ?>
@@ -196,20 +195,19 @@ function displayProduct($product)
                 <div class="filter">
                     <fieldset>
                         <legend>Category</legend>
-                        <input type="radio" name="category" value="All products" onchange="this.form.submit()">All
-                        products
+                        <input type="radio" name="category" value="All products">All products
                         <br>
                         <?php
                         foreach ($categoriesList as $category) {
-                            echo '<input type="radio" name="category" value="' . $category->getName() . '"onchange="this.form.submit()">' . $category->getName() . '<br>';
+                            echo '<input type="radio" name="categoryValue" value="' . $category->getName() . '">' . $category->getName() . '<br>';
                         }
                         ?>
                     </fieldset>
                     <fieldset>
                         <legend>Gender</legend>
-                        <input type="radio" name="gender" value="Male" onchange="this.form.submit()">Male
+                        <input type="radio" name="gender" value="Male">Male
                         <br>
-                        <input type="radio" name="gender" value="Female" onchange="this.form.submit()">Female
+                        <input type="radio" name="gender" value="Female">Female
                     </fieldset>
                     <fieldset>
                         <legend>Price</legend>
@@ -221,152 +219,242 @@ function displayProduct($product)
                             placeholder="100000">
                     </fieldset>
                 </div>
-                <button type="submit" name="submitBtn">Submit</button>
+                <button type="submit" name="submitBtn" id="submitBtnId" onchange="this.form.submit">Submit</button>
             </form>
             <div class="container_pagination">
-                <div class="sort">
-                    <label for="alphabet">Chữ Cái:</label>
-                    <select name="alphabet">
-                        <option value="A_Z">A-Z</option>
-                        <option value="Z_A">Z_A</option>
-                    </select>
-                    <label for="price">Theo giá:</label>
-                    <select>
-                        <option value="high">High</option>
-                        <option value="low">Low</option>
-                    </select>
-                </div> 
+                <!-- <div class="sort">
+                    <form method="POST">
+                        <label for="alphabet">Alphabet</label>
+                        <select name="alphabet">
+                            <option value="A_Z">A-Z</option>
+                            <option value="Z_A">Z-A</option>
+                        </select>
+                        <label for="price">Price</label>
+                        <select name="price">
+                            <option value="high">Low -> High</option>
+                            <option value="low">High -> Low</option>
+                        </select>
+                    </form>
+
+                    <?php
+                    // if (isGet()) {
+                    //     $filterAll = filter();
+                    //     $alphabet = $filterAll['alphabet'] ?? null;
+                    //     $price = $filterAll['price'] ?? null;
+                    //     $productsToDisplay = $products;
+                    
+                    //     if ($alphabet == "A-Z") {
+                    //         usort($productsToDisplay, function ($a, $b) {
+                    //             return $a->getName() <=> $b->getName();
+                    //         });
+                    //     } elseif ($alphabet == "Z-A") {
+                    //         usort($productsToDisplay, function ($a, $b) {
+                    //             return $b->getName() <=> $a->getName();
+                    //         });
+                    //     }
+                    
+                    //     if ($price == "low") {
+                    //         usort($productsToDisplay, function ($a, $b) {
+                    //             return $a->getPrice() <=> $b->getPrice();
+                    //         });
+                    //     } elseif ($price == "high") {
+                    //         usort($productsToDisplay, function ($a, $b) {
+                    //             return $b->getPrice() <=> $a->getPrice();
+                    //         });
+                    //     }
+                    // }
+                    ?>
+                </div> -->
                 <div class="areaproduct">
                     <?php
-                    if (isPost()) {
-
-                        $filterAll = filter();
-                        $minimalPrice = $filterAll['min_price'] ?? null;
-                        $maximalPrice = $filterAll['max_price'] ?? null;
-                        $resultsBasedOnPrice = array();
-                        $errors = array();
-
-                        if ($minimalPrice != null && $maximalPrice != null) {
-                            if ($minimalPrice > $maximalPrice) {
-                                $errors[] = "Giá tối thiểu không được lớn hơn giá tối đa";
-                            } elseif ($minimalPrice < 0) {
-                                $errors[] = "Giá tối thiểu không được nhỏ hơn 0";
-                            } elseif ($maximalPrice < 0) {
-                                $errors[] = "Giá tối đa không được nhỏ hơn 0";
-                            } elseif ($maximalPrice == $minimalPrice) {
-                                $errors[] = "Giá tối đa không được bằng giá tối thiểu";
-                            } elseif ($maximalPrice < $minimalPrice) {
-                                $errors[] = "Giá tối đa không được nhỏ hơn giá tối thiểu";
-                            } elseif ($maximalPrice < 0 && $minimalPrice < 0) {
-                                $errors[] = "Giá tối đa và giá tối thiểu không được nhỏ hơn 0";
-                            } elseif ($maximalPrice == $minimalPrice && $maximalPrice < 0 && $minimalPrice < 0) {
-                                $errors[] = "Giá tối đa và giá tối thiểu không được nhỏ hơn 0 và bằng nhau";
-                            } elseif ($maximalPrice == $minimalPrice && $maximalPrice < 0) {
-                                $errors[] = "Giá tối đa và giá tối thiểu không được nhỏ hơn 0 và bằng nhau";
-                            } elseif ($maximalPrice == $minimalPrice && $minimalPrice < 0) {
-                                $errors[] = "Giá tối đa và giá tối thiểu không được nhỏ hơn 0 và bằng nhau";
-                            }
-                        }
-
-                        if (!empty($errors)) {
-                            foreach ($errors as $error) {
-                                session::getInstance()->setFlashData("error", $error);
-                                session::getInstance()->setFlashData("price", "error");
-                            }
-                        }
-
-                        if ($maximalPrice != null && $minimalPrice != null) {
-                            $resultsBasedOnPrice = ProductBUS::getInstance()->searchBetweenPrice($minimalPrice, $maximalPrice);
-                        }
-
-                        if ($maximalPrice != null && $minimalPrice == null) {
-                            $resultsBasedOnPrice = ProductBUS::getInstance()->searchByMaximalPrice($maximalPrice);
-                        }
-
-                        if ($maximalPrice == null && $minimalPrice != null) {
-                            $resultsBasedOnPrice = ProductBUS::getInstance()->searchByMinimalPrice($minimalPrice);
+                    //By default, display all products:
+                    if (!isPost() || (isPost() && !isset($_POST['submitBtn']) && !isset($_POST['searchBtn']))) {
+                        $products_per_page = 12;
+                        $total_products = count($products);
+                        $total_pages = ceil($total_products / $products_per_page);
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $offset = ($page - 1) * $products_per_page;
+                        $productToDisplayPerPage = array_slice($products, $offset, $products_per_page);
+                        //Show productToDisplayPerPage:
+                        foreach ($productToDisplayPerPage as $product) {
+                            displayProduct($product);
                         }
                     }
-                    ?>
-                    <?php
-                    $filteredProducts = array();
+
                     if (isPost()) {
                         $filterAll = filter();
-                        $selectedCategory = $filterAll['category'] ?? null;
-                        $selectedGender = $filterAll['gender'] ?? null;
+                        //Check if submit button is clicked:
+                        if (isset($_POST['submitBtn'])) {
+                            //Create an array that stores all filter into 1 list:
+                            $searchResultFromRadioButton = array();
 
-                        if ($selectedGender == "Male") {
-                            $selectedGender = 0;
-                        } else if ($selectedGender == "Female") {
-                            $selectedGender = 1;
-                        }
+                            $selectedCategory = $_POST['categoryValue'] ?? null;
 
-                        // Only call searchModel if $selectedCategory is not null
-                        if ($selectedCategory != null && $selectedCategory != "All products") {
-                            $categoryModel = CategoriesBUS::getInstance()->getModelByName($selectedCategory);
-                            $filteredProducts = array_filter($products, function ($product) use ($categoryModel, $selectedGender) {
-                                if ($categoryModel != null && $product->getCategoryId() != $categoryModel->getId()) {
-                                    return false;
+                            //Check for category first:
+                            //Check for gender from category above, if user don't choose category, check gender only:
+                            //Then check for minimal price and maximal price:
+                            //When checking is finished above, user clicks on submit button:
+                            if (isset($selectedCategory) && $selectedCategory != null && $selectedCategory != "All products") {
+                                $categoryModel = CategoriesBUS::getInstance()->getModelByName($selectedCategory);
+                                $searchResultFromRadioButton = array_filter($products, function ($product) use ($categoryModel) {
+                                    if ($categoryModel != null && $product->getCategoryId() != $categoryModel->getId()) {
+                                        return false;
+                                    }
+                                    return true;
+                                });
+                            }
+
+                            if ($selectedCategory == "All products" || $selectedCategory == null) {
+                                $searchResultFromRadioButton = $products;
+                            }
+
+                            $searchResultFromRadioButton = array_values($searchResultFromRadioButton);
+
+                            //Check for gender:
+                            $selectedGender = $_POST['gender'] ?? null;
+                            if ($selectedGender == "Male") {
+                                $selectedGender = 0;
+                            } elseif ($selectedGender == "Female") {
+                                $selectedGender = 1;
+                            }
+
+                            if ($selectedGender !== null) {
+                                $searchResultFromRadioButton = array_filter($searchResultFromRadioButton, function ($product) use ($selectedGender) {
+                                    return $product->getGender() == $selectedGender;
+                                });
+                            }
+
+                            $searchResultFromRadioButton = array_values($searchResultFromRadioButton);
+
+                            $minimalPrice = isset($_POST['min_price']) && $_POST['min_price'] !== '' ? $_POST['min_price'] : false;
+                            $maximalPrice = isset($_POST['max_price']) && $_POST['max_price'] !== '' ? $_POST['max_price'] : false;
+
+                            $errors = array();
+                            if (isset($minimalPrice) && isset($maximalPrice) && $minimalPrice != null && $maximalPrice != null) {
+                                if ($minimalPrice > $maximalPrice) {
+                                    $errors[] = "Giá tối thiểu không được lớn hơn giá tối đa";
+                                } elseif ($minimalPrice < 0) {
+                                    $errors[] = "Giá tối thiểu không được nhỏ hơn 0";
+                                } elseif ($maximalPrice < 0) {
+                                    $errors[] = "Giá tối đa không được nhỏ hơn 0";
+                                } elseif ($maximalPrice < $minimalPrice) {
+                                    $errors[] = "Giá tối đa không được nhỏ hơn giá tối thiểu";
+                                } elseif ($maximalPrice < 0 && $minimalPrice < 0) {
+                                    $errors[] = "Giá tối đa và giá tối thiểu không được nhỏ hơn 0";
+                                } elseif ($maximalPrice == $minimalPrice && $maximalPrice < 0 && $minimalPrice < 0) {
+                                    $errors[] = "Giá tối đa và giá tối thiểu không được nhỏ hơn 0 và bằng nhau";
+                                } elseif ($maximalPrice == $minimalPrice && $maximalPrice < 0) {
+                                    $errors[] = "Giá tối đa và giá tối thiểu không được nhỏ hơn 0 và bằng nhau";
+                                } elseif ($maximalPrice == $minimalPrice && $minimalPrice < 0) {
+                                    $errors[] = "Giá tối đa và giá tối thiểu không được nhỏ hơn 0 và bằng nhau";
                                 }
-                                if ($selectedGender != null && $product->getGender() != $selectedGender) {
-                                    return false;
+                            }
+
+                            if (!empty($errors)) {
+                                foreach ($errors as $error) {
+                                    echo '<script>alert("' . $error . '");</script>';
+                                    echo '<script>window.location.href = "http://localhost/frontend/index.php?module=indexphp&action=product";</script>';
+                                }
+                            }
+
+                            $searchResultFromRadioButton = array_filter($searchResultFromRadioButton, function ($product) use ($minimalPrice, $maximalPrice) {
+                                $price = $product->getPrice();
+                                if ($minimalPrice !== false && $maximalPrice !== false) {
+                                    return $price >= $minimalPrice && $price <= $maximalPrice;
+                                } elseif ($minimalPrice !== false && $maximalPrice === false) {
+                                    return $price >= $minimalPrice;
+                                } elseif ($maximalPrice !== false && $minimalPrice === false) {
+                                    return $price <= $maximalPrice;
                                 }
                                 return true;
                             });
+
+                            // If no products are found, display a message
+                            if (count($searchResultFromRadioButton) == 0 && isset($submitButton)) {
+                                echo '<div class="no_products">No products found</div>';
+                                echo '<script>alert("No product found")</script>';
+                                echo '<script>window.location.href = "http://localhost/frontend/index.php?module=indexphp&action=product";</script>';
+                            }
+
+                            // $products_per_page = 12;
+                            // $total_products = count($searchResultFromRadioButton);
+                            // $total_pages = ceil($total_products / $products_per_page);
+                            // $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+                            // $page = min(max($page, 1), $total_pages); // Ensure $page is between 1 and $total_pages
+                            // $offset = ($page - 1) * $products_per_page;
+                            // $productToDisplayPerPage = array_slice($searchResultFromRadioButton, $offset, $products_per_page);
+                            foreach ($searchResultFromRadioButton as $product) {
+                                displayProduct($product);
+                            }
+
                         } else {
-                            $filteredProducts = array_filter($products, function ($product) use ($selectedGender) {
-                                if ($selectedGender != null && $product->getGender() != $selectedGender) {
-                                    return false;
+                            if (isset($searchQuery)) {
+                                if (count($searchResult) == 0) {
+                                    echo '<div class="no_products">No products found</div>';
+                                    echo '<script>alert("No product found")</script>';
+                                    echo '<script>window.location.href = "http://localhost/frontend/index.php?module=indexphp&action=product";</script>';
                                 }
-                                return true;
-                            });
-                        }
 
-                        if ($selectedCategory == "All products") {
-                            $filteredProducts = $products;
-                        }
-
-                        // If no products are found, display a message
-                        if (count($filteredProducts) == 0) {
-                            echo '<div class="no_products">No products found</div>';
-                        }
-
-                        // If no filters are selected, display all products
-                        if (($selectedCategory == null || $selectedCategory == "All products") && $selectedGender == null) {
-                            $filteredProducts = $products;
+                                if (count($searchResult) > 0) {
+                                    // $products_per_page = 12;
+                                    // $total_products = count($searchResult);
+                                    // $total_pages = ceil($total_products / $products_per_page);
+                                    // $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+                                    // $page = min(max($page, 1), $total_pages); // Ensure $page is between 1 and $total_pages
+                                    // $offset = ($page - 1) * $products_per_page;
+                                    // $productToDisplayPerPage = array_slice($searchResult, $offset, $products_per_page);
+                                    foreach ($searchResult as $product) {
+                                        displayProduct($product);
+                                    }
+                                }
+                            }
                         }
                     }
-
-                    if ($searchResult !== null && count($searchResult) > 0 && isset($_POST['searchbox'])) {
-                        $productsToDisplay = $searchResult;
-                    } else if ($resultsBasedOnPrice !== null && count($resultsBasedOnPrice) > 0) {
-                        $productsToDisplay = $resultsBasedOnPrice;
-                    } elseif (
-                        isset($_POST['category']) || isset($_POST['gender'])
-                        || (isset($_POST['min_price']) && isset($_POST['max_price']))
-                        || (!isset($_POST['min_price']) && isset($_POST['max_price']))
-                        || (isset($_POST['min_price']) && !isset($_POST['max_price']))
-                    ) {
-                        $productsToDisplay = $filteredProducts;
-                    } else {
-                        $productsToDisplay = $products;
-                    }
-
-                    foreach ($productsToDisplay as $product) {
-                        displayProduct($product);
-                    }
-
                     ?>
                 </div>
-                <div class="page">
-                    <button class="custom-btn btn-7 prev"><span>
-                            < </span></button>
-                    <button class="custom-btn btn-7 next"><span> > </span></button>
-                </div>
+                <?php
+                $selectedCategory = $_POST['categoryValue'] ?? null;
+                if ((!isset($_POST['submitBtn']) && !isset($_POST['searchBtn'])) || ($selectedCategory == 'All products' && isset($_POST['submitBtn']))):
+                    ?>
+                    <div class="page" data-total-pages="<?php echo $total_pages; ?>"
+                        data-current-page="<?php echo $page; ?>">
+                        <a class="custom-btn btn-7 prev" id="prevPage" name="prevPage"><span>
+                                <</span></a>
+                        <span class="current-page" id="currentPage" name="currentPage">Page <?php echo $page; ?> of
+                            <?php echo $total_pages; ?></span>
+                        <a class="custom-btn btn-7 next" id="nextPage" name="nextPage"><span>></span></a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
-    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/product_slider.js"></script>
+
+    <script src=" <?php echo _WEB_HOST_TEMPLATE ?>/js/product_slider.js"></script>
+    <script>
+        //Get page:
+        let currentPage = document.getElementById("currentPage");
+        let prevPage = document.getElementById("prevPage");
+        let nextPage = document.getElementById("nextPage");
+        let page = document.querySelector(".page");
+        let totalPages = page.getAttribute("data-total-pages");
+        let currentPageValue = page.getAttribute("data-current-page");
+
+        prevPage.addEventListener("click", function () {
+            if (currentPageValue > 1) {
+                currentPageValue--;
+                window.location.href = "http://localhost/frontend/index.php?module=indexphp&action=product&page=" + currentPageValue;
+            }
+        });
+
+        nextPage.addEventListener("click", function () {
+            if (currentPageValue < totalPages) {
+                currentPageValue++;
+                window.location.href = "http://localhost/frontend/index.php?module=indexphp&action=product&page=" + currentPageValue;
+            }
+        });
+
+        currentPage.innerHTML = "Page " + currentPageValue + " of " + totalPages;
+    </script>
 </div>
 
 <div id="footer">

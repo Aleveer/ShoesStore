@@ -143,27 +143,6 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
         if (isset($_POST['submitButton'])) {
             $orderModel = new OrdersModel(null, null, null, null, null);
             $orderModel->setCustomerId($userModel->getId());
-            $customerModel = CustomerBUS::getInstance()->getModelById($userModel->getId());
-
-            if ($customerModel == null) {
-                $customerModel = new CustomerModel(null, null, null, null);
-                $customerModel->setId($userModel->getId());
-                $customerModel->setName($userModel->getName());
-                $customerModel->setPhone($userModel->getPhone());
-                $customerModel->setEmail($userModel->getEmail());
-                CustomerBUS::getInstance()->addModel($customerModel);
-                CustomerBUS::getInstance()->refreshData();
-            } else if ($customerModel != null) {
-                //Check for any changes in the customer id on html:
-                $inputName = $filterAll['inputName'];
-                $inputPhoneNumber = $filterAll['inputPhoneNumber'];
-                $inputAddress = $filterAll['inputAddress'];
-                $customerModel->setName($inputName);
-                $customerModel->setPhone($inputPhoneNumber);
-                $userModel->setAddress($inputAddress);
-                CustomerBUS::getInstance()->updateModel($customerModel);
-                CustomerBUS::getInstance()->refreshData();
-            }
             $orderModel->setCustomerId($customerModel->getId());
             $orderModel->setUserId($userModel->getId());
 

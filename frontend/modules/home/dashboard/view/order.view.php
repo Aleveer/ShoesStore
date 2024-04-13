@@ -55,17 +55,12 @@
                         <!-- HEADER TABLE -->
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
-                                <th scope="col" style="width: 15%;" class="text-end">
-                                    <button type="button" class="btn btn-sm btn-success align-middle">
-                                        <span data-feather="plus"></span>
-                                        Add
-                                    </button>
-                                </th>
+                                <th scope="col" class="col-1">ID Order</th>
+                                <th scope="col" class="col-2">Customer ID</th>
+                                <th scope="col" class="col-2">User ID</th>
+                                <th scope="col" class="col-2">Order Date</th>
+                                <th scope="col">Total Amount</th>
+                                <th scope="col" class="col-1 text-center">Info</th>
                             </tr>
                         </thead>
 
@@ -74,29 +69,23 @@
                             <!-- TESTING STATIC -->
                             <tr class="align-middle">
                                 <td>1,001</td>
-                                <td>random</td>
-                                <td>data</td>
-                                <td>placeholder</td>
-                                <td>text</td>
-                                <td class="text-end">
-                                    <button class="btn btn-sm btn-warning">
-                                        <span data-feather="tool"></span>
-                                        Update
-                                    </button>
-                                    <button class="btn btn-sm btn-danger">
-                                        <span data-feather="trash-2"></span>
-                                        Delete
+                                <td>01</td>
+                                <td>101</td>
+                                <td>03/03/2025 </td>
+                                <td>1.000.0000 Đ</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-primary">
+                                        <span data-feather="eye"></span>
+                                        View
                                     </button>
                                 </td>
                             </tr>
-
-                            <?php ?>
                         </tbody>
                     </table>
                 </div>
             </main>
 
-            <?php include ('../inc/script.php'); ?>
+            <?php include('../inc/script.php'); ?>
 </body>
 
 </html>

@@ -1,9 +1,11 @@
 <?php
     $title = 'Dashboard';
 
-    include ('../inc/head.php');
-?>
 
+    include ('../inc/head.php');
+
+?>
+<html>
 <body>
     <!-- HEADER -->
     <?php include ('../inc/header.php'); ?>
@@ -47,7 +49,20 @@
                     </div>
                 </div>
 
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+                <div class="row justify-content-evenly">
+                    <div class="col-6">
+                        <h3>Revenue</h3>
+                        <hr>
+                        <canvas id="Revenue_Income"></canvas>
+
+                    </div>
+
+                    <div class="col-6">
+                        <h3>Total Login</h3>
+                        <hr>
+                        <canvas id="Total_Login"></canvas>
+                    </div>
+                </div>
 
                 <h2>Section title</h2>
                 <div class="table-responsive">
@@ -79,7 +94,7 @@
         </div>
     </div>
 
-            <?php include ('../inc/script.php'); ?>
+    <?php     include('../inc/script.php');  ?>
 </body>
 
 </html>

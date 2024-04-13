@@ -371,8 +371,7 @@ function displayProduct($product)
 
                             // If no products are found, display a message
                             if (count($searchResultFromRadioButton) == 0 && isset($submitButton)) {
-                                echo '<div class="no_products">No products found</div>';
-                                echo '<script>alert("No product found")</script>';
+                                echo '<script>alert("No products found")</script>';
                                 echo '<script>window.location.href = "http://localhost/frontend/index.php?module=indexphp&action=product";</script>';
                             }
 

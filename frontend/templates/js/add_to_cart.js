@@ -50,7 +50,7 @@ $(document).ready(function () {
                 },
 
                 success: function (response) {
-                    console.log("Thêm sản phẩm vào giỏ hàng thành công");
+                    //console.log("Thêm sản phẩm vào giỏ hàng thành công");
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);

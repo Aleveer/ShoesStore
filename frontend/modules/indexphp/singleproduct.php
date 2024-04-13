@@ -160,26 +160,28 @@ if (isLogin()) {
                             $sizeId = $filterAll['sizeItem'];
                             $quantity = $filterAll['pquantity'];
 
-                            $cartItemForUser = CartsBUS::getInstance()->getModelByUserId($userModel->getId());
-                            if ($cartItemForUser != null) {
-                                foreach ($cartItemForUser as $cartItem) {
-                                    if ($cartItem->getProductId() == $product->getId() && $cartItem->getSizeId() == $sizeId) {
-                                        $sizeItems = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id', $sizeId]);
-                                        foreach ($sizeItems as $sizeItem) {
-                                            if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
-                                                echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm còn lại")});</script>';
-                                                $output = ob_get_clean();
-                                                die($output);
-                                            } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
-                                                echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm")});</script>';
-                                                $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
-                                                CartsBUS::getInstance()->updateModel($cartItem);
-                                                CartsBUS::getInstance()->refreshData();
-                                                $output = ob_get_clean();
-                                                die($output);
-                                            }
+                            $cartItem = CartsBUS::getInstance()->getModelByUserIdAndProductIdAndSizeId($userModel->getId(), $product->getId(), $sizeId);
+                            if ($cartItem != null) {
+                                    $sizeItems = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id', $sizeId]);
+                                    foreach ($sizeItems as $sizeItem) {
+                                        if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
+                                            $data = array(
+                                                'message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm còn lại'
+                                            );
+                                            echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert(' . json_encode($data['message']) . ')});</script>';
+                                            $output = ob_get_clean();
+                                            die($output);
+                                        } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
+                                            $data = array(
+                                                'message' => 'Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm'
+                                            );
+                                            echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert(' . json_encode($data['message']) . ')});</script>';
+                                            $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
+                                            CartsBUS::getInstance()->updateModel($cartItem);
+                                            CartsBUS::getInstance()->refreshData();
+                                            $output = ob_get_clean();
+                                            die($output);
                                         }
-                                    }
                                 }
                             } else if ($cartItemForUser == null) {
                                 $cart = new CartsModel(null, null, null, null, null);

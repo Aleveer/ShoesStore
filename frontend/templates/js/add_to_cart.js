@@ -49,8 +49,7 @@ $(document).ready(function () {
                     pquantity: quantity, 
                 },
 
-                success: function (response) {
-                    var data = JSON.parse(response);
+                success: function (data) {
                     if (data.status == "success") {
                         alert(data.message);
                     } else if (data.status == "error") {

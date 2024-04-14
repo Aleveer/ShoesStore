@@ -55,7 +55,6 @@ function displayProduct($product)
 </div>
 
 <div id="content">
-    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/product_filter.js"></script>
     <div class="carousel">
         <div class="list">
             <div class="item active">

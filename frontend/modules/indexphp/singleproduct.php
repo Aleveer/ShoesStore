@@ -167,17 +167,17 @@ if (isLogin()) {
                                             'status' => 'error',
                                             'message' => 'The quantity of the product in the cart exceeds the remaining quantity of the product'
                                         );
-                                        $jsonData = json_encode($data);
+                                        echo json_encode($data);
                                         return;
                                     } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
                                         $data = array(
                                             'status' => 'success',
                                             'message' => 'The product is already in your cart, the quantity of the product has been updated'
                                         );
-                                        $jsonData = json_encode($data);
                                         $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
                                         CartsBUS::getInstance()->updateModel($cartItem);
                                         CartsBUS::getInstance()->refreshData();
+                                        echo json_encode($data);
                                         return;
                                     }
                                 }
@@ -198,10 +198,10 @@ if (isLogin()) {
                                 CartsBUS::getInstance()->refreshData();
                                 $data = array(
                                     'status' => 'success',
-                                    'message' => 'Add product to cart successfully'
+                                    'message' => 'Added product to cart successfully'
                                 );
-                                $jsonData = json_encode($data);
-                                echo $jsonData;
+                                error_log(json_encode($data));
+                                echo json_encode($data);
                             }
                         }
                     }

@@ -8,7 +8,7 @@ $(document).ready(function () {
             var inputPhoneNumber = $('#inputPhoneNumberId').val();
             var inputAddress = $('#inputAddressId').val();
             var inputDiscount = $('#inputDiscountId').val();
-            var inputPaymentMethod = $('#inputPaymentId').val();
+            var inputPaymentMethodId = $('#inputPaymentId').val();
 
             if (!inputName) {
                 alert('Vui lòng nhập tên');
@@ -19,18 +19,19 @@ $(document).ready(function () {
                 alert('Vui lòng nhập số điện thoại');
                 return;
             }
+
+            if (isNaN(inputPhoneNumber)) {
+                alert('Vui lòng nhập số điện thoại là số');
+                return;
+            }
+
             if (!inputAddress) {
                 alert('Vui lòng nhập địa chỉ');
                 return;
             }
 
-            if(!inputPaymentMethod) {
+            if(!inputPaymentMethodId) {
                 alert('Vui lòng chọn phương thức thanh toán');
-                return;
-            }
-
-            if (isNaN(inputPhoneNumber)) {
-                alert('Vui lòng nhập số điện thoại là số');
                 return;
             }
 
@@ -46,7 +47,7 @@ $(document).ready(function () {
                     inputPhoneNumber: inputPhoneNumber,
                     inputAddress: inputAddress,
                     inputDiscount: inputDiscount,
-                    inputPaymentMethod: inputPaymentMethod,
+                    inputPaymentMethod: inputPaymentMethodId,
                 },
                 success: function (response) {
                     var data = JSON.parse(response);

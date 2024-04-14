@@ -43,6 +43,12 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
     echo '</script>';
     die();
 }
+
+$totalPriceOfCart = 0;
+foreach ($cartListFromUser as $cartModel) {
+    $productModel = ProductBUS::getInstance()->getModelById($cartModel->getProductId());
+    $totalPriceOfCart += $productModel->getPrice() * $cartModel->getQuantity();
+}
 ?>
 
 <div id="header">
@@ -134,7 +140,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
         <div class="btn-group ">
             <input type="button" id="btnBack" value="Back"
                 onclick="window.location.href='?module=cartsection&action=cart'">
-            <p id="totalPrice">Final price:</p>
+            <p id="totalPrice">Final price: <?php echo $totalPriceOfCart ?></p>
             <input type="submit" name="submitButton" id="order-confirm-submit" value="Submit">
         </div>
     </form>
@@ -148,7 +154,6 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
             $currentTime = date('Y-m-d H:i:s');
 
             //Calculate the total price:
-    
             foreach ($cartListFromUser as $cartModel) {
                 $productModel = ProductBUS::getInstance()->getModelById($cartModel->getProductId());
                 $totalPrice += $productModel->getPrice() * $cartModel->getQuantity();
@@ -167,7 +172,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
                 //Check if the discount code is valid:
                 if ($discountModel == null || trim($discountCode) == "") {
                     echo '<script>';
-                    echo 'alert("Mã giảm giá không hợp lệ!")';
+                    echo 'alert("Discount code is invalid!")';
                     echo '</script>';
                     echo '<script>';
                     echo 'window.location.href = "?module=cartsection&action=order"';
@@ -178,7 +183,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
                 //Check if the discount code has remaining quantity = 0
                 if ($discountModel->getQuantity() == 0) {
                     echo '<script>';
-                    echo 'alert("Mã giảm giá đã hết lượt sử dụng!")';
+                    echo 'alert("Discount code has run out!")';
                     echo '</script>';
                     echo '<script>';
                     echo 'window.location.href = "?module=cartsection&action=order"';
@@ -186,11 +191,10 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
                     die();
                 }
 
-
                 //Check if the discount code is expired:
                 if ($discountModel->getExpired() < $currentDate) {
                     echo '<script>';
-                    echo 'alert("Mã giảm giá đã hết hạn!")';
+                    echo 'alert("Discount code has expired!")';
                     echo '</script>';
                     //Reload the page:
                     echo '<script>';
@@ -202,14 +206,9 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
                 //If valid, apply the discount to the total price, getPercent is percentage:
                 $totalPrice = $totalPrice - ($totalPrice * $discountModel->getPercent() / 100);
                 echo '<script>';
-                echo 'alert("Đã áp dụng mã giảm giá thành công!")';
+                echo 'alert("Applied discount successfully!")';
                 echo '</script>';
-                // echo '<script>';
-                // echo '$.POST("?module=cartsection&action=order", { discount: ' . $discountModel->getDiscount() . ' }, function(discountedPrice) {';
-                // echo 'updateTotalPrice(discountedPrice);';
-                // echo '});';
-                // echo '</script>';
-    
+
                 //Update the coupon remaining quantity:
                 $discountModel->setQuantity($discountModel->getQuantity() - 1);
                 CouponsBUS::getInstance()->updateModel($discountModel);
@@ -228,7 +227,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
 
             if (empty($customerName) || empty($customerPhone) || empty($customerAddress)) {
                 echo '<script>';
-                echo 'alert("Vui lòng nhập đầy đủ thông tin!")';
+                echo 'alert("Please write all the information!")';
                 echo '</script>';
                 echo '<script>';
                 echo 'window.location.href = "?module=cartsection&action=order"';
@@ -238,7 +237,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
 
             if (validation::isValidPhoneNumber($customerPhone) == false) {
                 echo '<script>';
-                echo 'alert("Số điện thoại không hợp lệ!")';
+                echo 'alert("Invalid phone number!")';
                 echo '</script>';
                 echo '<script>';
                 echo 'window.location.href = "?module=cartsection&action=order"';
@@ -248,7 +247,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
 
             if (validation::isValidName($customerName) == false) {
                 echo '<script>';
-                echo 'alert("Tên không hợp lệ!")';
+                echo 'alert("Invalid name!")';
                 echo '</script>';
                 echo '<script>';
                 echo 'window.location.href = "?module=cartsection&action=order"';
@@ -258,7 +257,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
 
             if (validation::isValidAddress($customerAddress) == false) {
                 echo '<script>';
-                echo 'alert("Địa chỉ không hợp lệ!")';
+                echo 'alert("Invalid address!")';
                 echo '</script>';
                 echo '<script>';
                 echo 'window.location.href = "?module=cartsection&action=order"';
@@ -289,21 +288,25 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
             //Create payment:
             $paymentModel = new PaymentsModel(null, null, null, null, null);
             $paymentModel->setOrderId($lastOrderId);
-            //Check isset for payment method:
-            if (isset($_POST['inputPaymentMethod'])) {
-                $paymentMethod = $_POST['inputPaymentMethod'];
-            } else {
-                $paymentMethod = null;
+
+            $paymentMethod = $_POST['inputPaymentMethod'];
+            if (!isset($paymentMethod)) {
+                echo '<script>';
+                echo 'alert("Please choose payment method!")';
+                echo '</script>';
+                echo '<script>';
+                echo 'window.location.href = "?module=cartsection&action=order"';
+                echo '</script>';
+                die();
             }
-            if ($paymentMethod == null) {
+
+            if ($paymentMethod == "Cash") {
                 //Set default cash payment method:
                 $methodId = 1;
-                $paymentMethodModel = PaymentMethodsBUS::getInstance()->getModelById($methodId);
-                $paymentModel->setMethodId($paymentMethodModel->getId());
+                $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById($methodId)->getId());
             } else {
-                if ($paymentMethod == "Credit Card") {
-                    $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(2)->getId());
-                }
+                $methodId = 2;
+                $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById($methodId)->getId());
             }
 
             $paymentModel->setPaymentDate($currentTime);

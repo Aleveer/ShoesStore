@@ -15,7 +15,6 @@ if (!isset($title)) {
 
     <!-- Bootstrap core CSS -->
     <link href="../../../../../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -37,6 +36,8 @@ if (!isset($title)) {
     <link href="../css/global.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/scrollbar.css">
 
+
+    <link rel="stylesheet" href="../css/product.css">
     <!-- Feather Icon -->
     <script src="https://unpkg.com/feather-icons"></script>
 </head>

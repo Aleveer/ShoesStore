@@ -31,6 +31,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="account.view.php">
+                    <span data-feather="users"></span>
+                    Accounts
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#">
                     <span data-feather="bar-chart-2"></span>
                     Reports

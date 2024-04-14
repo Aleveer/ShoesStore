@@ -1,5 +1,5 @@
 <!-- Bootstrap Script Lib -->
-<script src="../../../../../../vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../../../../vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <!-- Chart JS Lib -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -347,7 +347,7 @@ foreach ($cartListFromUser as $cartModel) {
                 CartsBUS::getInstance()->refreshData();
             }
             echo '<script>';
-            echo 'alert("Đặt hàng thành công!")';
+            echo 'alert("Order successfully! Thank you for shopping with us!")';
             echo '</script>';
 
             echo '<script>';

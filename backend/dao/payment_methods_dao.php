@@ -34,7 +34,7 @@ class PaymentMethodsDAO implements DAOInterface
     private function createPaymentMethodsModel($rs)
     {
         $id = $rs['id'];
-        $name = $rs['name'];
+        $name = $rs['method_name'];
         return new PaymentMethodModel($id, $name);
     }
 
@@ -64,14 +64,14 @@ class PaymentMethodsDAO implements DAOInterface
 
     public function insert($paymentMethodModel): int
     {
-        $query = "INSERT INTO payment_methods (name) VALUES (?)";
+        $query = "INSERT INTO payment_methods (method_name) VALUES (?)";
         $args = [$paymentMethodModel->getName()];
         return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($paymentMethodModel): int
     {
-        $query = "UPDATE payment_methods SET name = ? WHERE id = ?";
+        $query = "UPDATE payment_methods SET method_name = ? WHERE id = ?";
         $args = [$paymentMethodModel->getName(), $paymentMethodModel->getId()];
         return DatabaseConnection::executeUpdate($query, ...$args);
     }
@@ -89,7 +89,7 @@ class PaymentMethodsDAO implements DAOInterface
         }
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM payment_methods WHERE id LIKE ? OR name LIKE ?";
+            $query = "SELECT * FROM payment_methods WHERE id LIKE ? OR method_name LIKE ?";
             $args = array_fill(0,  2, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];

@@ -50,7 +50,12 @@ $(document).ready(function () {
                 },
 
                 success: function (response) {
-                    //console.log("Thêm sản phẩm vào giỏ hàng thành công");
+                    var data = JSON.parse(response);
+                    if (data.status == "success") {
+                        alert(data.message);
+                    } else if (data.status == "error") {
+                        alert(data.error);
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);

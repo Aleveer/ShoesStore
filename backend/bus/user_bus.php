@@ -180,12 +180,14 @@ class UserBUS implements BUSInterface
         $roleId = $userModel->getRoleId();
         switch ($roleId) {
             case 1:
+                //Admin
             case 2:
-            case 3: // Add missing case for role 3
-                break;
+                //Manager
+            case 3:
+                //Employee
             case null:
                 // Default is customer
-                $userModel->setRoleId(0);
+                $userModel->setRoleId(4);
                 break;
             default:
                 $errors[] = "Invalid role";

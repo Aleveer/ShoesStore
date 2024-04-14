@@ -125,34 +125,44 @@ if (isLogin()) {
                     echo '<button class="addtocart" name="addToCart">';
                 }
                 ?>
-                <i class="fa-solid fa-cart-shopping"></i>
-                <?php
-                echo 'Thêm vô giỏ';
-                ?>
+                <i class="fa-solid fa-cart-shopping"> Add+</i>
                 </button>
                 <?php
                 if (!isLogin()) {
-                    echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng")});</script>';
+                    echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("You have to login in order to add a product to cart!")});</script>';
                     die();
                 } else {
                     if (isPost()) {
-                        if ($userModel->getStatus() == StatusEnums::BANNED) {
-                            $script = '<script>alert("Tài khoản của bạn đã bị khóa. Bạn không thể thực hiện chức năng này")</script>';
-                            $script = '<script>window.location.href = "?module=indexphp";</script>';
-                            die();
-                        }
-
-                        if ($userModel->getStatus() == StatusEnums::INACTIVE) {
-                            $script = '<script>alert("Tài khoản của bạn chưa được kích hoạt. Vui lòng đăng nhập lại để kích hoạt tài khoản!")</script>';
-                            $userModel->setStatus(StatusEnums::INACTIVE);
-                            UserBUS::getInstance()->updateModel($userModel);
-                            TokenLoginBUS::getInstance()->deleteModel($tokenModel);
-                            session::getInstance()->removeSession('tokenLogin');
-                            redirect('?module=auth&action=login');
-                            die();
-                        }
-
                         if (isset($_POST['addtocart'])) {
+                            if ($userModel->getStatus() === strtolower(StatusEnums::BANNED)) {
+                                $data = array(
+                                    'status' => 'error',
+                                    'message' => 'Your account has been banned. You cannot perform this action'
+                                );
+                                // Use json_encode to convert the array to a JSON string
+                                $jsonData = json_encode($data);
+                                // Send the JSON string as the response
+                                echo $jsonData;
+                                // Stop further script execution
+                                die();
+                            } else if ($userModel->getStatus() === strtolower(StatusEnums::INACTIVE)) {
+                                    //$script = '<script>alert("Tài khoản của bạn chưa được kích hoạt. Vui lòng đăng nhập lại để kích hoạt tài khoản!")</script>';
+                                    $data = array(
+                                        'status' => 'error',
+                                        'message' => 'Your account has not been activated. Please log in again to activate your account'
+                                    );
+                                    $jsonData = json_encode($data);
+                                    echo $jsonData;
+                                    $userModel->setStatus(StatusEnums::INACTIVE);
+                                    UserBUS::getInstance()->updateModel($userModel);
+                                    TokenLoginBUS::getInstance()->deleteModel($tokenModel);
+                                    session::getInstance()->removeSession('tokenLogin');
+                                    redirect('?module=auth&action=login');
+                                    die();
+                                } else {
+                                    error_log('User status: ' . $userModel->getStatus() . ' - ' . StatusEnums::ACTIVE . ' - ' . $userModel->getStatus() === strtolower(StatusEnums::ACTIVE));
+                                }
+
                             $filterAll = filter();
                             $sizeId = $filterAll['sizeItem'];
                             $quantity = $filterAll['pquantity'];
@@ -163,15 +173,21 @@ if (isLogin()) {
                                 foreach ($sizeItems as $sizeItem) {
                                     if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
                                         $data = array(
-                                            'message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm còn lại'
+                                            'status' => 'error',
+                                            'message' => 'The quantity of the product in the cart exceeds the remaining quantity of the product'
                                         );
-                                        $script = '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert(' . json_encode($data['message']) . ')});</script>';
+                                        $jsonData = json_encode($data);
                                         die();
                                     } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
+                                        // $data = array(
+                                        //     'message' => 'Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm'
+                                        // );
+                                        // $scrip = '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert(' . json_encode($data['message']) . ')});</script>';
                                         $data = array(
-                                            'message' => 'Sản phẩm đã có sẵn ở giỏ hàng của bạn, số lượng sản phẩm đã được cập nhật thêm'
+                                            'status' => 'success',
+                                            'message' => 'The product is already in your cart, the quantity of the product has been updated'
                                         );
-                                        $scrip = '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert(' . json_encode($data['message']) . ')});</script>';
+                                        $jsonData = json_encode($data);
                                         $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
                                         CartsBUS::getInstance()->updateModel($cartItem);
                                         CartsBUS::getInstance()->refreshData();
@@ -193,7 +209,12 @@ if (isLogin()) {
                                 $cart->setQuantity($quantity);
                                 CartsBUS::getInstance()->addModel($cart);
                                 CartsBUS::getInstance()->refreshData();
-                                $script = '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("Thêm sản phẩm vào giỏ hàng thành công")});</script>';
+                                $data = array(
+                                    'status' => 'success',
+                                    'message' => 'Add product to cart successfully'
+                                );
+                                $jsonData = json_encode($data);
+                                echo $jsonData;
                             }
                         }
                     }

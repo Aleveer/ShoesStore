@@ -17,22 +17,22 @@ $(document).ready(function () {
             var id = urlParams.get("id");
 
             if (!sizeId) {
-                alert("Vui lòng chọn size");
+                alert("Please select a size");
                 return;
             }
 
             if (!quantity) {
-                alert("Vui lòng nhập số lượng");
+                alert("Please enter quantity");
                 return;
             }
 
             if (isNaN(quantity)) {
-                alert("Vui lòng nhập số lượng là số");
+                alert("Please enter a valid quantity");
                 return;
             }
 
             if (quantity < 1) {
-                alert("Vui lòng nhập số lượng lớn hơn 0");
+                alert("Quantity should be greater than 0");
                 return;
             }
 
@@ -54,12 +54,12 @@ $(document).ready(function () {
                     if (data.status == "success") {
                         alert(data.message);
                     } else if (data.status == "error") {
-                        alert(data.error);
+                        alert(data.message);
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);
-                    alert("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng");
+                    alert("Error occurred. Please try again.");
                 },
             });
         });

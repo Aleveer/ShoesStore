@@ -151,9 +151,6 @@ function isLogin()
 
         if (!empty($queryToken)) {
             $checkLogin = true;
-            $userModel = UserBUS::getInstance()->getModelById($queryToken->getUserId());
-            $userModel->setStatus(StatusEnums::ACTIVE);
-            UserBUS::getInstance()->updateModel($userModel);
         } else {
             session::getInstance()->removeSession('tokenLogin');
         }

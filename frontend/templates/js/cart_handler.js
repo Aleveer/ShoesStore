@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var price = parseFloat(cartPrice[index].textContent);
                 cartTotal[index].textContent = price * quantity;
             } else {
-                alert('Số lượng sản phẩm không thể nhỏ hơn 1');
+                alert('Quantity cannot be less than 1');
                 console.log('Quantity cannot be less than 1');
             }
         });
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var price = parseFloat(cartPrice[index].textContent);
                 cartTotal[index].textContent = price * quantity;
             } else {
-                alert('Số lượng sản phẩm không thể vượt quá số lượng sản phẩm có sẵn');
+                alert('Cannot exceed available product quantity');
                 console.log('Cannot exceed available product quantity');
             }
         });

@@ -2,7 +2,7 @@
 namespace backend\enums;
 class StatusEnums
 {
-    const ACTIVE = 1;
-    const INACTIVE = 2;
-    const BANNED = 3;
+    const ACTIVE = 'ACTIVE';
+    const INACTIVE = 'INACTIVE';
+    const BANNED = 'BANNED';
 }

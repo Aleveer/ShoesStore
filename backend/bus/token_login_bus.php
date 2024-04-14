@@ -62,7 +62,7 @@ class TokenLoginBUS implements BUSInterface
         }
     }
 
-    public function addModel($tokenLoginModel): int
+    public function addModel($tokenLoginModel)
     {
         $this->validateModel($tokenLoginModel);
         $result = TokenLoginDAO::getInstance()->insert($tokenLoginModel);
@@ -73,7 +73,7 @@ class TokenLoginBUS implements BUSInterface
         return $result;
     }
 
-    public function updateModel($tokenLoginModel): int
+    public function updateModel($tokenLoginModel)
     {
         $this->validateModel($tokenLoginModel);
         $result = TokenLoginDAO::getInstance()->update($tokenLoginModel);
@@ -85,7 +85,7 @@ class TokenLoginBUS implements BUSInterface
         return $result;
     }
 
-    public function deleteModel($tokenLoginModel): int
+    public function deleteModel($tokenLoginModel)
     {
         $result = TokenLoginDAO::getInstance()->delete($tokenLoginModel);
         if ($result) {

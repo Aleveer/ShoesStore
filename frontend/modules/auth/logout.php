@@ -16,7 +16,11 @@ if (isLogin()) {
     $token = session::getInstance()->getSession('tokenLogin');
     $tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
     $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
-    $userModel->setStatus(StatusEnums::INACTIVE);
+    if ($userModel->getStatus() == StatusEnums::ACTIVE || $userModel->getStatus() == StatusEnums::INACTIVE) {
+        $userModel->setStatus(StatusEnums::INACTIVE);
+        UserBUS::getInstance()->updateModel($userModel);
+    }
+
     UserBUS::getInstance()->updateModel($userModel);
     TokenLoginBUS::getInstance()->deleteModel($tokenModel->getId());
     session::getInstance()->removeSession('tokenLogin');

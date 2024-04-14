@@ -66,18 +66,18 @@ if (!defined('_CODE')) {
                     <i class="fa-solid fa-angle-down user__dropdown"></i>
                     <ul class="user__dropdown__menu hide">
                         <li class="user__dropdown__menu__item">
-                            <a href="#">Thông tin</a>
+                            <a href="#">Account Setting</a>
                         </li>
                         <li class="user__dropdown__menu__item">
-                            <a href="?module=auth&action=logout">Đăng xuất</a>
+                            <a href="?module=auth&action=logout">Log out</a>
                         </li>
                     </ul>
                 </div>
                 <?php
             else:
                 ?>
-                <a class="btn btn-primary" href="?module=auth&action=login">Đăng nhập</a>
-                <a class="btn btn-primary ml8" href="?module=auth&action=register">Đăng ký</a>
+                <a class="btn btn-primary" href="?module=auth&action=login">Login</a>
+                <a class="btn btn-primary ml8" href="?module=auth&action=register">Register</a>
                 <?php
             endif;
             ?>

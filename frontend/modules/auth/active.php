@@ -28,20 +28,20 @@ if (!empty($token)) {
         $updateStatus = UserBUS::getInstance()->updateModel($userQuery);
 
         if ($updateStatus) {
-            session::getInstance()->setFlashData('msg', 'Kích hoạt tài khoản thành công!');
+            session::getInstance()->setFlashData('msg', 'Your account has been activated successfully!');
             session::getInstance()->setFlashData('msg_type', 'success');
             redirect('?module=auth&action=login');
         } else {
-            session::getInstance()->setFlashData('msg', 'Kích hoạt tài khoản thất bại, vui lòng liên hệ quản trị viên!');
+            session::getInstance()->setFlashData('msg', 'Activation failed! Please contact the administrator for assistance!');
             session::getInstance()->setFlashData('msg_type', 'danger');
         }
     } else {
         echo 123;
-        getMsg('Liên kết không tồn tại hoặc đã hết hạn', 'danger');
+        getMsg('The url is not available or expired', 'danger');
     }
 } else {
     echo 456;
-    getMsg('Liên kết không tồn tại hoặc đã hết hạn', 'danger');
+    getMsg('The url is not available or expired', 'danger');
 }
 
 layouts('footer');

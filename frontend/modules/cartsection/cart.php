@@ -16,7 +16,7 @@ $cartList = CartsBUS::getInstance()->getModelByUserId($userModel->getId());
 
 if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->getRoleId() == 3) {
     echo '<script>';
-    echo 'alert("Bạn không có quyền truy cập vào trang này!")';
+    echo 'alert("You don\'t have access to this page!")';
     echo '</script>';
     echo '<script>';
     echo 'window.location.href = "?module=index.php&action=product"';
@@ -111,7 +111,7 @@ if (isPost()) {
                         //If the product is not found, delete that product from the cart and refresh the data:
                         //Possibly tell user that the product is out of stock / unavailable:
                         echo '<script>';
-                        echo 'alert("Sản phẩm với mã' . $cart->getProductId() . ' không tồn tại hoặc đã hết hàng!")';
+                        echo 'alert("A product with id: ' . $cart->getProductId() . ' is not available or out of stock!")';
                         echo '</script>';
                         CartsBUS::getInstance()->deleteModel($cart->getId());
                         CartsBUS::getInstance()->refreshData();
@@ -151,7 +151,7 @@ if (isPost()) {
                 <?php
                 if (count($cartList) == 0) {
                     echo '<div class="no-product">';
-                    echo '<p>Giỏ hàng không có gì hết. Hãy thêm món gì đó đi :3</p>';
+                    echo '<p>This cart is empty. Please add something :3</p>';
                     echo '</div>';
                 }
                 ?>

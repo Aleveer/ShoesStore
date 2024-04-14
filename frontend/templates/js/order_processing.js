@@ -11,27 +11,27 @@ $(document).ready(function () {
             var inputPaymentMethodId = $('#inputPaymentId').val();
 
             if (!inputName) {
-                alert('Vui lòng nhập tên');
+                alert('Please enter your name');
                 return;
             }
 
             if (!inputPhoneNumber) {
-                alert('Vui lòng nhập số điện thoại');
+                alert('Please enter your phone number');
                 return;
             }
 
             if (isNaN(inputPhoneNumber)) {
-                alert('Vui lòng nhập số điện thoại là số');
+                alert('Please enter a valid phone number');
                 return;
             }
 
             if (!inputAddress) {
-                alert('Vui lòng nhập địa chỉ');
+                alert('Please enter your address');
                 return;
             }
 
             if(!inputPaymentMethodId) {
-                alert('Vui lòng chọn phương thức thanh toán');
+                alert('Please select a payment method');
                 return;
             }
 

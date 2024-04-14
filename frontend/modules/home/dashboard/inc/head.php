@@ -33,7 +33,7 @@ if (!isset($title)) {
 
 
     <!-- Custom styles for this template -->
-    <link href="../css/global.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css" >
     <link rel="stylesheet" href="../css/scrollbar.css">
 
 

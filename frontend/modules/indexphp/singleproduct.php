@@ -202,7 +202,6 @@ if (isLogin()) {
             </div>
         </div>
         <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/add_to_cart.js"></script>
-        <?php echo $script; ?>
     </div>
 </body>
 

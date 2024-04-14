@@ -297,7 +297,9 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
             }
             if ($paymentMethod == null) {
                 //Set default cash payment method:
-                $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(1)->getId());
+                $methodId = 1;
+                $paymentMethodModel = PaymentMethodsBUS::getInstance()->getModelById($methodId);
+                $paymentModel->setMethodId($paymentMethodModel->getId());
             } else {
                 if ($paymentMethod == "Credit Card") {
                     $paymentModel->setMethodId(PaymentMethodsBUS::getInstance()->getModelById(2)->getId());

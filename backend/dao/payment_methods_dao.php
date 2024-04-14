@@ -49,7 +49,7 @@ class PaymentMethodsDAO implements DAOInterface
         return $paymentMethodsList;
     }
 
-    public function getById(int $id)
+    public function getById($id)
     {
         $query = "SELECT * FROM payment_methods WHERE id = ?";
         $result = DatabaseConnection::executeQuery($query, $id);

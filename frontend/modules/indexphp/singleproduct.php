@@ -99,7 +99,7 @@ if (isLogin()) {
                         }
                     }
                     if ($check == 0) {
-                        echo 'Sản phẩm tạm thời hết hàng';
+                        echo 'This product is out of stock!';
                     }
                     ?>
                 </div>
@@ -108,15 +108,16 @@ if (isLogin()) {
                     <input type="number" name="pquantity" id="pquantity" placeholder="1" min="1" required>
                 </div>
                 <?php
+                $hideButton = false;
                 if (isLogin()) {
-                    if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->getRoleId() == 3) {
-                        //Hide button add to cart:
-                        echo '<button class="addtocart" name="addToCart" style="display:none;">';
-                        //Lock the quantity input:
-                        echo '<script>document.getElementById("pquantity").disabled = true;</script>';
+                    if ($userModel->getRoleId() === 1 || $userModel->getRoleId() === 2 || $userModel->getRoleId() === 3) {
+                        $hideButton = true;
                     }
                 }
                 if ($check == 0) {
+                    $hideButton = true;
+                }
+                if ($hideButton) {
                     //Hide button add to cart:
                     echo '<button class="addtocart" name="addToCart" style="display:none;">';
                     //Lock the quantity input:

@@ -66,7 +66,7 @@ if (!defined('_CODE')) {
                     <i class="fa-solid fa-angle-down user__dropdown"></i>
                     <ul class="user__dropdown__menu hide">
                         <li class="user__dropdown__menu__item">
-                            <a href="#">Account Setting</a>
+                            <a href="#">Setting</a>
                         </li>
                         <li class="user__dropdown__menu__item">
                             <a href="?module=auth&action=logout">Log out</a>

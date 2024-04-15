@@ -19,7 +19,7 @@ if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->
     echo 'alert("You don\'t have access to this page!")';
     echo '</script>';
     echo '<script>';
-    echo 'window.location.href = "?module=index.php&action=product"';
+    echo 'window.location.href = "?module=indexphp&action=product"';
     echo '</script>';
     die();
 }

@@ -54,7 +54,7 @@ class TokenLoginDAO implements DAOInterface
         return $tokenLoginList;
     }
 
-    public function getById(int $id)
+    public function getById($id)
     {
         $query = "SELECT * FROM tokenlogin WHERE id = ?";
         $rs = DatabaseConnection::executeQuery($query, $id);

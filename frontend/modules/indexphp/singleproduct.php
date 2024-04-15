@@ -133,25 +133,28 @@ if (isLogin()) {
                 } else {
                     if (isPost()) {
                         if (isset($_POST['addtocart'])) {
-                            if ($userModel->getStatus() === StatusEnums::BANNED) {
-                                $data = array(
-                                    'status' => 'error',
-                                    'message' => 'Your account has been banned. You cannot perform this action'
-                                );
-                                echo json_encode($data);
-                                return;
-                            } else if ($userModel->getStatus() === StatusEnums::INACTIVE) {
-                                $data = array(
-                                    'status' => 'error',
-                                    'message' => 'Your account has not been activated. Please log in again to activate your account'
-                                );
-                                echo json_encode($data);
-                                $userModel->setStatus(StatusEnums::INACTIVE);
-                                UserBUS::getInstance()->updateModel($userModel);
-                                TokenLoginBUS::getInstance()->deleteModel($tokenModel);
-                                session::getInstance()->removeSession('tokenLogin');
-                                redirect('?module=auth&action=login');
-                                return;
+                            switch ($userModel->getStatus()) {
+                                case StatusEnums::BANNED:
+                                    $data = array(
+                                        'status' => 'error',
+                                        'message' => 'Your account has been banned. You cannot perform this action'
+                                    );
+                                    echo json_encode($data);
+                                    error_log(json_encode($data));
+                                    exit();
+
+                                case StatusEnums::INACTIVE:
+                                    $data = array(
+                                        'status' => 'error',
+                                        'message' => 'Your account has not been activated. Please log in again to activate your account'
+                                    );
+                                    echo json_encode($data);
+                                    $userModel->setStatus(StatusEnums::INACTIVE);
+                                    UserBUS::getInstance()->updateModel($userModel);
+                                    TokenLoginBUS::getInstance()->deleteModel($tokenModel);
+                                    session::getInstance()->removeSession('tokenLogin');
+                                    redirect('?module=auth&action=login');
+                                    exit();
                             }
 
                             $filterAll = filter();
@@ -168,6 +171,7 @@ if (isLogin()) {
                                             'message' => 'The quantity of the product in the cart exceeds the remaining quantity of the product'
                                         );
                                         echo json_encode($data);
+                                        error_log(json_encode($data));
                                         return;
                                     } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
                                         $data = array(
@@ -178,6 +182,7 @@ if (isLogin()) {
                                         CartsBUS::getInstance()->updateModel($cartItem);
                                         CartsBUS::getInstance()->refreshData();
                                         echo json_encode($data);
+                                        error_log(json_encode($data));
                                         return;
                                     }
                                 }

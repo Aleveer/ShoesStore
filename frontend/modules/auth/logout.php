@@ -22,7 +22,7 @@ if (isLogin()) {
     }
 
     UserBUS::getInstance()->updateModel($userModel);
-    TokenLoginBUS::getInstance()->deleteModel($tokenModel->getId());
+    TokenLoginBUS::getInstance()->deleteModel($tokenModel);
     session::getInstance()->removeSession('tokenLogin');
     redirect('?module=auth&action=login');
 }

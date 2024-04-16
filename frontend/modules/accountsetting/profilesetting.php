@@ -79,7 +79,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                     ?> -->
                                     <button type="button" class="btn btn-default md-btn-flat" name="resetButton"
                                         id="resetButton">Reset</button>
-                                    <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
+                                    <div class="text-bold small mt-1">Allowed JPG, JPEG or PNG. Max size of 1MB</div>
                                 </div>
                             </div>
                             <hr class="border-light m-0">
@@ -125,7 +125,6 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                     <div class="text-right mt-3">
                                         <button type="button" class="btn btn-primary" name="saveButton"
                                             id="applyChangesFirstCard">Apply changes</button>&nbsp;
-                                        <button type="button" class="btn btn-default">Cancel</button>
                                     </div>
                                 </div>
                             </div>

@@ -111,7 +111,7 @@ if (isPost()) {
                         //If the product is not found, delete that product from the cart and refresh the data:
                         //Possibly tell user that the product is out of stock / unavailable:
                         echo '<script>';
-                        echo 'alert("A product with id: ' . $cart->getProductId() . ' is not available or out of stock!")';
+                        echo 'alert("A product you have in cart: ' . $product->getName() . ' is not available or out of stock!")';
                         echo '</script>';
                         CartsBUS::getInstance()->deleteModel($cart->getId());
                         CartsBUS::getInstance()->refreshData();

@@ -164,42 +164,40 @@ if (isLogin()) {
 
                             $cartItem = CartsBUS::getInstance()->getModelByUserIdAndProductIdAndSizeId($userModel->getId(), $product->getId(), $sizeId);
                             if ($cartItem != null) {
-                                $sizeItems = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id', $sizeId]);
-                                foreach ($sizeItems as $sizeItem) {
-                                    if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
-                                        $data = array(
-                                            'status' => 'error',
-                                            'message' => 'The quantity of the product in the cart exceeds the remaining quantity of the product'
-                                        );
-                                        echo json_encode($data);
-                                        error_log(json_encode($data));
-                                        return;
-                                    } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
-                                        $data = array(
-                                            'status' => 'success',
-                                            'message' => 'The product is already in your cart, the quantity of the product has been updated'
-                                        );
-                                        $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
-                                        CartsBUS::getInstance()->updateModel($cartItem);
-                                        CartsBUS::getInstance()->refreshData();
-                                        echo json_encode($data);
-                                        error_log(json_encode($data));
-                                        return;
-                                    }
+                                $sizeItem = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $product->getId());
+                                if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
+                                    $data = array(
+                                        'status' => 'error',
+                                        'message' => 'The quantity of the product in the cart can\'t exceeds the remaining quantity of the product'
+                                    );
+                                    echo json_encode($data);
+                                    error_log(json_encode($data));
+                                    return;
+                                } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
+                                    $data = array(
+                                        'status' => 'success',
+                                        'message' => 'The product is already in your cart, the quantity of the product has been updated'
+                                    );
+                                    $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
+                                    CartsBUS::getInstance()->updateModel($cartItem);
+                                    CartsBUS::getInstance()->refreshData();
+                                    echo json_encode($data);
+                                    error_log(json_encode($data));
+                                    return;
                                 }
                             } else if ($cartItem == null) {
                                 $cart = new CartsModel(null, null, null, null, null);
                                 $cart->setUserId($userModel->getId());
                                 $cart->setProductId($product->getId());
                                 $cart->setSizeId($sizeId);
+
                                 //Check if the quantity is greater than the quantity of the product:
-                                $sizeItems = SizeItemsBUS::getInstance()->searchModel($product->getId(), ['product_id', $sizeId]);
-                                foreach ($sizeItems as $sizeItem) {
-                                    if ($quantity > $sizeItem->getQuantity()) {
-                                        $cart->setQuantity($sizeItem->getQuantity());
-                                    }
+                                $sizeItems = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $product->getId());
+                                if ($quantity > $sizeItems->getQuantity()) {
+                                    $cart->setQuantity($sizeItems->getQuantity());
+                                } else {
+                                    $cart->setQuantity($quantity);
                                 }
-                                $cart->setQuantity($quantity);
                                 CartsBUS::getInstance()->addModel($cart);
                                 CartsBUS::getInstance()->refreshData();
                                 $data = array(

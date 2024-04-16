@@ -129,7 +129,7 @@ class UserBUS implements BUSInterface
             $errors['email']['required'] = "Email is required";
         }
 
-        if ($userModel->getName() == null || trim($userModel->getName()) ==  "") {
+        if ($userModel->getName() == null || trim($userModel->getName()) == "") {
             $errors['fullname']['required'] = "Name is required";
         }
 
@@ -180,11 +180,11 @@ class UserBUS implements BUSInterface
         $roleId = $userModel->getRoleId();
         switch ($roleId) {
             case 1:
-                //Admin
+            //Admin
             case 2:
-                //Manager
+            //Manager
             case 3:
-                //Employee
+            //Employee
             case null:
                 // Default is customer
                 $userModel->setRoleId(4);
@@ -253,11 +253,8 @@ class UserBUS implements BUSInterface
 
     public function imageUploadHandle($userId, $imageFile)
     {
-        $target_dir = __DIR__ . "/../uploads/";
-        $target_file = $target_dir . basename($imageFile["name"]);
         $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
+        $imageFileType = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
         // Check if image file is a actual image or fake image
         $check = getimagesize($imageFile["tmp_name"]);
         if ($check !== false) {
@@ -265,29 +262,28 @@ class UserBUS implements BUSInterface
         } else {
             $uploadOk = 0;
         }
-
         // Check file size
         if ($imageFile["size"] > 500000) {
             $uploadOk = 0;
         }
-
         // Allow certain file formats
         if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
             $uploadOk = 0;
         }
-
         // Check if $uploadOk is set to 0 by an error
         if ($uploadOk == 0) {
             return false;
         } else {
-            if (move_uploaded_file($imageFile["tmp_name"], $target_file)) {
-                $user = $this->getModelById($userId);
-                $user->setImage($target_file);
-                $this->updateModel($user);
-                return true;
-            } else {
-                return false;
-            }
+            // Convert the image to base64 string
+            $imageData = base64_encode(file_get_contents($imageFile["tmp_name"]));
+            // Get the user model
+            $user = $this->getModelById($userId);
+            // Set the image data
+            $user->setImage($imageData);
+            // Update the user model
+            $this->updateModel($user);
+            $this->refreshData();
+            return true;
         }
     }
 }

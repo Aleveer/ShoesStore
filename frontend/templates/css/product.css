@@ -1,9 +1,7 @@
-
 .con_product{
     width: 100vw;
     height: auto;
     background-color: black;
-
 }
 /*Hiệu ứng cho vùng tìm kiếm*/
 .con_product .psearch{
@@ -132,8 +130,8 @@
     text-align: center;
     justify-content: center;
     width: 82vw;
-   
     height: auto;
+
 }
 .container_filter_pagination .areaproduct{
     justify-content: center;

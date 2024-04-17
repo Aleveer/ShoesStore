@@ -134,7 +134,7 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
                         <p class="text-muted mb-0 small">Qty: ' . $orderItem->getQuantity() . '</p>
                     </div>
                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                        <p class="text-muted mb-0 small">$ ' . $orderItem->getPrice() . '</p>
+                        <p class="text-muted mb-0 small">$ ' . ProductBUS::getInstance()->getModelById($orderItem->getProductId())->getPrice() . '</p>
                     </div>
                 </div>
             </div>
@@ -145,10 +145,9 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
                             <div class="d-flex justify-content-between pt-2">
                                 <p class="fw-bold mb-0">Order Details</p>
                                 <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> $<?php
-                                //Get total price of order:
                                 $totalPrice = 0;
                                 foreach ($orderItemsListBasedOnOrderFromUser as $orderItem) {
-                                    $totalPrice += $orderItem->getPrice() * $orderItem->getQuantity();
+                                    $totalPrice += $orderItem->getPrice();
                                 }
                                 echo $totalPrice;
                                 ?></p>
@@ -159,7 +158,7 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
                                 <p class="text-muted mb-0"><span class="fw-bold me-4">Discount </span>
                                     <?php
                                     $discountedPrice = $totalPrice - $order->getTotalAmount();
-                                    echo '$'. $discountedPrice;
+                                    echo '$' . $discountedPrice;
                                     ?>
                                 </p>
                             </div>
@@ -172,7 +171,8 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
                         <div class="card-footer border-0 px-4 py-5"
                             style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                             <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
-                                Total paid: <span class="h2 mb-0 ms-2">$<?php echo $order->getTotalAmount() ?></span></h5>
+                                Total paid: <span class="h2 mb-0 ms-2">$<?php echo $order->getTotalAmount() ?></span>
+                            </h5>
                         </div>
                     </div>
                 </div>

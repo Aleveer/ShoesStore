@@ -50,7 +50,7 @@ $orderList = OrdersBUS::getInstance()->getOrdersByUserId($userModel->getId());
             </thead>
             <tbody id="productList">
                 <?php
-                usort($orderList, function($a, $b) {
+                usort($orderList, function ($a, $b) {
                     return strtotime($b->getOrderDate()) - strtotime($a->getOrderDate());
                 });
 
@@ -76,6 +76,6 @@ $orderList = OrdersBUS::getInstance()->getOrdersByUserId($userModel->getId());
                 ?>
             </tbody>
         </table>
+        <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/order_detail.js"></script>
     </div>
-    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/order_detail.js"></script>
 </body>

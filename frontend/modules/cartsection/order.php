@@ -147,17 +147,10 @@ foreach ($cartListFromUser as $cartModel) {
     <?php
     //button to submit the order :
     if (isPost()) {
-        $totalPrice = null;
         if (isset($_POST['submitButton'])) {
             //Get current time:
             $currentDate = date('Y-m-d');
             $currentTime = date('Y-m-d H:i:s');
-
-            //Calculate the total price:
-            foreach ($cartListFromUser as $cartModel) {
-                $productModel = ProductBUS::getInstance()->getModelById($cartModel->getProductId());
-                $totalPrice += $productModel->getPrice() * $cartModel->getQuantity();
-            }
 
             //Check for discount:
             if (isset($_POST['discount-code'])) {
@@ -204,7 +197,7 @@ foreach ($cartListFromUser as $cartModel) {
                 }
 
                 //If valid, apply the discount to the total price, getPercent is percentage:
-                $totalPrice = $totalPrice - ($totalPrice * $discountModel->getPercent() / 100);
+                $totalPriceOfCart = $totalPriceOfCart - ($totalPriceOfCart * $discountModel->getPercent() / 100);
                 echo '<script>';
                 echo 'alert("Applied discount successfully!")';
                 echo '</script>';
@@ -219,7 +212,7 @@ foreach ($cartListFromUser as $cartModel) {
             $orderModel = new OrdersModel(null, null, null, null, null, null, null, null);
             $orderModel->setUserId($userModel->getId());
             $orderModel->setOrderDate($currentTime);
-            $orderModel->setTotalAmount($totalPrice);
+            $orderModel->setTotalAmount($totalPriceOfCart);
 
             $customerName = $_POST['inputName'];
             $customerPhone = $_POST['inputPhoneNumber'];
@@ -310,7 +303,7 @@ foreach ($cartListFromUser as $cartModel) {
             }
 
             $paymentModel->setPaymentDate($currentTime);
-            $paymentModel->setTotalPrice($totalPrice);
+            $paymentModel->setTotalPrice($totalPriceOfCart);
             PaymentsBUS::getInstance()->addModel($paymentModel);
             PaymentsBUS::getInstance()->refreshData();
 

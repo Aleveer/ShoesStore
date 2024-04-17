@@ -6,9 +6,7 @@ body {
     margin-left: 50rem;
     margin-bottom: 10rem !important;  
 }
-.flex-grow-1 h4{
-    padding-left: 20rem;
-}
+
 .flex-grow-1 .card {
     background-color: #e3e4f6 !important;
     height: 30rem !important;

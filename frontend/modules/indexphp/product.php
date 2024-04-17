@@ -40,10 +40,8 @@ function displayProduct($product)
         ';
 }
 ?>
-
-
-<div id="header">
-    <meta charset="UTF-8">
+<div id="header" style="  background-color: rgb(18, 15, 40); ">  
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
@@ -414,7 +412,7 @@ function displayProduct($product)
                 $selectedCategory = $_POST['categoryValue'] ?? null;
                 if ((!isset($_POST['submitBtn']) && !isset($_POST['searchBtn'])) || ($selectedCategory == 'All products' && isset($_POST['submitBtn']))):
                     ?>
-                    <div class="page" data-total-pages="<?php echo $total_pages; ?>"
+                    <div style="margin-bottom: 2rem;" class="page" data-total-pages="<?php echo $total_pages; ?>"
                         data-current-page="<?php echo $page; ?>">
                         <a class="custom-btn btn-7 prev" id="prevPage" name="prevPage"><span>
                                 <</span></a>

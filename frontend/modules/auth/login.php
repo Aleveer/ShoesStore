@@ -110,6 +110,6 @@ $msgType = session::getInstance()->getFlashData('msg_type');
     </div>
 </body>
 
-<div id="footer">
+<div id="footer" style="margin-top: 15rem;">
     <?php layouts('footer'); ?>
 </div>

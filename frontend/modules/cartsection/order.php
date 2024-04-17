@@ -148,7 +148,8 @@ foreach ($cartListFromUser as $cartModel) {
     //button to submit the order :
     if (isPost()) {
         if (isset($_POST['submitButton'])) {
-            //Get current time:
+            //Get current time with GMT+7 timezone:
+            date_default_timezone_set('Asia/Ho_Chi_Minh');
             $currentDate = date('Y-m-d');
             $currentTime = date('Y-m-d H:i:s');
 

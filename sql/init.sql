@@ -162,7 +162,7 @@ CREATE TABLE `products` (
   `category_id` int(11) NOT NULL,
   `price` double NOT NULL,
   `description` text NOT NULL,
-  `image` varchar(255) NOT NULL,
+  `image` longtext NOT NULL,
   `gender` int(11) NOT NULL DEFAULT 1
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
@@ -218,7 +218,7 @@ CREATE TABLE `users` (
   `name` varchar(50) NOT NULL,
   `phone` varchar(10) DEFAULT NULL,
   `gender` tinyint(4) NOT NULL DEFAULT 0,
-  `image` varchar(255) DEFAULT NULL,
+  `image` longtext DEFAULT NULL,
   `role_id` int(11) DEFAULT NULL,
   `status` enum('active', 'inactive', 'banned') NOT NULL DEFAULT 'active',
   `address` varchar(255) NOT NULL

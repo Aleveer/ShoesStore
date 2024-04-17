@@ -39,16 +39,9 @@ class OrderItemsBUS implements BUSInterface
         return OrderItemsDAO::getInstance()->getById($id);
     }
 
-    public function getOrderItemsListByOrderId(int $orderId)
+    public function getOrderItemsListByOrderId($orderId)
     {
-        //Use for loop instead
-        $orderItemsList = array();
-        foreach ($this->orderItemsList as $orderItems) {
-            if ($orderItems->getOrderId() == $orderId) {
-                $orderItemsList[] = $orderItems;
-            }
-        }
-        return $orderItemsList;
+        return OrderItemsDAO::getInstance()->getOrderItemsListByOrderId($orderId);
     }
 
     public function addModel($orderItemsModel): int

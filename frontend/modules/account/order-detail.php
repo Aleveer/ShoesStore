@@ -1,14 +1,8 @@
 <?php
 use backend\bus\ProductBUS;
-use backend\bus\SizeBUS;
-use backend\bus\SizeItemsBUS;
-use backend\bus\CategoriesBUS;
 use backend\bus\TokenLoginBUS;
 use backend\bus\UserBUS;
-use backend\models\CartsModel;
 use backend\services\session;
-use backend\bus\CartsBUS;
-use backend\enums\StatusEnums;
 use backend\bus\OrderItemsBUS;
 use backend\bus\OrdersBUS;
 
@@ -59,6 +53,15 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <php class="text-muted mb-0">Customer name: <?php echo $order->getCustomerName() ?></p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <php class="text-muted mb-0">Address: <?php echo $order->getCustomerAddress() ?></p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <php class="text-muted mb-0">Phone number: <?php echo $order->getCustomerPhone() ?></p>
                             </div>
                             <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
                             <div class="row d-flex align-items-center">

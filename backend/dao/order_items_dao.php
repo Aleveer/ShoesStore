@@ -63,6 +63,18 @@ class OrderItemsDAO implements DAOInterface
         return null;
     }
 
+    public function getOrderItemsListByOrderId($orderId)
+    {
+        $query = "SELECT * FROM order_items WHERE order_id = ?";
+        $rs = DatabaseConnection::executeQuery($query, $orderId);
+        $orderItemsList = [];
+        while ($row = $rs->fetch_assoc()) {
+            $orderItemsModel = $this->createOrderItemsModel($row);
+            array_push($orderItemsList, $orderItemsModel);
+        }
+        return $orderItemsList;
+    }
+
     public function insert($orderItemsModel): int
     {
         $query = "INSERT INTO order_items (order_id, product_id, size_id, quantity, price) VALUES (?, ?, ?, ?, ?)";

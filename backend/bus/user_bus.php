@@ -203,9 +203,9 @@ class UserBUS implements BUSInterface
             $errors['address']['valid'] = "Invalid address";
         }
 
-        if ($userModel->getImage() === null) {
-            // TODO: set default image, need a proper implementation.
-        }
+        // if ($userModel->getImage() === null) {
+        //     // TODO: set default image, need a proper implementation.
+        // }
 
         return $errors;
     }

@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (imageUploadButton) {
         imageUploadButton.addEventListener('change', (event) => {
-            console.log('Button clicked:');
             let file = event.target.files[0];
             if (file) {
                 let reader = new FileReader();
@@ -84,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Create an AJAX request
                     let xhr = new XMLHttpRequest();
                     xhr.open('POST', 'http://localhost/frontend/index.php?module=account&action=profilesetting', true);
-                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                     // Set up a handler for when the request finishes
                     xhr.onload = function () {
@@ -96,7 +94,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     };
 
                     // Send the AJAX request
-                    xhr.send('image=' + encodeURIComponent(base64Image));
+                    let formData = new FormData();
+                    formData.append("image", base64Image);
+                    xhr.send(formData);
                 }
                 reader.readAsDataURL(file);
             }

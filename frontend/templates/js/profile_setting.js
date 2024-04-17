@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Attach click event listener to each card body
         cardBody.addEventListener('click', (event) => {
             // Handle the event here
-            console.log('Card body clicked:', event.target);
+            //console.log('Card body clicked:', event.target);
         });
     });
 
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Use ajax to send the data only if there is a change:
         $.ajax({
-            url: "http://localhost/frontend/index.php?module=accountsetting&action=profilesetting",
+            url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
             type: "POST",
             dataType: "html",
             data: {
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 femaleGender.checked !== femaleGender.defaultChecked) {
                 // Use ajax to send the data only if there is a change:
                 $.ajax({
-                    url: "http://localhost/frontend/index.php?module=accountsetting&action=profilesetting",
+                    url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
                     type: "POST",
                     dataType: "html",
                     data: {
@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         mailAccount: email.value,
                         maleGender: maleGender.checked,
                         femaleGender: femaleGender.checked,
+                        gender: maleGender.checked ? 'male' : 'female',
                         saveButton: true,
                     },
                 });
@@ -134,20 +135,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            if(currentPassword.value === newPassword.value) {
+                alert("New password cannot be the same as the current password!");
+                return;
+            }
+
             //Check for changes then use ajax to send the changed data:
             if (currentPassword.value !== currentPassword.defaultValue ||
                 newPassword.value !== newPassword.defaultValue ||
                 confirmPassword.value !== confirmPassword.defaultValue) {
                 // Use ajax to send the data only if there is a change:
                 $.ajax({
-                    url: "http://localhost/frontend/index.php?module=accountsetting&action=profilesetting",
+                    url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
                     type: "POST",
-                    dataType: "html",
+                    dataType: "json",
                     data: {
-                        currentPassword: currentPassword.value,
-                        newPassword: newPassword.value,
-                        repeatNewPassword: confirmNewPassword.value,
-                        saveButtonPassword: true,
+                        'saveButtonPassword': true,
+                        'currentPassword': currentPassword.value,
+                        'newPassword': newPassword.value,
+                        'repeatNewPassword': confirmNewPassword.value
+                    },
+                    success: function (data) {
+                        if (data.status == "success") {
+                            alert(data.message);
+                        } else if (data.status == "error") {
+                            alert(data.message);
+                        }
                     },
                 });
             }
@@ -175,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             $.ajax({
-                url: "http://localhost/frontend/index.php?module=accountsetting&action=profilesetting",
+                url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
                 type: "POST",
                 dataType: "html",
                 data: {

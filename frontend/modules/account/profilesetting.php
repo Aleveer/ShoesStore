@@ -155,8 +155,8 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                     $username = $_POST['username'];
                                     $accountName = $_POST['account-name'];
                                     $mailAccount = $_POST['mailAccount'];
-                                    //$gender = ($_POST['gender'] == 'male') ? 0 : 1;
-                                    $gender = isset($_POST['maleGender']) && $_POST['maleGender'] ? 0 : (isset($_POST['femaleGender']) && $_POST['femaleGender'] ? 1 : null);
+                                    $gender = ($_POST['gender'] == 'male') ? 0 : 1;
+
                                     $userBUS = UserBUS::getInstance();
 
                                     if ($username != $userModel->getUsername() && !$userBUS->isUsernameTaken($username)) {
@@ -207,32 +207,47 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                 <?php
                                 if (isPost()) {
                                     if (isset($_POST['saveButtonPassword'])) {
+                                        error_log("Change password button clicked!");
+
                                         $currentPassword = $_POST['currentPassword'];
                                         $newPassword = $_POST['newPassword'];
                                         $repeatNewPassword = $_POST['repeatNewPassword'];
                                         $userBUS = UserBUS::getInstance();
 
-                                        //Based on login.php, check for current password:
                                         $passwordHash = $userModel->getPassword();
-                                        if (PasswordUtilities::getInstance()->verifyPassword($currentPassword, $passwordHash)) {
-                                            if ($newPassword == $repeatNewPassword) {
-                                                $userModel->setPassword(PasswordUtilities::getInstance()->hashPassword($newPassword));
-                                                $result = $userBUS->updateModel($userModel);
-                                                if ($result) {
-                                                    $userBUS->refreshData();
-                                                    error_log("Changed password successfully!");
-                                                    echo '<script>alert("Changed password successfully!")</script>';
-                                                    //Refresh the page
-                                                    echo '<script>location.reload();</script>';
-                                                } else {
-                                                    error_log("Failed to change password!");
-                                                    echo '<script>alert("Failed to change password!")</script>';
-                                                }
-                                            }
-                                        } else {
+                                        error_log("Current password hash: $passwordHash");
+
+                                        if (!PasswordUtilities::getInstance()->verifyPassword($currentPassword, $passwordHash)) {
                                             error_log("Current password is incorrect!");
-                                            echo '<script>alert("Current password is incorrect!")</script>';
+                                            //echo '<script>alert("Current password is incorrect!")</script>';
+                                            echo json_encode(['success' => false, 'message' => 'Current password is incorrect!']);
+                                            return;
                                         }
+
+                                        if ($newPassword != $repeatNewPassword) {
+                                            error_log("New passwords do not match!");
+                                            echo '<script>alert("New passwords do not match!")</script>';
+                                            return;
+                                        }
+
+                                        $newPasswordHash = PasswordUtilities::getInstance()->hashPassword($newPassword);
+                                        error_log("New password hash: $newPasswordHash");
+
+                                        $userModel->setPassword($newPasswordHash);
+                                        $result = $userBUS->updateModel($userModel);
+                                        error_log("Update result: $result");
+
+                                        if (!$result) {
+                                            error_log("Failed to change password!");
+                                            //echo '<script>alert("Failed to change password!")</script>';
+                                            echo json_encode(['success' => false, 'message' => 'Failed to change password!']);
+                                            return;
+                                        }
+
+                                        $userBUS->refreshData();
+                                        error_log("Changed password successfully!");
+                                        echo json_encode(['success' => true, 'message' => 'Changed password successfully!']);
+                                        echo '<script>location.reload();</script>';
                                     }
                                 }
                                 ?>

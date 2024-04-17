@@ -28,9 +28,8 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <?php layouts("header") ?>
 </div>
-<!-- style="padding-left: 200px -->
-<body>
-    <div class="container light-style flex-grow-1 container-p-y">
+<body> 
+    <div class="container light-style flex-grow-1 container-p-y" style="margin-left: 5rem;">
         <h4 class="font-weight-bold py-3 mb-4">
             Account settings
         </h4>

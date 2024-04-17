@@ -56,7 +56,7 @@ foreach ($cartListFromUser as $cartModel) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo _WEB_HOST_TEMPLATE ?>/css/cart.css">
+    <link rel="stylesheet" href="<?php echo _WEB_HOST_TEMPLATE ?>/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <?php layouts("header") ?>
 </div>

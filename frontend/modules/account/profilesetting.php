@@ -30,7 +30,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
 </div>
 
 <body>
-    <div class="container light-style flex-grow-1 container-p-y">
+    <div class="container light-style flex-grow-1 container-p-y" style="padding-left: 200px">
         <h4 class="font-weight-bold py-3 mb-4">
             Account settings
         </h4>

@@ -23,7 +23,7 @@ if (!defined('_CODE')) {
           <div class="in-wrap">
                <div class="footer1">
                     <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/logoShoes.jpg" alt="">
-                    <p>Thank you for visiting our shoe store. We strive to provide the highest quality footwear for all occasions. <br>For any inquiries, please contact us.<br> © All rights reserved.</p>
+                    <p>Thank you for visiting our shoe store. We strive to provide the highest <br>quality footwear for all occasions. For any inquiries, please contact us.<br> © All rights reserved.</p>
                     <h4>Follow Us</h4>
                     <div class="footer-icon">
                          <a href=""><i class="fa-brands fa-facebook" style="color: #ffffff;"></i></a>

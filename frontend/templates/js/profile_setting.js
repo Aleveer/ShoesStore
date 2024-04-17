@@ -66,6 +66,43 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Select the image upload button
+    let imageUploadButton = document.getElementById('imageUploadIdButton');
+    let showImage = document.getElementById('showImageId');
+
+    if (imageUploadButton) {
+        imageUploadButton.addEventListener('change', (event) => {
+            console.log('Button clicked:');
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    // The result attribute contains the file's data as a base64 encoded string
+                    let base64Image = e.target.result;
+                    showImage.src = base64Image;
+
+                    // Create an AJAX request
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'http://localhost/frontend/index.php?module=account&action=profilesetting', true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    // Set up a handler for when the request finishes
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            console.log('Upload complete!');
+                        } else {
+                            console.error('An error occurred during the upload.');
+                        }
+                    };
+
+                    // Send the AJAX request
+                    xhr.send('image=' + encodeURIComponent(base64Image));
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
     // Select the save button inside the first card
     //let saveButton = firstCard.querySelector('#applyChangesFirstCard');
     let saveButton = document.getElementById('applyChangesFirstCard');
@@ -135,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            if(currentPassword.value === newPassword.value) {
+            if (currentPassword.value === newPassword.value) {
                 alert("New password cannot be the same as the current password!");
                 return;
             }
@@ -200,44 +237,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
     }
-    // document.addEventListener('DOMContentLoaded', (event) => {
-    //     //Image upload handling:
-    //     let imageUploadBtn = document.querySelector('#imageUploadIdButton');
-    //     let imageUploadLabel = document.querySelector('label.btn.btn-outline-primary');
-    //     if (imageUploadBtn && imageUploadLabel) {
-    //         imageUploadLabel.addEventListener('click', (event) => {
-    //             imageUploadBtn.addEventListener('change', (event) => {
-    //                 console.log('Image upload button clicked:', event.target);
-    //                 // Get the image file
-    //                 let imageFile = event.target.files[0];
-    //                 let formData = new FormData();
-    //                 formData.append('image', imageFile);
-
-    //                 // Use ajax to send the data only if there is a change:
-    //                 $.ajax({
-    //                     url: "http://localhost/frontend/index.php?module=accountsetting&action=profilesetting",
-    //                     type: "POST",
-    //                     dataType: "html",
-    //                     data: formData,
-    //                     processData: false,
-    //                     contentType: false,
-    //                     success: function (data) {
-    //                         console.log("sent successfully");
-    //                         if (data.status == "success") {
-    //                             alert(data.message);
-    //                         } else if (data.status == "error") {
-    //                             alert(data.message);
-    //                         }
-    //                     },
-    //                     error: function (xhr, status, error) {
-    //                         console.error("Error:", error);
-    //                         alert("Error occurred. Please try again.");
-    //                     },
-    //                 });
-    //             });
-    //         });
-    //     } else {
-    //         console.error('Image upload button or label not found');
-    //     }
-    // });
 });

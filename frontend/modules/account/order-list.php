@@ -19,9 +19,8 @@ $orderList = OrdersBUS::getInstance()->getOrdersByUserId($userModel->getId());
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo _WEB_HOST_TEMPLATE ?>/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <?php layouts("header") ?>
+    <?php layouts('header') ?>
 </div>
 
 <body>
@@ -51,6 +50,10 @@ $orderList = OrdersBUS::getInstance()->getOrdersByUserId($userModel->getId());
             </thead>
             <tbody id="productList">
                 <?php
+                usort($orderList, function ($a, $b) {
+                    return strtotime($b->getOrderDate()) - strtotime($a->getOrderDate());
+                });
+
                 foreach ($orderList as $order) {
                     echo '<tr>';
                     echo '<td>' . $order->getId() . '</td>';
@@ -58,21 +61,21 @@ $orderList = OrdersBUS::getInstance()->getOrdersByUserId($userModel->getId());
                     echo '<td>' . $order->getStatus() . '</td>';
                     echo '<td>' . $order->getTotalAmount() . '</td>';
                     echo '<td> 
-                <a href="http://localhost/frontend/index.php?module=account&action=order-detail&orderId=' . $order->getId() . '">
-                    <button class="btn btn-sm btn-primary view-button" data-order-id="' . $order->getId() . '">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                        View
-                    </button>
-                </a>
-            </td>';
+                        <a href="http://localhost/frontend/index.php?module=account&action=order-detail&orderId=' . $order->getId() . '">
+                            <button class="btn btn-sm btn-primary view-button" data-order-id="' . $order->getId() . '">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                View
+                            </button>
+                        </a>
+                    </td>';
                     echo '</tr>';
                 }
                 ?>
             </tbody>
         </table>
+        <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/order_detail.js"></script>
     </div>
-    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/order_detail.js"></script>
 </body>

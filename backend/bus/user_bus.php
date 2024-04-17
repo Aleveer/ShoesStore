@@ -250,40 +250,4 @@ class UserBUS implements BUSInterface
         $phones = array_column($this->userList, 'phone');
         return in_array($phone, $phones);
     }
-
-    public function imageUploadHandle($userId, $imageFile)
-    {
-        $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
-        // Check if image file is a actual image or fake image
-        $check = getimagesize($imageFile["tmp_name"]);
-        if ($check !== false) {
-            $uploadOk = 1;
-        } else {
-            $uploadOk = 0;
-        }
-        // Check file size
-        if ($imageFile["size"] > 500000) {
-            $uploadOk = 0;
-        }
-        // Allow certain file formats
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
-            $uploadOk = 0;
-        }
-        // Check if $uploadOk is set to 0 by an error
-        if ($uploadOk == 0) {
-            return false;
-        } else {
-            // Convert the image to base64 string
-            $imageData = base64_encode(file_get_contents($imageFile["tmp_name"]));
-            // Get the user model
-            $user = $this->getModelById($userId);
-            // Set the image data
-            $user->setImage($imageData);
-            // Update the user model
-            $this->updateModel($user);
-            $this->refreshData();
-            return true;
-        }
-    }
 }

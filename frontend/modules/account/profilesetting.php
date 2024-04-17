@@ -52,31 +52,31 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                     <div class="tab-content">
                         <div class="tab-pane fade active show" id="account-general">
                             <div class="card-body media align-items-center">
-                                <img src="<?php echo $userModel->getImage() ?>" alt class="d-block ui-w-80"
-                                    name="showImage" id="showImageId">
+                                <img src="<?php echo base64_decode($userModel->getImage()) ?>" alt
+                                    class="d-block ui-w-80" name="showImage" id="showImageId">
                                 <div class="media-body ml-4">
                                     <label class="btn btn-outline-primary">
                                         Upload new photo
                                         <input type="file" class="account-settings-fileinput" name="imageUploadButton"
                                             id="imageUploadIdButton" accept=".jpg, .jpeg, .png">
                                     </label> &nbsp;
-                                    <!-- <?php
+                                    <?php
                                     if (isPost()) {
-                                        if (isset($_FILES['imageUploadButton'])) {
-                                            error_log('Image upload button clicked!');
-                                            if ($_FILES['imageUploadButton']['error'] === UPLOAD_ERR_OK) {
-                                                $result = UserBUS::getInstance()->imageUploadHandle($userModel->getId(), $_FILES['imageUploadButton']);
-                                                if ($result) {
-                                                    echo "Image uploaded successfully!";
-                                                } else {
-                                                    echo "Failed to upload image.";
-                                                }
-                                            } else {
-                                                echo "File upload error: " . $_FILES['imageUploadButton']['error'];
-                                            }
+                                        if (isset($_POST['imageUploadButton'])) {
+                                            // $base64Image = $_POST['image'];
+                                            // // Remove the 'data:image/png;base64,' part
+                                            // $base64Image = str_replace('data:image/png;base64,', '', $base64Image);
+                                            // $base64Image = str_replace(' ', '+', $base64Image);
+                                            // $data = base64_decode($base64Image);
+
+                                            // // Update the user's image in the database
+                                            $data = $_POST['image'];
+                                            $userModel->setImage($data);
+                                            UserBUS::getInstance()->updateModel($userModel);
+                                            UserBUS::getInstance()->refreshData();
                                         }
                                     }
-                                    ?> -->
+                                    ?>
                                     <button type="button" class="btn btn-default md-btn-flat" name="resetButton"
                                         id="resetButton">Reset</button>
                                     <div class="text-bold small mt-1">Allowed JPG, JPEG or PNG. Max size of 1MB</div>

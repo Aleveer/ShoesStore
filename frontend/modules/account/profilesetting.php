@@ -50,8 +50,8 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                     <div class="tab-content">
                         <div class="tab-pane fade active show" id="account-general">
                             <div class="card-body media align-items-center">
-                                <img src="<?php echo base64_decode($userModel->getImage()) ?>" alt
-                                    class="d-block ui-w-80" name="showImage" id="showImageId">
+                                <img src="<?php echo $userModel->getImage(); ?>" alt="" class="d-block ui-w-80"
+                                    name="showImage" id="showImageId">
                                 <div class="media-body ml-4">
                                     <label class="btn btn-outline-primary">
                                         Upload new photo
@@ -60,14 +60,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                     </label> &nbsp;
                                     <?php
                                     if (isPost()) {
-                                        if (isset($_POST['imageUploadButton'])) {
-                                            // $base64Image = $_POST['image'];
-                                            // // Remove the 'data:image/png;base64,' part
-                                            // $base64Image = str_replace('data:image/png;base64,', '', $base64Image);
-                                            // $base64Image = str_replace(' ', '+', $base64Image);
-                                            // $data = base64_decode($base64Image);
-
-                                            // // Update the user's image in the database
+                                        if (isset($_POST['image'])) {
                                             $data = $_POST['image'];
                                             $userModel->setImage($data);
                                             UserBUS::getInstance()->updateModel($userModel);

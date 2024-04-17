@@ -319,6 +319,7 @@ h1:hover {
     padding: 0;
     margin: 0;
     width: 100%;
+    margin-left: 200px;
 }
 .text__content {
     display: flex;
@@ -360,9 +361,8 @@ h1:hover {
     border-radius: 3px;
     position: relative;
     overflow: hidden;
-    box-shadow: 3px 3px 15px rgba(63, 3, 3, 0.8);
+    box-shadow: 3px 3px 15px rgba(63, 3, 3, 0.8);    
 }
-
 .box img {
     width: 100%;
     height: 100%;
@@ -432,7 +432,7 @@ h1:hover {
 }
 
 .in__wrap ul li {
-    padding: 3px;
+    padding: 1px;
     margin: 25px;
     overflow: hidden;
 } 
@@ -441,7 +441,7 @@ h1:hover {
     content: "";
     width: 180%;
     height: 50%;
-    background-image: linear-gradient(to right, blue, rgb(238, 188, 22), rgb(207, 206, 170));
+    background-image: linear-gradient(to right, rgb(163, 163, 229), rgb(237, 220, 165), rgb(233, 70, 6));
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

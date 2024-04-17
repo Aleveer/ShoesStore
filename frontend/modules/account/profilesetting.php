@@ -270,7 +270,6 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                         $userBUS = UserBUS::getInstance();
 
                                         if ($phone != $userModel->getPhone()) {
-                                            //$userModel->setPhone($phone);
                                             if (UserBUS::getInstance()->isPhoneTaken($phone)) {
                                                 error_log("Phone number is already taken!");
                                                 echo '<script>alert("Phone number is already taken!")</script>';

@@ -1,4 +1,6 @@
 <?php
+use backend\bus\PaymentMethodsBUS;
+use backend\bus\PaymentsBUS;
 use backend\bus\ProductBUS;
 use backend\bus\TokenLoginBUS;
 use backend\bus\UserBUS;
@@ -22,6 +24,8 @@ if ($order->getUserId() != $userModel->getId()) {
     exit;
 }
 
+$paymentMethod = PaymentsBUS::getInstance()->getModelByOrderId($order->getId());
+$methodId = PaymentMethodsBUS::getInstance()->getModelById($paymentMethod->getMethodId())->getMethodName();
 $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItemsListByOrderId($orderId);
 ?>
 
@@ -60,6 +64,9 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
                             </div>
                             <div class="d-flex justify-content-between">
                                 <php class="text-muted mb-0">Phone number: <?php echo $order->getCustomerPhone() ?></p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <php class="text-muted mb-0">Payment method: <?php echo $methodId ?></p>
                             </div>
                             <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
                             <div class="row d-flex align-items-center">

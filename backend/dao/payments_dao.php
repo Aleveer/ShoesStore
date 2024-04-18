@@ -62,6 +62,19 @@ class PaymentsDAO implements DAOInterface
         return null;
     }
 
+    public function getByOrderId($orderId)
+    {
+        $query = "SELECT * FROM payments WHERE order_id = ?";
+        $result = DatabaseConnection::executeQuery($query, $orderId);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createPaymentModel($row);
+            }
+        }
+        return null;
+    }
+
     public function insert($payment): int
     {
         $query = "INSERT INTO payments (order_id, method_id, payment_date, total_price) VALUES (?, ?, ?, ?)";

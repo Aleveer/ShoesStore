@@ -4,9 +4,6 @@ if (!defined('_CODE')) {
     die('Access denied');
 } ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +24,9 @@ if (!defined('_CODE')) {
 
 <body>
     <div class="header__logo">
-        <img src="<?php echo _WEB_HOST_TEMPLATE ?> /images/logoShoes.jpg" alt="Wait a minute!!">
+        <a href="?module=indexphp">
+            <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/logoShoes.jpg" alt="Wait a minute!!" style="width: 50px; height: 50px;">
+        </a>
     </div>
     <div class="header__content">
         <ul class="navbar header__content__item">
@@ -87,5 +86,3 @@ if (!defined('_CODE')) {
         </div>
     </div>
 </body>
-
-</html>

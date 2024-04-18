@@ -5,8 +5,6 @@ if (!defined('_CODE')) {
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
      <meta charset="UTF-8">
@@ -63,5 +61,3 @@ if (!defined('_CODE')) {
           </div>
      </div>
 </body>
-
-</html>

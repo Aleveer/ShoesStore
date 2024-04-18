@@ -32,23 +32,21 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="<?php echo _WEB_HOST_TEMPLATE ?>/css/order_detail.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/home.js"></script>
     <?php layouts("header") ?>
 </div>
 
 <body>
-    <button id="closeOrderDetail">
-        <a href="?module=account&action=order-list">
-            <i class="fa-solid fa-xmark"></i>
-        </a>
-    </button>
-    <section class="h-100 gradient-custom">
+    <section class="h-100 gradient-custom width:100%">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-lg-10 col-xl-8">
                     <div class="card" style="border-radius: 10px;">
-                        <div class="card-header px-4 py-5">
-                            <h5 class="text-muted mb-0">Thanks for your Order, <span
-                                    style="color: #a8729a;"><?php echo $userModel->getName() ?></span>!</h5>
+                        <div class="card-header px-2 py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="text-muted mb-0">Thanks for your Order, <span
+                                    style="color: #a8729a;"><?php echo $userModel->getName() ?></span>!</h6>
+                            <h6 class="text-muted mb-0">Back to <a href="?module=account&action=order-list"
+                                    style="color: #a8729a;">Order List</a></h6>
                         </div>
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -117,29 +115,31 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
                                 ?>
                             </div>
                             <?php
+                            echo '<div style="height: 300px; overflow-y: auto;">'; // Adjust the height as needed
                             foreach ($orderItemsListBasedOnOrderFromUser as $orderItem) {
                                 echo '<div class="card shadow-0 border mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-2">
-                        <img src="' . ProductBUS::getInstance()->getModelById($orderItem->getProductId())->getImage() . '" class="img-fluid" alt="Shoes">
-                    </div>
-                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                        <p class="text-muted mb-0">' . ProductBUS::getInstance()->getModelById($orderItem->getProductId())->getName() . '</p>
-                    </div>
-                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                        <p class="text-muted mb-0 small">Size: ' . $orderItem->getSizeId() . '</p>
-                    </div>
-                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                        <p class="text-muted mb-0 small">Qty: ' . $orderItem->getQuantity() . '</p>
-                    </div>
-                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                        <p class="text-muted mb-0 small">$ ' . ProductBUS::getInstance()->getModelById($orderItem->getProductId())->getPrice() . '</p>
-                    </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="' . ProductBUS::getInstance()->getModelById($orderItem->getProductId())->getImage() . '" class="img-fluid" alt="Shoes">
+                </div>
+                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0">' . ProductBUS::getInstance()->getModelById($orderItem->getProductId())->getName() . '</p>
+                </div>
+                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Size: ' . $orderItem->getSizeId() . '</p>
+                </div>
+                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Qty: ' . $orderItem->getQuantity() . '</p>
+                </div>
+                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">$ ' . ProductBUS::getInstance()->getModelById($orderItem->getProductId())->getPrice() . '</p>
                 </div>
             </div>
-        </div>';
+        </div>
+    </div>';
                             }
+                            echo '</div>';
                             ?>
 
                             <div class="d-flex justify-content-between pt-2">
@@ -168,10 +168,10 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
                             </div>
 
                         </div>
-                        <div class="card-footer border-0 px-4 py-5"
+                        <div class="card-footer border-0 px-2 py-3"
                             style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                             <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
-                                Total paid: <span class="h2 mb-0 ms-2">$<?php echo $order->getTotalAmount() ?></span>
+                                Total paid: <span class="h4 mb-0 ms-2">$<?php echo $order->getTotalAmount() ?></span>
                             </h5>
                         </div>
                     </div>

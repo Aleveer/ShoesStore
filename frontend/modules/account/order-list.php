@@ -20,21 +20,20 @@ $orderList = OrdersBUS::getInstance()->getOrdersByUserId($userModel->getId());
     <title>Orders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/home.js"></script>
     <?php layouts('header') ?>
 </div>
 
 <body>
     <h4 class="pt-3">Your recent orders:</h4>
-    <!-- Add search bar here -->
     <div class="tab-pane fade" id="account-order-list">
-        <!--Create a search bar for the order list-->
-        <div class="input-group mb-3">
+        <!-- <div class="input-group mb-3" style="background-color: white; color: black;">
             <input type="text" class="form-control" placeholder="Search for an order" aria-label="Search for an order"
                 aria-describedby="button-addon2" id="searchOrder">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
             </div>
-        </div>
+        </div> -->
     </div>
     <div id="order-list-product">
         <table class="table table-striped col-12 align-middle table-borderless text-center table-secondary">
@@ -77,5 +76,6 @@ $orderList = OrdersBUS::getInstance()->getOrdersByUserId($userModel->getId());
             </tbody>
         </table>
         <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/order_detail.js"></script>
+        
     </div>
 </body>

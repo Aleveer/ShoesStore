@@ -14,6 +14,7 @@ class DatabaseConnection
     private static $user = "root";
     private static $password = "";
 
+    // This is the constructor of the class
     private function __construct()
     {
     }
@@ -34,7 +35,7 @@ class DatabaseConnection
             }
             return $this->connection;
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            error_log("Error connecting to database: " . $e->getMessage());
         }
         return null;
     }
@@ -60,7 +61,7 @@ class DatabaseConnection
             }
             return $preparedStatement;
         } catch (Exception $e) {
-            throw new Exception("Error: " . $e->getMessage() . " with sql: " . $sql);
+            error_log("Error preparing statement: " . $e->getMessage());
         }
     }
 
@@ -81,7 +82,6 @@ class DatabaseConnection
             return $affectedRows;
         } catch (Exception $e) {
             error_log("Error executing update: " . $e->getMessage());
-            throw $e;
         }
     }
 
@@ -93,7 +93,7 @@ class DatabaseConnection
                 $instance->connection->close();
             }
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            error_log("Error closing connection: " . $e->getMessage());
         }
     }
 
@@ -103,7 +103,7 @@ class DatabaseConnection
         try {
             return $this->connection != null && !$this->connection->connect_error;
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            error_log("Error checking connection: " . $e->getMessage());
         }
         return false;
     }
@@ -113,7 +113,7 @@ class DatabaseConnection
         try {
             $this->getConnection()->begin_transaction();
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            error_log("Error beginning transaction: " . $e->getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ class DatabaseConnection
         try {
             $this->getConnection()->commit();
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            error_log("Error ending transaction: " . $e->getMessage());
         }
     }
 
@@ -131,7 +131,7 @@ class DatabaseConnection
         try {
             $this->getConnection()->rollback();
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            error_log("Error rolling back transaction: " . $e->getMessage());
         }
     }
 }

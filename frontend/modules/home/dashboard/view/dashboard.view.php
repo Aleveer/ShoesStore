@@ -80,7 +80,7 @@
 
                         <!-- BODY DATABASE -->
                         <tbody>
-                            <tr>
+                            <tr class="align-middle">
                                 <td>1,001</td>
                                 <td>random</td>
                                 <td>data</td>

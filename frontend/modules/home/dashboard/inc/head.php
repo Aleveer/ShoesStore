@@ -2,6 +2,7 @@
 if (!isset($title)) {
     $title = 'Title is not set';
 }
+
 ?>
 
 <!doctype html>
@@ -14,7 +15,7 @@ if (!isset($title)) {
     <title>Dashboard</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../../../../../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;

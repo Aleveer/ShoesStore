@@ -2,17 +2,16 @@
 
 <?php
 
-if (!defined('_CODE')) {
+if (defined('_CODE')) {
     die('Access denied');
 }
+
 $data = [
     'page_title' => 'Dashboard'
 ];
 layouts('header', $data);
 
-
 // Kiểm tra trạng thái đăng nhập
-
 if (!isLogin()) {
     redirect('?module=auth&action=login');
 }

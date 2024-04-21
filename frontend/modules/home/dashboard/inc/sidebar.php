@@ -1,5 +1,5 @@
 <?php
-    // TODO: Set actived sidebar menu link
+    // TODO: Set activate sidebar menu link
 
 ?>
 

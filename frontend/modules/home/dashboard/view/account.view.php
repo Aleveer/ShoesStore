@@ -2,10 +2,12 @@
     $title = 'Accounts';
 
     include ('../inc/head.php');
+    include ('../inc/app/app.php');
 
     // Namespace
-    use backend\bus\OrdersBUS;
-    use backend\bus\OrderItemsBUS;
+    use backend\bus\UserBUS;
+
+    $userListDetail = UserBUS::getInstance()->getAllModels();
 ?>
 
 <body>
@@ -35,47 +37,7 @@
                 </div>
 
                 <!-- BODY DATABASE -->
-                <table class="table align-middle table-borderless table-hover text-start">
-                    <thead>
-                        <tr class="align-middle">
-                            <th></th>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Manage</th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class='col-1'><img src="https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg" alt=""></td>
-                            <td class='col-1'>Username</td>
-                            <td class='col-1'>Passwords</td>
-                            <td class='col-2'>Nguyen Van A</td>
-                            <td class='col-1'>Email@gmail.codawda234m</td>
-                            <td class='col-1'>0123456789</td>
-                            <td class="col-2">273 An Duong Vuong, Phuong 3, Quan 5, TP HCM</td>
-                            <td class='col-1'>Admin</td>
-                            <td class='col-1'>Active</td>
-                            <td class='col-2 userAction'>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">
-                                            <span data-feather="lock"></span>
-                                            Lock
-                                    </button>
-                                    <button class="btn btn-sm btn-danger">
-                                            <span data-feather="trash-2"></span>
-                                            Delete
-                                    </button>
-                            </td>
-
-                        </tr>
-                    </tbody>
-                </table>
+                <?php include('../inc/account/account.table.php') ?>
             </main>
 
             <!-- Add modal -->

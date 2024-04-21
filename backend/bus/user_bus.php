@@ -178,20 +178,10 @@ class UserBUS implements BUSInterface
 
         // Validate role
         $roleId = $userModel->getRoleId();
-        switch ($roleId) {
-            case 1:
-            //Admin
-            case 2:
-            //Manager
-            case 3:
-            //Employee
-            case null:
-                // Default is customer
-                $userModel->setRoleId(4);
-                break;
-            default:
-                $errors[] = "Invalid role";
-                break;
+        if ($roleId === null) {
+            $errors[] = "Role is required";
+        } else {
+            $errors[] = "Invalid role";
         }
 
         // Validate phone number and address

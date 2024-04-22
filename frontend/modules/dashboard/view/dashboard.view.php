@@ -1,6 +1,13 @@
 <?php
     $title = 'Dashboard';
 
+    if (!defined('_CODE')) {
+        die('Access denied');
+    }
+
+    if (!isAllowToDashBoard()) {
+        die('Access denied');
+    }
 
     include ('../inc/head.php');
 

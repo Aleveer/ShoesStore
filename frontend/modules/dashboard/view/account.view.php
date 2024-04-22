@@ -1,6 +1,13 @@
 <?php
     $title = 'Accounts';
+    
+    if (!defined('_CODE')) {
+        die('Access denied');
+    }
 
+    if (!isAllowToDashBoard()) {
+        die('Access denied');
+    }
     include ('../inc/head.php');
     include ('../inc/app/app.php');
 

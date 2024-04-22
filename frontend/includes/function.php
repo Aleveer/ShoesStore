@@ -1,5 +1,6 @@
 <!-- Các hàm xử lí chung của project -->
 <?php
+
 use backend\enums\StatusEnums;
 
 if (!defined('_CODE')) {
@@ -163,5 +164,20 @@ function requireLogin()
 {
     if (!isLogin()) {
         redirect('?module=auth&action=login');
+    }
+}
+
+
+function isAllowToDashBoard()
+{
+    $tokenLogin = session::getInstance()->getSession('tokenLogin');
+    $userId = TokenLoginBUS::getInstance()->getModelByToken($tokenLogin)->getUserId();
+    $userModel = UserBUS::getInstance()->getModelById($userId);
+    $roleId = $userModel->getRoleId();
+
+    if ($roleId == 4) {
+        return false;
+    } else {
+        return true;
     }
 }

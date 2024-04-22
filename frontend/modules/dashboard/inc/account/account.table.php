@@ -1,9 +1,13 @@
+<?php
+use backend\bus\UserBUS;
+
+?>
 <table class="table align-middle table-borderless table-hover text-start">
     <thead>
         <tr class="align-middle">
             <th>Img</th>
             <th>Username</th>
-            <th>Password</th>
+            <!-- <th>Password</th> -->
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
@@ -11,17 +15,17 @@
             <th>Role</th>
             <th>Status</th>
             <th>Manage</th>
-
         </tr>
     </thead>
-    <?php foreach ($userListDetail as $user) : ?>
+    <?php foreach (UserBUS::getInstance()->getAllModels() as $user): ?>
         <tbody>
             <tr>
-                <td class='col-1'><img
-                        src="https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg"
-                        alt=""></td>
+                <td class='col-1'><img src="<?php echo $user->getImage(); ?>" style="width: 50px; height: 50px;"></td>
+                </td>
                 <td class='col-1'><?= $user->getUsername() ?></td>
-                <td class='col-1'><?= $user->getPassword() ?></td>
+                <!-- <td class='col-1'>
+                    <div class="shorten-text"><?= $user->getPassword() ?></div>
+                </td> -->
                 <td class='col-2'><?= $user->getName() ?></td>
                 <td class='col-1'><?= $user->getEmail() ?></td>
                 <td class='col-1'><?= $user->getPhone() ?></td>

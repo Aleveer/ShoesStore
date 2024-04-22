@@ -2,16 +2,9 @@
 session_start();
 // require config
 require __DIR__ . '/config.php';
-require __DIR__ . '/../vendor/autoload.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-use backend\services\session;
-
-// require includes
 require __DIR__ . '/includes/function.php';
 require __DIR__ . '/../vendor/autoload.php';
+
 $module = _MODULE;
 $action = _ACTION;
 $view = 'dashboard.view';
@@ -42,7 +35,8 @@ if ($module != 'dashboard') {
 
 
 
-if (file_exists($path)) require_once($path);
+if (file_exists($path))
+    require_once ($path);
 else {
-    require_once('modules\error\404page.php');
+    require_once ('modules\error\404page.php');
 }

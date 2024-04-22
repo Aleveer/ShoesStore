@@ -1,31 +1,26 @@
 <?php
-    $title = 'Accounts';
-    
-    if (!defined('_CODE')) {
-        die('Access denied');
-    }
+$title = 'Accounts';
 
-    if (!isAllowToDashBoard()) {
-        die('Access denied');
-    }
-    include (__DIR__.'/../inc/head.php');
-    include (__DIR__.'/../inc/app/app.php');
+if (!defined('_CODE')) {
+    die('Access denied');
+}
 
-    // Namespace
-    use backend\bus\UserBUS;
-
-    $userListDetail = UserBUS::getInstance()->getAllModels();
+if (!isAllowToDashBoard()) {
+    die('Access denied');
+}
+include (__DIR__ . '/../inc/head.php');
+include (__DIR__ . '/../inc/app/app.php');
 ?>
 
 <body>
     <!-- HEADER -->
-    <?php include (__DIR__.'/../inc/header.php'); ?>
+    <?php include (__DIR__ . '/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include (__DIR__.'/../inc/sidebar.php'); ?>
+            <?php include (__DIR__ . '/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -35,8 +30,8 @@
                         <?= $title ?>
                     </h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
-                        <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal" 
-                                data-bs-target="#addModal" id="addAcount" class="addBtn">
+                        <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
+                            data-bs-target="#addModal" id="addAcount" class="addBtn">
                             <span data-feather="plus"></span>
                             Add
                         </button>
@@ -44,11 +39,12 @@
                 </div>
 
                 <!-- BODY DATABASE -->
-                <?php include(__DIR__.'/../inc/account/account.table.php') ?>
+                <?php include (__DIR__ . '/../inc/account/account.table.php') ?>
             </main>
 
             <!-- Add modal -->
-            <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="width: 100%">
+            <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true" style="width: 100%">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -67,15 +63,15 @@
                                 </div>
                                 <div class="col-5">
                                     <label for="inputEmail" class="form-label">Email</label>
-                                    <input type="text" class="form-control" id="inputEmail" >
+                                    <input type="text" class="form-control" id="inputEmail">
                                 </div>
                                 <div class="col-5">
                                     <label for="inputName" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="inputName" >
+                                    <input type="text" class="form-control" id="inputName">
                                 </div>
                                 <div class="col-3">
                                     <label for="inputPhone" class="form-label">Phone</label>
-                                    <input type="text" class="form-control" id="inputPhone" >
+                                    <input type="text" class="form-control" id="inputPhone">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="inputGender" class="form-label">Gender</label>
@@ -97,13 +93,15 @@
                                     <input type="text" name="" id="inputAddress" class="form-control">
                                 </div>
                                 <div class="col-6  userImg">
-                                <img id="imgPreview" src="..\..\..\..\templates\images\680098.jpg" alt="Preview Image"a class="img-circle">
+                                    <img id="imgPreview" src="..\..\..\..\templates\images\680098.jpg"
+                                        alt="Preview Image" a class="img-circle">
                                 </div>
                                 <div class="col-6">
                                     <label for="inputImg">Img</label>
-                                    <input type="file" class="form-control" name="imgProduct" id="inputImg" accept="image/*">
+                                    <input type="file" class="form-control" name="imgProduct" id="inputImg"
+                                        accept="image/*">
                                 </div>
-                            
+
 
                         </div>
                         <div class="modal-footer">
@@ -116,8 +114,8 @@
             </div>
 
 
-            <?php include(__DIR__.'/../inc/app/app.php'); ?>
-            
+            <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+
 </body>
 
 </html>

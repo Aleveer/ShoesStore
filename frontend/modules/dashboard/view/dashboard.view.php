@@ -1,27 +1,28 @@
 <?php
-    $title = 'Dashboard';
+$title = 'Dashboard';
 
-    if (!defined('_CODE')) {
-        die('Access denied');
-    }
+if (!defined('_CODE')) {
+    die('Access denied');
+}
 
-    if (!isAllowToDashBoard()) {
-        die('Access denied');
-    }
+if (!isAllowToDashBoard()) {
+    die('Access denied');
+}
 
-    include (__DIR__.'/../inc/head.php');
+include (__DIR__ . '/../inc/head.php');
 
 ?>
 <html>
+
 <body>
     <!-- HEADER -->
-    <?php include (__DIR__.'/../inc/header.php'); ?>
+    <?php include (__DIR__ . '/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include (__DIR__.'/../inc/sidebar.php'); ?>
+            <?php include (__DIR__ . '/../inc/sidebar.php'); ?>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div
@@ -102,9 +103,9 @@
     </div>
 
     <?php
-        include (__DIR__.'/../inc/app/app.php');
-        include (__DIR__.'/../inc/chart.php')
-    ?>
+    include (__DIR__ . '/../inc/app/app.php');
+    include (__DIR__ . '/../inc/chart.php')
+        ?>
 </body>
 
 </html>

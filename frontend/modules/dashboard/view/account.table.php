@@ -20,7 +20,7 @@ use backend\bus\UserBUS;
     <?php foreach (UserBUS::getInstance()->getAllModels() as $user): ?>
         <tbody>
             <tr>
-                <td class='col-1'><img src="<?php echo $user->getImage(); ?>" style="width: 50px; height: 50px;"></td>
+                <td class='col-1'><img src="<?php echo $user->getImage(); ?>" style="width: 50px; height: 50px;" alt="ATR"></td>
                 </td>
                 <td class='col-1'><?= $user->getUsername() ?></td>
                 <!-- <td class='col-1'>

@@ -7,21 +7,22 @@ if (!defined('_CODE')) {
 if (!isAllowToDashBoard()) {
     die('Access denied');
 }
-include(__DIR__.'/../inc/head.php');
+include(__DIR__ .'/../inc/head.php');
 
 use backend\bus\ProductBUS;
 
+$productList = ProductBUS::getInstance()->getAllModels();
 ?>
 
 <body>
     <!-- HEADER -->
-    <?php include(__DIR__.'/../inc/header.php'); ?>
+    <?php include(__DIR__ .'/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include(__DIR__.'/../inc/sidebar.php'); ?>
+            <?php include(__DIR__ .'/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -36,44 +37,7 @@ use backend\bus\ProductBUS;
                         </button>
                     </div>
                 </div>
-
-                <table class="table align-middle table-borderless table-hover">
-                    <thead class="table-light">
-                        <tr class="align-middle">
-                            <th></th>
-                            <th>Product Name</th>
-                            <th>Categories</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            <td class='col-1'><img src='..\..\..\..\templates\images\680098.jpg' alt='' class='rounded float-start'></td>
-                            <td class='col-3'>Adidas</td>
-                            <td class='col-2'>Running Shoes</td>
-                            <td class='col-4'>Giay nay rat dep</td>
-                            <td class='col-1'>1000000</td>
-                            <td class='col-1'>
-                                <div class='product-action'>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">
-                                        <span data-feather="tool"></span>
-                                        Update
-                                    </button>
-                                    <button class="btn btn-sm btn-danger">
-                                        <span data-feather="trash-2"></span>
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-
-
-                    </tbody>
-                </table>
+                <?php include('product.table.php') ?>
             </main>
 
 
@@ -187,7 +151,7 @@ use backend\bus\ProductBUS;
                 </div>
             </div>
 
-            <?php include(__DIR__.'/../inc/app/app.php'); ?>
+            <?php include(__DIR__ . '/../inc/app/app.php'); ?>
             <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
 
 </body>

@@ -34,11 +34,10 @@ if (!isset($title)) {
 
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="../css/global.css" >
-    <link rel="stylesheet" href="../css/scrollbar.css">
-
-
-    <link rel="stylesheet" href="../css/product.css">
+    <link rel="stylesheet" href="modules/dashboard/css/global.css">
+    <link rel="stylesheet" href="modules/dashboard/css/scrollbar.css">
+    <link rel="stylesheet" href="modules/dashboard/css/product.css">
+    
     <!-- Feather Icon -->
     <script src="https://unpkg.com/feather-icons"></script>
 </head>

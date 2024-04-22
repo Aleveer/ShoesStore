@@ -40,11 +40,11 @@ $orderListItem = OrderItemsBUS::getInstance();
                 </div>
 
                 <!-- SEARCH BAR -->
-                <?php include(__DIR__.'/./../inc/order/order.search.php'); ?>
+                <?php include(__DIR__.'/order.search.php'); ?>
 
 
                 <!-- BODY DATABASE -->
-                <?php include(__DIR__.'/./../inc/order/order.table.php'); ?>
+                <?php include(__DIR__.'/order.table.php'); ?>
             </main>
 
             <?php include(__DIR__.'/../inc/app/app.php'); ?>

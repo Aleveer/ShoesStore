@@ -5,7 +5,7 @@ use backend\bus\UserBUS;
 <table class="table align-middle table-borderless table-hover text-start">
     <thead>
         <tr class="align-middle">
-            <th>Img</th>
+            <th></th>
             <th>Username</th>
             <!-- <th>Password</th> -->
             <th>Name</th>

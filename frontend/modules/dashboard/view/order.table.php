@@ -4,10 +4,11 @@
             <thead>
                 <tr>
                     <th scope="col" class="col-1">ID Order</th>
-                    <th scope="col" class="col-2">Customer ID</th>
-                    <th scope="col" class="col-2">User ID</th>
+                    <th scope="col" class="col-1">User ID</th>
+                    <th scope="col" class="col-2">Customer Name</th>
                     <th scope="col" class="col-2">Order Date</th>
-                    <th scope="col">Total Amount</th>
+                    <th scope="col" class="col-2">Total Amount</th>
+                    <th scope="col" class="col-1 text-center">Status</th>
                     <th scope="col" class="col-1 text-center">Info</th>
                 </tr>
             </thead>
@@ -17,11 +18,12 @@
             <tbody>
                 <!-- TESTING STATIC -->
                 <tr class="align-middle">
-                    <td>1,001</td>
-                    <td>01</td>
-                    <td>101</td>
-                    <td>03/03/2025 </td>
-                    <td>1.000.0000 Đ</td>
+                    <td><?= $order->getId() ?></td>
+                    <td><?= $order->getUserId() ?></td>
+                    <td><?= $order->getCustomerName() ?></td>
+                    <td><?= $order->getOrderDate() ?></td>
+                    <td><?= $order->getTotalAmount() ?></td>
+                    <td class="text-center"><?= $order->getStatus() ?></td>
                     <td class="text-center">
                         <!-- Button to Trigger Modal-->
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -30,6 +32,7 @@
                         </button>
 
                         <!-- Modal -->
+                        <!-- TODO: Fix the modal GUI, it's not good -->
                         <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1"
                             aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -45,6 +48,7 @@
                                             <h3 class="p-0">Order Details</h3>
                                             <div style="display: flex; flex-direction: row; justify-content: space-between;"
                                                 class="border border-black p-2">
+                                                <!-- TODO: Add some database here -->
                                                 <div class="col-5">
                                                     <h5 class="p-0">Customer ID: 01</h5>
                                                     <p>User ID: 101</p>
@@ -58,16 +62,8 @@
                                                         <p>Product ID: 20</p>
                                                         <p>Quantity: 1</p>
                                                         <p>Price: 1.000.0000 Đ</p>
-                                                        <img style="width: 50%; height: 50%; border-radius: 16px"
-                                                            src="../../../../../img/Running%20Shoes/Asics%20Gel-Excite%209.avif"
-                                                            alt="IMG">
-                                                        <hr>
-                                                    </div>
-                                                    <div>
-                                                        <p>Product ID: 20</p>
-                                                        <p>Quantity: 1</p>
-                                                        <p>Price: 1.000.0000 Đ</p>
-                                                        <img style="width: 50%; height: 50%; border-radius: 16px"
+                                                        <img style="width: 12rem; aspect-ratio: 1;"
+                                                            class="img-fluid rounded-3"
                                                             src="../../../../../img/Running%20Shoes/Asics%20Gel-Excite%209.avif"
                                                             alt="IMG">
                                                         <hr>

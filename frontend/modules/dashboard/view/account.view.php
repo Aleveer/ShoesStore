@@ -8,8 +8,8 @@
     if (!isAllowToDashBoard()) {
         die('Access denied');
     }
-    include ('../inc/head.php');
-    include ('../inc/app/app.php');
+    include (__DIR__.'/../inc/head.php');
+    include (__DIR__.'/../inc/app/app.php');
 
     // Namespace
     use backend\bus\UserBUS;
@@ -19,13 +19,13 @@
 
 <body>
     <!-- HEADER -->
-    <?php include ('../inc/header.php'); ?>
+    <?php include (__DIR__.'/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include ('../inc/sidebar.php'); ?>
+            <?php include (__DIR__.'/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -44,7 +44,7 @@
                 </div>
 
                 <!-- BODY DATABASE -->
-                <?php include('../inc/account/account.table.php') ?>
+                <?php include(__DIR__.'/../inc/account/account.table.php') ?>
             </main>
 
             <!-- Add modal -->
@@ -116,7 +116,7 @@
             </div>
 
 
-            <?php include('../inc/app/app.php'); ?>
+            <?php include(__DIR__.'/../inc/app/app.php'); ?>
             
 </body>
 

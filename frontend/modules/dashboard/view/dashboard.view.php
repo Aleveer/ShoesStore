@@ -9,19 +9,19 @@
         die('Access denied');
     }
 
-    include ('../inc/head.php');
+    include (__DIR__.'/../inc/head.php');
 
 ?>
 <html>
 <body>
     <!-- HEADER -->
-    <?php include ('../inc/header.php'); ?>
+    <?php include (__DIR__.'/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include ('../inc/sidebar.php'); ?>
+            <?php include (__DIR__.'/../inc/sidebar.php'); ?>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div
@@ -102,8 +102,8 @@
     </div>
 
     <?php
-        include ('../inc/app/app.php');
-        include ('../inc/chart.php')
+        include (__DIR__.'/../inc/app/app.php');
+        include (__DIR__.'/../inc/chart.php')
     ?>
 </body>
 

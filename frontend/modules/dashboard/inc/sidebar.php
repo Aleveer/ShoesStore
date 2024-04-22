@@ -7,25 +7,25 @@
     <div class="position-sticky pt-3">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="dashboard.view.php">
+                <a class="nav-link" aria-current="page" href="?module=dashboard&view=dashboard.view">
                     <span data-feather="home"></span>
                     Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="order.view.php">
+                <a class="nav-link" href="?module=dashboard&view=order.view">
                     <span data-feather="file"></span>
                     Orders
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="product.view.php">
+                <a class="nav-link" href="?module=dashboard&view=product.view">
                     <span data-feather="shopping-cart"></span>
                     Products
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="account.view.php">
+                <a class="nav-link" href="?module=dashboard&view=account.view">
                     <span data-feather="users"></span>
                     Accounts
                 </a>

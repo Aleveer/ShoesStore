@@ -7,7 +7,7 @@ if (!defined('_CODE')) {
 if (!isAllowToDashBoard()) {
     die('Access denied');
 }
-include('../inc/head.php');
+include(__DIR__.'/../inc/head.php');
 
 use backend\bus\ProductBUS;
 
@@ -15,13 +15,13 @@ use backend\bus\ProductBUS;
 
 <body>
     <!-- HEADER -->
-    <?php include('../inc/header.php'); ?>
+    <?php include(__DIR__.'/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include('../inc/sidebar.php'); ?>
+            <?php include(__DIR__.'/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -187,7 +187,7 @@ use backend\bus\ProductBUS;
                 </div>
             </div>
 
-            <?php include('../inc/app/app.php'); ?>
+            <?php include(__DIR__.'/../inc/app/app.php'); ?>
             <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
 
 </body>

@@ -39,7 +39,7 @@ include (__DIR__ . '/../inc/app/app.php');
                 </div>
 
                 <!-- BODY DATABASE -->
-                <?php include (__DIR__ . '/../inc/account/account.table.php') ?>
+                <?php include (__DIR__ . '/../view/account.table.php') ?>
             </main>
 
             <!-- Add modal -->

@@ -25,6 +25,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="?module=dashboard&view=inventory.view">
+                    <span data-feather="archive"></span>
+                    Inventory
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="?module=dashboard&view=account.view">
                     <span data-feather="users"></span>
                     Accounts

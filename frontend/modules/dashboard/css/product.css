@@ -248,6 +248,8 @@ tbody tr:first-child {
 
 .userAction {
     width: 100%;
+    height: 60px;
+    position: relative;
 }
 
 .userAction button {
@@ -255,4 +257,21 @@ tbody tr:first-child {
     height: 40%;
     margin: 5% 0%;
     padding: 0;
+}
+
+.search-group {
+    width: 50%;
+
+}
+
+#addSizeModal {
+    background-color: rgba(128, 128, 128, 0.611);
+}
+
+.btn-fixed-height {
+    height: 15px;
+    width: 15px;
+    font-size: smaller;
+    transform: translateY(-20%);
+    text-align: center;
 }

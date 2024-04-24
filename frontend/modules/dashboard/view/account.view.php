@@ -29,9 +29,15 @@ include (__DIR__ . '/../inc/app/app.php');
                     <h1 class="h2">
                         <?= $title ?>
                     </h1>
+                    <div class="search-group input-group">
+                        <input type="text" id="accountSearch" class="searchInput form-control">
+                        <button type="button" class="btn btn-sm btn-primary align-middle padx-0 pady-0">
+                            <span data-feather="search"></span>
+                        </button>
+                    </div>
                     <div class="btn-toolbar mb-2 mb-md-0">
-                        <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
-                            data-bs-target="#addModal" id="addAcount" class="addBtn">
+                        <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal" 
+                                data-bs-target="#addModal" id="addAcount" class="addBtn">
                             <span data-feather="plus"></span>
                             Add
                         </button>

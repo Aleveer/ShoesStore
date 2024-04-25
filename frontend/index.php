@@ -33,8 +33,6 @@ if ($module != 'dashboard') {
     $path = 'modules\\' . $module . '\\view\\' . $view . '.php';
 }
 
-
-
 if (file_exists($path))
     require_once ($path);
 else {

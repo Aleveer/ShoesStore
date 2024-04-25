@@ -28,7 +28,8 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <?php layouts("header") ?>
 </div>
-<body> 
+
+<body>
     <div class="container light-style flex-grow-1 container-p-y" style="margin-left: 5rem;">
         <h4 class="font-weight-bold py-3 mb-4">
             Account settings
@@ -140,6 +141,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                         UserBUS::getInstance()->refreshData();
                                     }
                                 }
+                                //TODO: Fix the bug that it skips checking validation.
                                 if (isset($_POST['saveButton'])) {
                                     // Update the user model with the new values
                                     $username = $_POST['username'];

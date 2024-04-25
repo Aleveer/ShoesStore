@@ -27,7 +27,7 @@ use backend\bus\UserBUS;
                     <div class="shorten-text"><?= $user->getPassword() ?></div>
                 </td> -->
                 <td class='col-2'><?= $user->getName() ?></td>
-                <td class='col-1'><?= $user->getEmail() ?></td>
+                <td class='col-2'><?= $user->getEmail() ?></td>
                 <td class='col-1'><?= $user->getPhone() ?></td>
                 <td class="col-2"><?= $user->getAddress() ?></td>
                 <td class='col-1'><?= $user->getRoleId() ?></td>

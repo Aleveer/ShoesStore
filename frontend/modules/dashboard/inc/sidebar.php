@@ -37,6 +37,18 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="?module=dashboard&view=permission.view">
+                    <span data-feather="tool"></span>
+                    Permissions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?module=dashboard&view=role.view">
+                    <span data-feather="tool"></span>
+                    Roles
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#">
                     <span data-feather="bar-chart-2"></span>
                     Reports

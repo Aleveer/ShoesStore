@@ -1,4 +1,3 @@
-<!-- Các hàm xử lí chung của project -->
 <?php
 
 use backend\enums\StatusEnums;
@@ -112,11 +111,9 @@ function filter()
 }
 
 // Hàm in ra message
-function getMsg($msg, $type = 'sucess')
+function getMsg($msg, $type = 'success')
 {
-    echo "<div class='cw text-center alert alert-$type'>";
-    echo $msg;
-    echo '</div>';
+    return "<div class='cw text-center alert alert-$type'>" . htmlspecialchars($msg) . "</div>";
 }
 
 

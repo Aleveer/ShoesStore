@@ -5,7 +5,7 @@ const _ACTION = 'userhomepage';
 const _CODE = true;
 
 // Thiết lập host
-define('_WEB_HOST', 'http://' . $_SERVER['HTTP_HOST'] . '/ShoesStore/frontend');
+define('_WEB_HOST', 'http://' . $_SERVER['HTTP_HOST'] . '/Shoesstore/frontend');
 define('_WEB_HOST_TEMPLATE', _WEB_HOST . '/templates');
 
 // Thiết lập path

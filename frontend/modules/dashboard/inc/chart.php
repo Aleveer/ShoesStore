@@ -1,3 +1,12 @@
+<?php
+// use NameSpace
+use backend\models\UserModel;
+use backend\models\UserPermissionModel;
+
+// $userList = UserModel::getInstance()->getAllModels();
+
+?>
+
 <!-- Chart JS Lib -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

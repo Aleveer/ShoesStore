@@ -20,28 +20,30 @@ $productList = ProductBUS::getInstance()->getAllModels();
 
 function showProductList($product)
 {
-    echo "<tr>";
-    echo "<td class='col-1'><img src='" . $product->getImage() . "' alt='" . $product->getName() . "' class='rounded float-start'></td>";
-    echo "<td class='col-1'>" . $product->getId() . "</td>";
-    echo "<td class='col-3'>" . $product->getName() . "</td>";
-    echo "<td class='col-2'>" . CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName() . "</td>";
-    echo "<td class='col-4'>" . $product->getDescription() . "</td>";
-    echo "<td class='col-1'>" . $product->getPrice() . "</td>";
-    echo "<td class='col-1'>";
-    echo "<div class='product-action'>";
-    echo "<a href='http://localhost/frontend/index.php?module=dashboard&view=product.update&id=" . $product->getId() . "' class='btn btn-sm btn-warning'>";
-    echo "<span data-feather='tool'></span>";
-    echo "</a>";
-    echo "<button class='btn btn-sm btn-danger' id='completelyDeleteProduct' name='completelyDeleteProduct'>";
-    echo "<span data-feather='trash-2'></span>";
-    echo "</button>";
-    echo "<button class='btn btn-sm btn-danger' id='deleteProductButton' name='deleteProductButton'>";
-    echo "<span data-feather='eye-off'></span>";
-    echo "</button>";
-    echo "<td class='col-1'>" . $product->getStatus() . "</td>";
-    echo "</div>";
-    echo "</td>";
-    echo "</tr>";
+    return "
+        <tr>
+            <td><img src='{$product->getImage()}' alt='{$product->getName()}' class='rounded float-start'></td>
+            <td class='text-center'>{$product->getId()}</td>
+            <td>{$product->getName()}</td>
+            <td>" . CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName() . "</td>
+            <td>{$product->getDescription()}</td>
+            <td>{$product->getPrice()}</td>
+            <td>
+                <div>
+                    <a href='http://localhost/frontend/index.php?module=dashboard&view=product.update&id={$product->getId()}' class='btn btn-sm btn-warning'>
+                        <span data-feather='tool'></span>
+                    </a>
+                    <button class='btn btn-sm btn-danger' id='completelyDeleteProduct' name='completelyDeleteProduct'>
+                        <span data-feather='trash-2'></span>
+                    </button>
+                    <button class='btn btn-sm btn-danger' id='deleteProductButton' name='deleteProductButton'>
+                        <span data-feather='eye-off'></span>
+                    </button>
+                </div>
+            </td>
+            <td class='text-center'>{$product->getStatus()}</td>
+        </tr>
+    ";
 }
 ?>
 
@@ -86,13 +88,13 @@ function showProductList($product)
                     <thead class="table-light">
                         <tr class="align-middle">
                             <th></th>
-                            <th>Id</th>
-                            <th>Product Name</th>
-                            <th>Categories</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Action</th>
-                            <th>Status</th>
+                            <th class='text-center'>ID</th>
+                            <th class='col-3'>Product Name</th>
+                            <th class='col-1'>Categories</th>
+                            <th class='col-5'>Description</th>
+                            <th class='col-1'>Price</th>
+                            <th class='col-1 text-center'>Action</th>
+                            <th class='col-1 text-center'>Status</th>
                         </tr>
                     </thead>
 
@@ -126,6 +128,8 @@ function showProductList($product)
                                 <?= showProductList($product); ?>
                             <?php endforeach;
                         } ?>
+
+                        <!-- Function -->
                         <?php
                         if (isPost()) {
                             $filterAll = filter();

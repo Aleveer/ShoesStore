@@ -1,5 +1,5 @@
 <?php
-    // TODO: Set activate sidebar menu link
+// TODO: Set activate sidebar menu link
 
 ?>
 
@@ -22,6 +22,24 @@
                 <a class="nav-link" href="?module=dashboard&view=product.view">
                     <span data-feather="shopping-cart"></span>
                     Products
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?module=dashboard&view=category.view">
+                    <span data-feather="shopping-cart"></span>
+                    Categories
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?module=dashboard&view=coupon.view">
+                    <span data-feather="shopping-cart"></span>
+                    Coupons
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?module=dashboard&view=payment.view">
+                    <span data-feather="shopping-cart"></span>
+                    Payments
                 </a>
             </li>
             <li class="nav-item">

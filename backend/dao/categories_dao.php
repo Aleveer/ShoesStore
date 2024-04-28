@@ -71,7 +71,7 @@ class CategoriesDAO implements DAOInterface
         return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
-    public function delete($id): int
+    public function delete(int $id): int
     {
         $query = "DELETE FROM categories WHERE id = ?";
         return DatabaseConnection::executeUpdate($query, $id);
@@ -85,7 +85,7 @@ class CategoriesDAO implements DAOInterface
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
             $query = "SELECT * FROM categories WHERE id LIKE ? OR name LIKE ?";
-            $args = array_fill(0,  2, "%" . $condition . "%");
+            $args = array_fill(0, 2, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM categories WHERE $column LIKE ?";

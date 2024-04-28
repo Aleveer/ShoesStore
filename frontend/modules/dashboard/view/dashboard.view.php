@@ -62,7 +62,6 @@ include (__DIR__ . '/../inc/head.php');
                         <h3>Revenue</h3>
                         <hr>
                         <canvas id="Revenue_Income"></canvas>
-
                     </div>
 
                     <div class="col-6">
@@ -71,6 +70,7 @@ include (__DIR__ . '/../inc/head.php');
                         <canvas id="Total_Login"></canvas>
                     </div>
                 </div>
+
 
                 <h2>Section title</h2>
                 <div class="table-responsive">

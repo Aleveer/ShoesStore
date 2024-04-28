@@ -122,7 +122,7 @@ if (isPost()) {
                         echo '</script>';
                         break;
                     }
-                    $sizeItems = SizeItemsBUS::getInstance()->getModelById($product->getId());
+                    $sizeItems = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($cart->getSizeId(), $product->getId());
                     $size = SizeBUS::getInstance()->getModelById($cart->getSizeId());
                     echo '<form method="POST" action="?module=cartsection&action=cart">';
                     echo '<div class="item-container" name="itemContainer">';

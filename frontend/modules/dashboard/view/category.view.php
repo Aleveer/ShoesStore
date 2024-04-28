@@ -1,7 +1,8 @@
 <?php
+use backend\bus\ProductBUS;
 use backend\models\CategoriesModel;
 
-$title = 'Categories Management';
+$title = 'Categories';
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -33,12 +34,6 @@ use backend\bus\CategoriesBUS;
                     <h1 class="h2">
                         <?= $title ?>
                     </h1>
-                    <div class="search-group input-group">
-                        <input type="text" id="accountSearch" class="searchInput form-control">
-                        <button type="button" class="btn btn-sm btn-primary align-middle padx-0 pady-0">
-                            <span data-feather="search"></span>
-                        </button>
-                    </div>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
                             data-bs-target="#addModal" id="addCategory" class="addBtn">
@@ -54,6 +49,7 @@ use backend\bus\CategoriesBUS;
                         <tr class="align-middle">
                             <th>Id</th>
                             <th>Name</th>
+                            <th>Product Quantity</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -62,6 +58,9 @@ use backend\bus\CategoriesBUS;
                             <tr>
                                 <td class='col-1'><?= $categories->getId() ?></td>
                                 <td class='col-2'><?= $categories->getName() ?></td>
+                                <td class='col-2'>
+                                    <?= count(ProductBUS::getInstance()->searchModel($categories->getId(), ['category_id'])); ?>
+                                </td>
                                 <td class='col-2 categoryAction'>
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                         data-bs-target="#editModal<?= $categories->getId() ?>">

@@ -7,6 +7,7 @@
                 <th scope="col" class="col-1">User ID</th>
                 <th scope="col" class="col-2">Customer Name</th>
                 <th scope="col" class="col-2">Order Date</th>
+                <th scope="col" class="col-2">Address</th>
                 <th scope="col" class="col-2">Final Price</th>
                 <th scope="col" class="col-1 text-center">Status</th>
                 <th scope="col" class="col-1 text-center">Info</th>
@@ -27,6 +28,7 @@
                     <td><?= $order->getUserId() ?></td>
                     <td><?= $order->getCustomerName() ?></td>
                     <td><?= $order->getOrderDate() ?></td>
+                    <td><?= $order->getCustomerAddress() ?></td>
                     <td><?= $order->getTotalAmount() ?></td>
                     <td class="text-center">
                         <select class="form-control" name="status" id="orderStatus"

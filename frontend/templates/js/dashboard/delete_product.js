@@ -4,7 +4,13 @@ $(document).ready(function () {
         button.addEventListener('click', function () {
             console.log('delete button clicked');
             let productId = $(this).closest('tr').children('td:nth-child(2)').text();
-            console.log(productId);
+            let status = $(this).closest('tr').children('td:last-child').text();
+
+            if (status === 'inactive') {
+                alert('Product is already hidden');
+                return;
+            }
+
             $.ajax({
                 url: window.location.href,
                 method: 'POST',

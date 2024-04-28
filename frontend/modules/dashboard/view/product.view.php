@@ -31,10 +31,10 @@ function showProductList($product)
     echo "<span data-feather='tool'></span>";
     echo "</a>";
     echo "<button class='btn btn-sm btn-danger' id='hideProductButton' name='hideProductButton'>";
-    echo "<span data-feather='eye-off'></span>";
+    echo "<span data-feather='trash-2'></span>";
     echo "</button>";
     echo "<button class='btn btn-sm btn-danger' id='deleteProductButton' name='deleteProductButton'>";
-    echo "<span data-feather='trash-2'></span>";
+    echo "<span data-feather='eye-off'></span>";
     echo "</button>";
     echo "<td class='col-1'>" . $product->getStatus() . "</td>";
     echo "</div>";

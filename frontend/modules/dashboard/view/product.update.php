@@ -56,6 +56,16 @@ if (isset($_GET['id'])) {
                     ?>
                 </select>
             </div>
+            <div class="col-4">
+                <label for="inputProductStatus" class="form-label">Status</label>
+                <select id="inputEditProductStatus" class="form-select">
+                    <?php
+                    $status = ProductBUS::getInstance()->getModelById($id)->getStatus();
+                    ?>
+                    <option value="inactive" <?php echo $status == 'inactive' ? 'selected' : ''; ?>>Inactive</option>
+                    <option value="active" <?php echo $status == 'active' ? 'selected' : ''; ?>>Active</option>
+                </select>
+            </div>
             </select>
         </div>
         <div class="col-4">
@@ -104,12 +114,14 @@ if (isset($_GET['id'])) {
                 $productPrice = $_POST['priceEdit'] ?? '';
                 $productGender = $_POST['genderEdit'] ?? '';
                 $productDescription = $_POST['descriptionEdit'] ?? '';
+                $productStatus = $_POST['statusEdit'] ?? '';
 
                 $productUpdate->setCategoryId($productCategory);
                 $productUpdate->setGender($productGender);
                 $productUpdate->setName($productName);
                 $productUpdate->setPrice($productPrice);
                 $productUpdate->setDescription($productDescription);
+                $productUpdate->setStatus($productStatus);
 
                 $data = $_POST['imageEdit'];
                 $productUpdate->setImage($data);

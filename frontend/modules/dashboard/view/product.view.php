@@ -30,9 +30,13 @@ function showProductList($product)
     echo "<a href='http://localhost/frontend/index.php?module=dashboard&view=product.update&id=" . $product->getId() . "' class='btn btn-sm btn-warning'>";
     echo "<span data-feather='tool'></span>";
     echo "</a>";
-    echo "<button class='btn btn-sm btn-danger'>";
+    echo "<button class='btn btn-sm btn-danger' id='hideProductButton' name='hideProductButton'>";
+    echo "<span data-feather='eye-off'></span>";
+    echo "</button>";
+    echo "<button class='btn btn-sm btn-danger' id='deleteProductButton' name='deleteProductButton'>";
     echo "<span data-feather='trash-2'></span>";
     echo "</button>";
+    echo "<td class='col-1'>" . $product->getStatus() . "</td>";
     echo "</div>";
     echo "</td>";
     echo "</tr>";
@@ -86,6 +90,7 @@ function showProductList($product)
                             <th>Description</th>
                             <th>Price</th>
                             <th>Action</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
 
@@ -230,7 +235,7 @@ function showProductList($product)
                                     $productGender = $_POST['gender'];
                                     $productDescription = $_POST['description'];
 
-                                    $productModel = new ProductModel(null, $productName, $productCategory, $productPrice, $productDescription, null, $productGender);
+                                    $productModel = new ProductModel(null, $productName, $productCategory, $productPrice, $productDescription, null, $productGender, 'active');
                                     $data = $_POST['image'];
                                     $productModel->setImage($data);
 
@@ -267,10 +272,22 @@ function showProductList($product)
                     </div>
                 </div>
 
+                <?php
+                //Handle delete product:
+                if (isPost()) {
+                    if (isset($_POST['deleteButton'])) {
+                        error_log('Delete button clicked');
+                        $productId = $_POST['productId'];
+                        $updateProductStatus = ProductBUS::getInstance()->getModelById($productId);
+                        $updateProductStatus->setStatus('inactive');
+                        ProductBUS::getInstance()->updateModel($updateProductStatus);
+                        ProductBUS::getInstance()->refreshData();
+                    }
+                }
+                ?>
                 <?php include (__DIR__ . '/../inc/app/app.php'); ?>
                 <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_product.js"></script>
+                <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_product.js"></script>
 </body>
-
-</html>

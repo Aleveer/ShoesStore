@@ -6,6 +6,7 @@ $(document).ready(function () {
     let productDescription = document.getElementById("w3Editreview");
     let productImageUpload = document.getElementById("inputEditImg");
     let imageProductReview = document.getElementById("imgEditPreview");
+    let inputEditProductStatus = document.getElementById("inputEditProductStatus");
 
     //Get default values:
     let productNameDefault = productName.value;
@@ -14,6 +15,7 @@ $(document).ready(function () {
     let imageProductReviewDefault = imageProductReview.src;
     let chosenCategoryDefault = chosenCategory.value;
     let chosenGenderDefault = chosenGender.value;
+    let inputEditProductStatusDefault = inputEditProductStatus.value;
 
     productImageUpload.addEventListener('change', (event) => {
         let file = event.target.files[0];
@@ -37,7 +39,8 @@ $(document).ready(function () {
                 productDescription.value === productDescriptionDefault &&
                 imageProductReview.src === imageProductReviewDefault &&
                 chosenCategory.value === chosenCategoryDefault &&
-                chosenGender.value === chosenGenderDefault) {
+                chosenGender.value === chosenGenderDefault &&
+                inputEditProductStatus.value === inputEditProductStatusDefault) {
                 alert("No changes have been made.");
                 return;
             }
@@ -87,6 +90,7 @@ $(document).ready(function () {
                     priceEdit: productPrice.value,
                     genderEdit: chosenGender.value,
                     descriptionEdit: productDescription.value,
+                    statusEdit: inputEditProductStatus.value,
                     imageEdit: imageProductReview.src,
                     updateEditBtnName: true,
                 },

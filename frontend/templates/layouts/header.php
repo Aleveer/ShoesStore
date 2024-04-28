@@ -1,4 +1,14 @@
 <?php
+use backend\enums\RolesEnums;
+use backend\services\session;
+use backend\bus\TokenLoginBUS;
+use backend\bus\UserBUS;
+
+if (isLogin()) {
+    $token = session::getInstance()->getSession('tokenLogin');
+    $tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
+    $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
+}
 
 if (!defined('_CODE')) {
     die('Access denied');
@@ -25,7 +35,8 @@ if (!defined('_CODE')) {
 <body>
     <div class="header__logo">
         <a href="?module=indexphp">
-            <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/logoShoes.jpg" alt="Wait a minute!!" style="width: 50px; height: 50px;">
+            <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/logoShoes.jpg" alt="Wait a minute!!"
+                style="width: 50px; height: 50px;">
         </a>
     </div>
     <div class="header__content">
@@ -43,14 +54,9 @@ if (!defined('_CODE')) {
         </ul>
 
         <?php
-        if (isLogin()) {
+        if (!isLogin() || ($userModel->getRoleId() == RolesEnums::CUSTOMER)) {
             echo '<div class="cart header__content__item">
         <a href="?module=cartsection&action=cart">
-            <i class="fa-sharp fa-solid fa-cart-shopping cart__icon"></i>
-        </a></div>';
-        } else {
-            echo '<div class="cart header__content__item">
-        <a href="?module=auth&action=login">
             <i class="fa-sharp fa-solid fa-cart-shopping cart__icon"></i>
         </a></div>';
         }
@@ -67,9 +73,15 @@ if (!defined('_CODE')) {
                         <li class="user__dropdown__menu__item">
                             <a href="?module=account&action=profilesetting">Profile Setting</a>
                         </li>
-                        <li class="user__dropdown__menu__item">
+                        <?php if ($userModel->getRoleId() == RolesEnums::CUSTOMER) {
+                            echo '<li class="user__dropdown__menu__item">
                             <a href="?module=account&action=order-list">Purchase List</a>
-                        </li>
+                        </li>';
+                        } else {
+                            echo '<li class="user__dropdown__menu__item">
+                            <a href="?module=dashboard&view=dashboard.view">Dashboard</a>';
+                        }
+                        ; ?>
                         <li class="user__dropdown__menu__item">
                             <a href="?module=auth&action=logout">Log out</a>
                         </li>

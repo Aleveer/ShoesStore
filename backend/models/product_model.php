@@ -1,8 +1,9 @@
 <?php
 namespace backend\models;
+
 class ProductModel
 {
-    private $id, $name, $categoryId, $price, $description, $image, $gender;
+    private $id, $name, $categoryId, $price, $description, $image, $gender, $status;
 
     public function __construct(
         $id,
@@ -11,7 +12,8 @@ class ProductModel
         $price,
         $description,
         $image,
-        $gender
+        $gender,
+        $status,
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -20,6 +22,7 @@ class ProductModel
         $this->description = $description;
         $this->image = $image;
         $this->gender = $gender;
+        $this->status = $status;
     }
 
     public function getId()
@@ -90,5 +93,15 @@ class ProductModel
     public function setGender($gender)
     {
         $this->gender = $gender;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 }

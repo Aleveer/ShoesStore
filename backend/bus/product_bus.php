@@ -5,6 +5,7 @@ namespace backend\bus;
 use backend\interfaces\BUSInterface;
 use InvalidArgumentException;
 use backend\dao\ProductDAO;
+use Exception;
 
 class ProductBUS implements BUSInterface
 {
@@ -33,12 +34,17 @@ class ProductBUS implements BUSInterface
         $this->productList = ProductDAO::getInstance()->getAll();
     }
 
-    public function getModelById(int $id)
+    public function getModelById($id)
     {
         return ProductDAO::getInstance()->getById($id);
     }
 
-    public function addModel($productModel): int
+    public function getActiveProductOnly()
+    {
+        return ProductDAO::getInstance()->getActiveProducts();
+    }
+
+    public function addModel($productModel)
     {
         if (
             empty($productModel->getName()) ||
@@ -47,12 +53,14 @@ class ProductBUS implements BUSInterface
             empty($productModel->getDescription()) ||
             empty($productModel->getImage()) ||
             empty($productModel->getGender() ||
+            empty($productModel->getStatus()) ||
             $productModel->getName() == null ||
             $productModel->getCategoryId() == null ||
             $productModel->getPrice() == null ||
             $productModel->getDescription() == null ||
             $productModel->getImage() == null ||
-            $productModel->getGender() == null)
+            $productModel->getGender() == null ||
+            $productModel->getStatus() == null)
         ) {
             throw new InvalidArgumentException("Please fill in all fields");
         }
@@ -110,7 +118,7 @@ class ProductBUS implements BUSInterface
     {
         $result = [];
         foreach ($this->productList as $product) {
-            if ($product->getPrice() >= $min && $product->getPrice() <= $max) {
+            if ($product->getPrice() >= $min && $product->getPrice() <= $max && $product->getStatus() == 'active') {
                 $result[] = $product;
             }
         }
@@ -121,7 +129,7 @@ class ProductBUS implements BUSInterface
     {
         $result = [];
         foreach ($this->productList as $product) {
-            if ($product->getPrice() >= $min) {
+            if ($product->getPrice() >= $min && $product->getStatus() == 'active') {
                 $result[] = $product;
             }
         }
@@ -132,7 +140,7 @@ class ProductBUS implements BUSInterface
     {
         $result = [];
         foreach ($this->productList as $product) {
-            if ($product->getPrice() <= $max) {
+            if ($product->getPrice() <= $max && $product->getStatus() == 'active') {
                 $result[] = $product;
             }
         }
@@ -142,53 +150,19 @@ class ProductBUS implements BUSInterface
     public function getRandomRecommendProducts()
     {
         $result = [];
-        $randomKeys = array_rand($this->productList, 3);
+        $activeProducts = array_filter($this->productList, function ($product) {
+            return $product->getStatus() == 'active';
+        });
+
+        if (count($activeProducts) < 3) {
+            throw new Exception('Not enough active products');
+        }
+
+        $randomKeys = array_rand($activeProducts, 3);
         foreach ($randomKeys as $key) {
-            $result[] = $this->productList[$key];
+            $result[] = $activeProducts[$key];
         }
         return $result;
     }
 
-    //Handle multiple images upload at once
-    public function imageUploadHandle($productId, array $imageFiles)
-    {
-        $target_dir = __DIR__ . "/../../public/images/";
-        $uploaded_files = [];
-        foreach ($imageFiles as $imageFile) {
-            $target_file = $target_dir . basename($imageFile["name"]);
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            $check = getimagesize($imageFile["tmp_name"]);
-            if ($check !== false) {
-                $uploadOk = 1;
-            } else {
-                $uploadOk = 0;
-            }
-            if (file_exists($target_file)) {
-                $uploadOk = 0;
-            }
-            if ($imageFile["size"] > 500000) {
-                $uploadOk = 0;
-            }
-            if (
-                $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-                && $imageFileType != "gif"
-            ) {
-                $uploadOk = 0;
-            }
-            if ($uploadOk == 0) {
-                return false;
-            } else {
-                if (move_uploaded_file($imageFile["tmp_name"], $target_file)) {
-                    $uploaded_files[] = $target_file;
-                } else {
-                    return false;
-                }
-            }
-        }
-        $product = $this->getModelById($productId);
-        $product->setImage(implode(",", $uploaded_files));
-        $this->updateModel($product);
-        return true;
-    }
 }

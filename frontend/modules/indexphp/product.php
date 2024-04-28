@@ -8,7 +8,7 @@ use backend\services\session;
 $categoriesList = CategoriesBUS::getInstance()->getAllModels();
 $size = SizeBUS::getInstance()->getAllModels();
 $sizeItems = SizeItemsBUS::getInstance()->getAllModels();
-$products = ProductBUS::getInstance()->getAllModels();
+$products = ProductBUS::getInstance()->getActiveProductOnly();
 
 global $searchResult;
 global $resultsBasedOnPrice;
@@ -40,8 +40,8 @@ function displayProduct($product)
         ';
 }
 ?>
-<div id="header" style="  background-color: rgb(18, 15, 40); ">  
-<meta charset="UTF-8">
+<div id="header" style="  background-color: rgb(18, 15, 40); ">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
@@ -415,7 +415,7 @@ function displayProduct($product)
                     <div style="margin-bottom: 2rem;" class="page" data-total-pages="<?php echo $total_pages; ?>"
                         data-current-page="<?php echo $page; ?>">
                         <a class="custom-btn btn-7 prev" id="prevPage" name="prevPage"><span>
-                                <</span></a>
+                                < </span></a>
                         <span class="current-page" id="currentPage" name="currentPage">Page <?php echo $page; ?> of
                             <?php echo $total_pages; ?></span>
                         <a class="custom-btn btn-7 next" id="nextPage" name="nextPage"><span>></span></a>

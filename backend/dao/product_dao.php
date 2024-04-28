@@ -40,7 +40,8 @@ class ProductDAO implements DAOInterface
         $description = $rs['description'];
         $image = $rs['image'];
         $gender = $rs['gender'];
-        return new ProductModel($id, $name, $categoryId, $price, $description, $image, $gender);
+        $status = $rs['status'];
+        return new ProductModel($id, $name, $categoryId, $price, $description, $image, $gender, $status);
     }
 
     public function getAll(): array
@@ -53,7 +54,8 @@ class ProductDAO implements DAOInterface
         }
         return $productList;
     }
-    public function getById(int $id)
+
+    public function getById($id)
     {
         $query = "SELECT * FROM products WHERE id = ?";
         $result = DatabaseConnection::executeQuery($query, $id);
@@ -66,31 +68,45 @@ class ProductDAO implements DAOInterface
         return null;
     }
 
+    public function getActiveProducts()
+    {
+        $query = "SELECT * FROM products WHERE status = 'active'";
+        $rs = DatabaseConnection::executeQuery($query);
+        $productList = [];
+        while ($row = $rs->fetch_assoc()) {
+            $productModel = $this->createProductModel($row);
+            array_push($productList, $productModel);
+        }
+        return $productList;
+    }
+
     public function insert($data): int
     {
-        $query = "INSERT INTO products (name, category_id, price, description, image, gender) VALUES (?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO products (name, category_id, price, description, image, gender, status) VALUES (?, ?, ?, ?, ?, ?)";
         $args = [
-            $data['name'],
-            $data['category_id'],
-            $data['price'],
-            $data['description'],
-            $data['image'],
-            $data['gender']
+            $data->getName(),
+            $data->getCategoryId(),
+            $data->getPrice(),
+            $data->getDescription(),
+            $data->getImage(),
+            $data->getGender(),
+            $data->getStatus()
         ];
         return DatabaseConnection::executeUpdate($query, ...$args);
     }
 
     public function update($data): int
     {
-        $query = "UPDATE products SET name = ?, category_id = ?, price = ?, description = ?, image = ?, gender = ? WHERE id = ?";
+        $query = "UPDATE products SET name = ?, category_id = ?, price = ?, description = ?, image = ?, gender = ?, status = ? WHERE id = ?";
         $args = [
-            $data['name'],
-            $data['category_id'],
-            $data['price'],
-            $data['description'],
-            $data['image'],
-            $data['gender'],
-            $data['id']
+            $data->getName(),
+            $data->getCategoryId(),
+            $data->getPrice(),
+            $data->getDescription(),
+            $data->getImage(),
+            $data->getGender(),
+            $data->getStatus(),
+            $data->getId()
         ];
         return DatabaseConnection::executeUpdate($query, ...$args);
     }
@@ -108,8 +124,8 @@ class ProductDAO implements DAOInterface
         }
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
-            $query = "SELECT * FROM products WHERE id LIKE ? OR name LIKE ? OR category_id LIKE ? OR price LIKE ? OR description LIKE ? OR image LIKE ? OR gender LIKE ?";
-            $args = array_fill(0,  7, "%" . $condition . "%");
+            $query = "SELECT * FROM products WHERE id LIKE ? OR name LIKE ? OR category_id LIKE ? OR price LIKE ? OR description LIKE ? OR image LIKE ? OR gender LIKE ? OR status LIKE ?";
+            $args = array_fill(0, 7, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM products WHERE $column LIKE ?";

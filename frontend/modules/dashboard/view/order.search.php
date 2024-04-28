@@ -19,11 +19,6 @@
                 <label class="form-check-label" for="inlineRadio1">By Order ID</label>
             </div>
             <div class="form-check form-check-inline me-2">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                    value="Customer">
-                <label class="form-check-label" for="inlineRadio2">By Customer ID</label>
-            </div>
-            <div class="form-check form-check-inline me-2">
                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="User">
                 <label class="form-check-label" for="inlineRadio3">By User ID</label>
             </div>

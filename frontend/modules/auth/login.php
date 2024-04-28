@@ -19,12 +19,14 @@ $data = [
     'pageTitle' => 'Đăng nhập'
 ];
 
-// if (isLogin()) {
-//     redirect('?module=indexphp&action=userhomepage');
-// }
+if (isLogin()) {
+    redirect('?module=indexphp&action=userhomepage');
+}
 
 if (isPost()) {
     $filterAll = filter();
+    $response = ['success' => false, 'msg' => ''];
+
     if (!empty(trim($filterAll['email'])) && !empty(trim($filterAll['password']))) {
         $email = $filterAll['email'];
         $password = $filterAll['password'];
@@ -41,38 +43,38 @@ if (isPost()) {
 
                 if ($insertTokenLoginStatus) {
                     $status = $userQuery->getStatus();
+                    error_log('User status before update: ' . $status);
                     if ($status === StatusEnums::INACTIVE || $status === StatusEnums::ACTIVE) {
                         $userQuery->setStatus(StatusEnums::ACTIVE);
                         UserBUS::getInstance()->updateModel($userQuery);
                         UserBUS::getInstance()->refreshData();
+                        error_log('User status updated to active');
                     }
                     session::getInstance()->setSession('tokenLogin', $tokenLogin);
-                    // Trả về dữ liệu JSON
-                    header('Content-Type: application/json');
-                    echo json_encode(['status' => 'success', 'message' => 'Login successful']);
-                    exit;
+                    redirect('?module=indexphp&action=userhomepage');
                 } else {
-                    header('Content-Type: application/json');
-                    echo json_encode(['status' => 'error', 'message' => 'Cannot login! Please try again!']);
-                    exit;
+                    session::getInstance()->setFlashData('msg', 'Cannot login! Please try again!');
+                    session::getInstance()->setFlashData('msg_type', 'danger');
                 }
             } else {
-                header('Content-Type: application/json');
-                echo json_encode(['status' => 'error', 'message' => 'Wrong password, Please try again!']);
-                exit;
+                session::getInstance()->setFlashData('msg', 'Incorrect password!');
+                session::getInstance()->setFlashData('msg_type', 'danger');
             }
         } else {
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => 'Email does not exist!']);
-            exit;
+            session::getInstance()->setFlashData('msg', 'Email does not exist!');
+            session::getInstance()->setFlashData('msg_type', 'danger');
         }
     } else {
-        header('Content-Type: application/json');
-        echo json_encode(['status' => 'error', 'message' => 'Please fill in all fields!']);
-        exit;
+        session::getInstance()->setFlashData('msg', 'Please fill in all fields!');
+        session::getInstance()->setFlashData('msg_type', 'danger');
     }
+    // redirect('?module=auth&action=login');
 }
+//header('Content-Type: application/json');
+//echo json_encode($response);
 
+$msg = session::getInstance()->getFlashData('msg');
+$msgType = session::getInstance()->getFlashData('msg_type');
 ?>
 
 <div id="header">
@@ -83,7 +85,9 @@ if (isPost()) {
     <div class="row">
         <div class="col-4" style="margin:50px auto;">
             <h2 class="cw" style="text-align: center; text-transform: uppercase;">Login</h2>
-            <div class="message"></div>
+            <?php if (!empty($msg)) {
+                getMsg($msg, $msgType);
+            } ?>
             <form action="" method="post">
                 <div class="form-group mg-form">
                     <label class="cw" for="">Email</label>
@@ -94,7 +98,8 @@ if (isPost()) {
                     <input name="password" type="password" class="form-control" placeholder="Your password...">
                 </div>
 
-                <button id="loginBtn" type="button" class="btn btn-primary btn-block mg-form" style="width:100%; margin-top:16px;">Login</button>
+                <button type="submit" class="btn btn-primary btn-block mg-form"
+                    style="width:100%; margin-top:16px;">Login</button>
                 <hr>
                 <p class="text-center"><a href="?module=auth&action=forgot">Forgot password?</a></p>
                 <p class="text-center"><a href="?module=auth&action=register">Register</a></p>
@@ -102,49 +107,3 @@ if (isPost()) {
         </div>
     </div>
 </body>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-<script>
-    $(document).ready(function() {
-        var loginBtn = $("#loginBtn");
-
-        if (loginBtn.length) {
-            loginBtn.on("click", function(e) {
-                var email = $('input[name="email"]').val();
-                var password = $('input[name="password"]').val();
-                if ($('.messageErrorDetail').length) {
-                    $('.messageErrorDetail').text();
-                }
-                $.ajax({
-                    url: "http://localhost/ShoesStore/frontend/?module=auth&action=login",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        email: email,
-                        password: password
-                    },
-
-                    success: function(data) {
-                        // Xử lý phản hồi từ server ở đây
-                        console.log(data); // Hiển thị dữ liệu phản hồi từ server
-                        if (data.status == 'error') {
-                            if ($('.messageErrorDetail').length) {
-                                $('.messageErrorDetail').text(data.message);
-                            } else {
-                                $('.message').append("<div class='messageErrorDetail cw text-center alert alert-danger'>" + data.message + "</div>");
-                            }
-                        } else {
-                            window.location.href = "?module=indexphp&action=userhomepage";
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error:", error);
-                        alert("Error occurred. Please try again.");
-                    },
-                });
-            });
-        }
-    });
-</script>

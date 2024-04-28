@@ -1,7 +1,7 @@
 <?php
 use backend\bus\ProductBUS;
 
-$products = ProductBUS::getInstance()->getAllModels();
+$products = ProductBUS::getInstance()->getActiveProductOnly();
 $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
 ?>
 

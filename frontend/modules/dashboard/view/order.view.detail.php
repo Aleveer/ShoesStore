@@ -10,13 +10,11 @@ use backend\bus\OrderItemsBUS;
 use backend\bus\OrdersBUS;
 
 global $id;
-$orderId = $_GET['orderId'];
+$orderId = $_GET['customerOrderId'];
 requireLogin();
 
-$token = session::getInstance()->getSession('tokenLogin');
-$tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
-$userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
 $order = OrdersBUS::getInstance()->getModelById($orderId);
+$userModel = UserBUS::getInstance()->getModelById($order->getUserId());
 
 if ($order->getUserId() != $userModel->getId() && $userModel->getRoleId() == RolesEnums::CUSTOMER) {
     // The order doesn't belong to the user, return a 403 Forbidden status code
@@ -39,6 +37,7 @@ if ($order->getUserId() != $userModel->getId() && $userModel->getRoleId() == Rol
 $paymentMethod = PaymentsBUS::getInstance()->getModelByOrderId($order->getId());
 $methodId = PaymentMethodsBUS::getInstance()->getModelById($paymentMethod->getMethodId())->getMethodName();
 $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItemsListByOrderId($orderId);
+include (__DIR__ . '/../inc/head.php');
 ?>
 
 <div id="header">
@@ -46,23 +45,21 @@ $orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getOrderItem
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Detail</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo _WEB_HOST_TEMPLATE ?>/css/order_detail.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/home.js"></script>
-    <?php layouts("header") ?>
 </div>
 
 <body>
-    <section class="h-100 gradient-custom width:100%">
+    <section class="h-100 gradient-custom width:100%" style="height:150vh;">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-lg-10 col-xl-8">
                     <div class="card" style="border-radius: 10px;">
                         <div class="card-header px-2 py-3 d-flex justify-content-between align-items-center">
-                            <h6 class="text-muted mb-0">Thanks for your Order, <span
+                            <h6 class="text-muted mb-0">Order from: <span
                                     style="color: #a8729a;"><?php echo $userModel->getName() ?></span>!</h6>
-                            <h6 class="text-muted mb-0">Back to <a href="?module=account&action=order-list"
-                                    style="color: #a8729a;">Order List</a></h6>
+                            <h6 class="text-muted mb-0">Back to <a href="?module=dashboard&view=order.view"
+                                    style="color: #a8729a;">Customer Order List</a></h6>
                         </div>
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-4">

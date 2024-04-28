@@ -37,7 +37,6 @@ include (__DIR__ . '/../inc/head.php');
                         </div>
 
                         <!-- Drop Down Menu -->
-                        <!-- TODO: Fix this piece of shit that doesn't drop down, wtf -->
                         <div class="dropdown">
                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
                                 id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">

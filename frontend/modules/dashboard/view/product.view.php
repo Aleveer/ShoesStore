@@ -27,8 +27,8 @@ function showProductList($product)
             <td>{$product->getName()}</td>
             <td>" . CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName() . "</td>
             <td>{$product->getDescription()}</td>
-            <td>{$product->getPrice()}</td>
-            <td>
+            <td class='text-center'>{$product->getPrice()}</td>
+            <td class='text-center'>
                 <div>
                     <a href='http://localhost/frontend/index.php?module=dashboard&view=product.update&id={$product->getId()}' class='btn btn-sm btn-warning'>
                         <span data-feather='tool'></span>
@@ -65,17 +65,6 @@ function showProductList($product)
                         <?= $title ?>
                     </h1>
 
-                    <form action="" method="POST">
-                        <div class="search-group input-group">
-                            <input type="text" name="productSearch" id="productSearchBar"
-                                class="searchInput form-control">
-                            <button type="submit" id="productSearchButton" name="productSearchButtonName"
-                                class="btn btn-sm btn-primary align-middle padx-0 pady-0">
-                                <span data-feather="search"></span>
-                            </button>
-                        </div>
-                    </form>
-
                     <div class="btn-toolbar mb-2 mb-0">
                         <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
                             data-bs-target="#addModal" id="addProduct" class="addBtn">
@@ -84,6 +73,18 @@ function showProductList($product)
                         </button>
                     </div>
                 </div>
+
+                <!-- TODO: The search bar doesn't work anymore... weird-->
+                <form action="" method="POST">
+                    <div class="search-group input-group py-2">
+                        <input type="text" name="productSearch" id="productSearchBar" class="searchInput form-control">
+                        <button type="submit" id="productSearchButton" name="productSearchButtonName"
+                            class="btn btn-sm btn-primary align-middle px-3">
+                            <span data-feather="search"></span>
+                        </button>
+                    </div>
+                </form>
+
                 <table class="table align-middle table-borderless table-hover">
                     <thead class="table-light">
                         <tr class="align-middle">
@@ -92,8 +93,8 @@ function showProductList($product)
                             <th class='col-3'>Product Name</th>
                             <th class='col-1'>Categories</th>
                             <th class='col-5'>Description</th>
-                            <th class='col-1'>Price</th>
-                            <th class='col-1 text-center'>Action</th>
+                            <th class='col-1 text-center'>Price</th>
+                            <th class='col-2 text-center'>Action</th>
                             <th class='col-1 text-center'>Status</th>
                         </tr>
                     </thead>

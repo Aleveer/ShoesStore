@@ -75,6 +75,18 @@ class OrderItemsDAO implements DAOInterface
         return $orderItemsList;
     }
 
+    public function getOrderItemsListByProductId($productId)
+    {
+        $query = "SELECT * FROM order_items WHERE product_id = ?";
+        $rs = DatabaseConnection::executeQuery($query, $productId);
+        $orderItemsList = [];
+        while ($row = $rs->fetch_assoc()) {
+            $orderItemsModel = $this->createOrderItemsModel($row);
+            array_push($orderItemsList, $orderItemsModel);
+        }
+        return $orderItemsList;
+    }
+
     public function insert($orderItemsModel): int
     {
         $query = "INSERT INTO order_items (order_id, product_id, size_id, quantity, price) VALUES (?, ?, ?, ?, ?)";
@@ -121,7 +133,7 @@ class OrderItemsDAO implements DAOInterface
         $query = "";
         if ($columnNames === null || count($columnNames) === 0) {
             $query = "SELECT * FROM order_items WHERE id LIKE ? OR order_id LIKE ? OR product_id LIKE ? OR size_id LIKE ? OR quantity LIKE ? OR price LIKE ?";
-            $args = array_fill(0,  6, "%" . $condition . "%");
+            $args = array_fill(0, 6, "%" . $condition . "%");
         } else if (count($columnNames) === 1) {
             $column = $columnNames[0];
             $query = "SELECT * FROM order_items WHERE $column LIKE ?";

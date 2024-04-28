@@ -15,6 +15,16 @@ $categoriesList = CategoriesBUS::getInstance()->getAllModels();
 $size = SizeBUS::getInstance()->getAllModels();
 $id = $_GET['id'];
 $product = ProductBUS::getInstance()->getModelById($id);
+if ($product == null) {
+    echo '<script>alert("This product does not exist!")</script>';
+    redirect('?module=indexphp&action=product');
+}
+
+if ($product->getStatus() == "inactive") {
+    echo '<script>alert("This product is not available!")</script>';
+    redirect('?module=indexphp&action=product');
+}
+
 $sizeItemsProduct = SizeItemsBUS::getInstance()->getModelByProductId($id);
 if (isLogin()) {
     $token = session::getInstance()->getSession('tokenLogin');

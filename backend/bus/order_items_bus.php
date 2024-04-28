@@ -44,6 +44,11 @@ class OrderItemsBUS implements BUSInterface
         return OrderItemsDAO::getInstance()->getOrderItemsListByOrderId($orderId);
     }
 
+    public function getOrderItemsListByProductId($productId)
+    {
+        return OrderItemsDAO::getInstance()->getOrderItemsListByProductId($productId);
+    }
+
     public function addModel($orderItemsModel): int
     {
         $this->validateModel($orderItemsModel);

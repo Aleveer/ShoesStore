@@ -88,7 +88,7 @@ class SizeItemsDAO implements DAOInterface
     }
 
 
-    public function delete(int $id): int
+    public function delete($id): int
     {
         $deleteSql = "DELETE FROM size_items WHERE id = ?";
         return DatabaseConnection::executeUpdate($deleteSql, $id);

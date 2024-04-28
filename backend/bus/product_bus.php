@@ -94,7 +94,7 @@ class ProductBUS implements BUSInterface
         return false;
     }
 
-    public function deleteModel(int $id)
+    public function deleteModel($id)
     {
         $result = ProductDAO::getInstance()->delete($id);
         if ($result) {

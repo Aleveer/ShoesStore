@@ -55,9 +55,9 @@ class SizeItemsBUS implements BUSInterface
         return $result;
     }
 
-    public function deleteModel($sizeItemsModel): int
+    public function deleteModel($sizeItemsModel)
     {
-        $result = SizeItemsDAO::getInstance()->delete($sizeItemsModel);
+        $result = SizeItemsDAO::getInstance()->delete($sizeItemsModel->getId());
         if ($result) {
             $index = array_search($sizeItemsModel, $this->sizeItemsList);
             unset($this->sizeItemsList[$index]);

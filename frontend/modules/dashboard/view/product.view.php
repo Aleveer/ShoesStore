@@ -1,5 +1,7 @@
 <?php
 use backend\bus\CategoriesBUS;
+use backend\bus\OrderItemsBUS;
+use backend\bus\SizeItemsBUS;
 use backend\models\ProductModel;
 
 $title = 'Product';
@@ -30,7 +32,7 @@ function showProductList($product)
     echo "<a href='http://localhost/frontend/index.php?module=dashboard&view=product.update&id=" . $product->getId() . "' class='btn btn-sm btn-warning'>";
     echo "<span data-feather='tool'></span>";
     echo "</a>";
-    echo "<button class='btn btn-sm btn-danger' id='hideProductButton' name='hideProductButton'>";
+    echo "<button class='btn btn-sm btn-danger' id='completelyDeleteProduct' name='completelyDeleteProduct'>";
     echo "<span data-feather='trash-2'></span>";
     echo "</button>";
     echo "<button class='btn btn-sm btn-danger' id='deleteProductButton' name='deleteProductButton'>";
@@ -250,27 +252,6 @@ function showProductList($product)
                         </div>
                     </div>
                 </div>
-                <!-- add size modal -->
-                <div class="modal fade" id="addSizeModal" data-bs-backdrop="static" data-bs-keyboard="false"
-                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-sm">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Size</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <label for="inputSize" class="form-label">Size</label>
-                                <input type="text" name="inputSize" id="inputSize" class="form-control">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <?php
                 //Handle delete product:
@@ -282,6 +263,38 @@ function showProductList($product)
                         $updateProductStatus->setStatus('inactive');
                         ProductBUS::getInstance()->updateModel($updateProductStatus);
                         ProductBUS::getInstance()->refreshData();
+                    }
+                }
+
+                //Handle completely delete product:
+                //TODO: Fix not popping up confirmation dialog
+                if (isPost()) {
+                    if (isset($_POST['completelyDeleteProduct'])) {
+                        $productId = $_POST['productId'];
+                        $productPreparedToDel = ProductBUS::getInstance()->getModelById($productId);
+
+                        //Check for orders that contain the product:
+                        $orders = OrderItemsBUS::getInstance()->getOrderItemsListByProductId($productId);
+                        if (count($orders) > 0) {
+                            echo '<script>alert("Cannot delete product. Product is in orders.");</script>';
+                            error_log('Cannot delete product. Product is in orders.');
+                        } else {
+                            //Confirm to delete product:
+                            echo '<script>
+            if(confirm("Are you sure you want to delete this product? Once you delete, you cannot recover it.")) {
+                ';
+                            foreach (SizeItemsBUS::getInstance()->getModelByProductId($productId) as $sizeItem) {
+                                if ($sizeItem->getProductId() == $productId) {
+                                    SizeItemsBUS::getInstance()->deleteModel($sizeItem);
+                                }
+                            }
+                            ProductBUS::getInstance()->deleteModel($productPreparedToDel->getId());
+                            ProductBUS::getInstance()->refreshData();
+                            echo '
+            window.location.href = "?module=dashboard&view=product.view";
+            }
+            </script>';
+                        }
                     }
                 }
                 ?>

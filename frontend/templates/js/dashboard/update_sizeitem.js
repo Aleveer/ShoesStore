@@ -39,6 +39,8 @@ $(document).ready(function () {
                 // handle success
                 console.log('Update successful');
                 alert('Updated successfully');
+                //Refresh the page
+                window.location.reload();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 // handle error

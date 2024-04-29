@@ -172,7 +172,12 @@ $productList = ProductBUS::getInstance()->getAllModels();
                         }
 
                         $products = ProductBUS::getInstance()->searchModel($searchValue, ['name']);
-
+                        if (count($products) == 0 && !empty($searchValue)) {
+                            echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+                            echo "No product found!";
+                            echo "<button type='button' class='btn-close' data-bs-dismiss='alert' onclick='window.history.back(); aria-label='Close'></button>";
+                            echo "</div>";
+                        }
                         $groupedProducts = [];
 
                         // Group products by their ID

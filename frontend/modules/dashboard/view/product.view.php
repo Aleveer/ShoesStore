@@ -114,24 +114,25 @@ function showProductList($product)
                             $filterAll = filter();
                             if (isset($_POST['productSearchButtonName'])) {
                                 $searchQuery = $_POST['productSearch'];
-                                $searchResult = null;
+                                $searchResult = array();
                                 if (empty($searchQuery)) {
-                                    echo '
-                                    <script>
-                                    alert("Search cannot be empty!");
-                                    window.location.href = "?module=dashboard&view=product.view";
-                                    </script>';
+                                    echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+                                    echo "Please input the search bar to search!";
+                                    echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+                                    echo "</div>";
+                                    $searchResult = ProductBUS::getInstance()->getAllModels();
                                 } else {
-                                    $searchResultFromSearchBar = ProductBUS::getInstance()->searchModel($searchQuery, ['id', 'name', 'price', 'description']);
+                                    $searchResult = ProductBUS::getInstance()->searchModel($searchQuery, ['id', 'name', 'price', 'description']);
                                     // Check if searchModel returned any results
-                                    if (empty($searchResultFromSearchBar) || count($searchResultFromSearchBar) == 0) {
-                                        echo '<script>alert("No results found for your search.");</script>';
-                                        echo '<script>window.location.href = "?module=dashboard&view=product.view";</script>';
-                                    } else {
-                                        foreach ($searchResultFromSearchBar as $product) {
-                                            showProductList($product);
-                                        }
+                                    if (empty($searchResult) || count($searchResult) == 0) {
+                                        echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+                                        echo "No result found!";
+                                        echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+                                        echo "</div>";
                                     }
+                                }
+                                foreach ($searchResult as $product) {
+                                    showProductList($product);
                                 }
                             }
                         }

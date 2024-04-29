@@ -1,14 +1,16 @@
 $(document).ready(function () {
     $(document).on('submit', 'form[id^="form_"]', function (e) {
         e.preventDefault();
-
+        console.log('Button clicked');
         var formId = $(this).attr('id');
         var productId = formId.split('_')[1];
+        console.log(productId);
         var sizeId = formId.split('_')[2];
-        var modalId = '#editQuantityModal' + productId + '_' + sizeId;
-        var newQuantity = parseInt($(modalId).find('#inputNewQuantity').val(), 10);
-        var currentQuantity = parseInt($(modalId).find('#inputQuantity').val(), 10);
-
+        console.log(sizeId);
+        var newQuantity = parseInt($('#inputNewQuantity_' + productId + '_' + sizeId).val(), 10);
+        console.log(newQuantity);
+        var currentQuantity = parseInt($('#inputQuantity_' + productId + '_' + sizeId).val(), 10);
+        console.log(currentQuantity);
         //Check quantity:
         if (isNaN(newQuantity)) {
             alert('Please enter a valid quantity');

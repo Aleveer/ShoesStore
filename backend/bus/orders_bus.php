@@ -120,4 +120,37 @@ class OrdersBUS implements BUSInterface
     {
         return OrdersDAO::getInstance()->search($value, $columns);
     }
+
+    public function getOrdersByStatus($status)
+    {
+        $ordersByStatus = array();
+        foreach ($this->ordersList as $orders) {
+            if ($orders->getStatus() == $status) {
+                array_push($ordersByStatus, $orders);
+            }
+        }
+        return $ordersByStatus;
+    }
+
+    public function searchBetweenDate($before, $after)
+    {
+        return array_filter($this->ordersList, function ($orders) use ($before, $after) {
+            return $orders->getOrderDate() >= $before && $orders->getOrderDate() <= $after;
+        });
+    }
+
+    public function searchBeforeDate($before)
+    {
+        return array_filter($this->ordersList, function ($orders) use ($before) {
+            return $orders->getOrderDate() <= $before;
+        });
+    }
+
+    public function searchAfterDate($after)
+    {
+        return array_filter($this->ordersList, function ($orders) use ($after) {
+            return $orders->getOrderDate() >= $after;
+        });
+    }
+
 }

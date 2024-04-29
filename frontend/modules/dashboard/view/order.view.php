@@ -1,4 +1,7 @@
 <?php
+use backend\bus\PaymentMethodsBUS;
+use backend\bus\PaymentsBUS;
+
 $title = 'Orders';
 if (!defined('_CODE')) {
     die('Access denied');
@@ -13,13 +16,46 @@ include (__DIR__ . '/../inc/app/app.php');
 // Namespace
 use backend\bus\OrdersBUS;
 use backend\bus\OrderItemsBUS;
-use backend\bus\UserBUS;
+use backend\enums\OrderStatusEnums;
 
 $orderList = OrdersBUS::getInstance()->getAllModels();
 $orderListItem = OrderItemsBUS::getInstance();
-// $userListDetail = UserBUS::getInstance()->getAllModels();
-
+function showOrder($order)
+{
+    echo '<tr class="align-middle">';
+    echo '<td class="order" id="orderId" data-order-id="' . $order->getId() . '">';
+    echo $order->getId();
+    echo '</td>';
+    echo '<td>' . $order->getUserId() . '</td>';
+    echo '<td>' . $order->getCustomerName() . '</td>';
+    echo '<td>' . $order->getOrderDate() . '</td>';
+    echo '<td>' . $order->getCustomerAddress() . '</td>';
+    echo '<td>' . PaymentMethodsBUS::getInstance()->getModelById(PaymentsBUS::getInstance()->getModelByOrderId($order->getId())->getId())->getMethodName() . '</td>';
+    echo '<td>' . $order->getTotalAmount() . '</td>';
+    echo '<td class="text-center">';
+    echo '<select class="form-control" name="status" id="orderStatus" onchange="updateOrderStatus(' . $order->getId() . ', this.value)">';
+    echo '<option value="PENDING"' . (strtoupper($order->getStatus()) == OrderStatusEnums::PENDING ? ' selected' : '') . '>Pending</option>';
+    echo '<option value="SHIPPING"' . (strtoupper($order->getStatus()) == OrderStatusEnums::SHIPPING ? ' selected' : '') . '>Shipping</option>';
+    echo '<option value="COMPLETED"' . (strtoupper($order->getStatus()) == OrderStatusEnums::COMPLETED ? ' selected' : '') . '>Completed</option>';
+    echo '<option value="CANCELED"' . (strtoupper($order->getStatus()) == OrderStatusEnums::CANCELED ? ' selected' : '') . '>Canceled</option>';
+    echo '<option value="ACCEPTED"' . (strtoupper($order->getStatus()) == OrderStatusEnums::ACCEPTED ? ' selected' : '') . '>Accepted</option>';
+    echo '</select>';
+    echo '</td>';
+    echo '<td class="text-center">';
+    echo '<a href="http://localhost/frontend/index.php?module=dashboard&view=order.view.detail&customerOrderId=' . $order->getId() . '">';
+    echo '<button class="btn btn-sm btn-primary view-button" data-order-id="' . $order->getId() . '">';
+    echo '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">';
+    echo '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>';
+    echo '<circle cx="12" cy="12" r="3"></circle>';
+    echo '</svg>';
+    echo '</button>';
+    echo '</a>';
+    echo '</td>';
+    echo '</tr>';
+}
 ?>
+
+
 
 <body>
     <!-- HEADER -->
@@ -41,10 +77,250 @@ $orderListItem = OrderItemsBUS::getInstance();
                 </div>
 
                 <!-- SEARCH BAR -->
-                <?php include (__DIR__ . '/order.search.php'); ?>
+                <!-- TODO: Re-organize the search bar -->
+                <div class="container-lg d-flex justify-content-start m-0">
+                    <form action="" method="POST" class="m-0 col-lg-6">
+                        <div class="input-group">
+                            <input type="text" id="orderSearchBarId" name="orderSearchBarName"
+                                class="searchInput form-control" placeholder="Search anything here..."
+                                style="width: 100%;">
+                            <input type="date" id="startDate" name="startDate" class="form-control"
+                                style="width: 120px;" placeholder="Start Date">
+                            <input type="date" id="endDate" name="endDate" class="form-control" style="width: 120px;"
+                                placeholder="End Date">
+                            <button type="submit" class="btn btn-sm btn-primary align-middle padx-0 pady-0"
+                                id="searchBtnId" name="searchBtnName">
+                                <span data-feather="search"></span>
+                            </button>
+                        </div>
+                        <select class="form-control" name="statusSearchName" id="orderStatusSearchId">
+                            <option value="NONE">---</option>
+                            <option value="pending">Pending</option>
+                            <option value="shipping">Shipping</option>
+                            <option value="completed">Completed</option>
+                            <option value="canceled">Canceled</option>
+                            <option value="accepted">Accepted</option>
+                        </select>
+                        <!-- <div class="card card-body rounded-0 d-flex flex-row justify-content-between mt-2">
+                            <div class="form-check form-check-inline me-2">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                                    value="Order">
+                                <label class="form-check-label" for="inlineRadio1">By Order ID</label>
+                            </div>
+                            <div class="form-check form-check-inline me-2">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                                    value="User">
+                                <label class="form-check-label" for="inlineRadio3">By User ID</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4"
+                                    value="Something">
+                                <label class="form-check-label" for="inlineRadio4">By Something</label>
+                            </div>
+                        </div> -->
+                    </form>
+                </div>
 
                 <!-- BODY DATABASE -->
-                <?php include (__DIR__ . '/order.table.php'); ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <!-- HEADER TABLE -->
+                        <thead>
+                            <tr>
+                                <th scope="col" class="col-1">ID Order</th>
+                                <th scope="col" class="col-1">User ID</th>
+                                <th scope="col" class="col-2">Customer Name</th>
+                                <th scope="col" class="col-2">Order Date</th>
+                                <th scope="col" class="col-2">Address</th>
+                                <th scope="col" class="col-2">Payment method</th>
+                                <th scope="col" class="col-1">Final Price</th>
+                                <th scope="col" class="col-1 text-center">Status</th>
+                                <th scope="col" class="col-1 text-center">Info</th>
+                            </tr>
+                        </thead>
+                        <?php
+                        if (!isPost() || (isPost() && !isset($_POST['searchBtnName']))) {
+                            foreach ($orderList as $order) {
+                                showOrder($order);
+                            }
+                        }
+                        ?>
+
+                        <!--Handling search bar-->
+                        <?php
+                        if (isPost()) {
+                            $filterAll = filter();
+                            if (isset($_POST['searchBtnName'])) {
+                                $searchValue = $_POST['orderSearchBarName'];
+                                $startDate = $_POST['startDate'];
+                                $endDate = $_POST['endDate'];
+                                $statusSearch = $_POST['statusSearchName'];
+
+                                //Initiate the list:
+                                $searchOrderList = array();
+                                //If both search bar and date picker and status are empty, show all orders:
+                                if (empty($searchValue) && empty($startDate) && empty($endDate) && $statusSearch == 'NONE') {
+                                    echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+                                    echo "Please input at least one of the search bar or date picker or shipping status to search!";
+                                    echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+                                    echo "</div>";
+                                    $searchOrderList = $orderList;
+                                } else {
+                                    // Search by search term only if it's not empty and others are empty:
+                                    if (!empty($searchValue) && empty($startDate) && empty($endDate) && $statusSearch == 'NONE') {
+                                        $searchOrderList = OrdersBUS::getInstance()->searchModel($searchValue, ['id', 'customer_name', 'customer_phone', 'customer_address', 'total_amount']);
+                                    }
+
+                                    // Search by both start date and end date only if it's not empty
+                                    if (!empty($startDate) && !empty($endDate) && empty($searchValue)) {
+                                        $searchOrderList = OrdersBUS::getInstance()->searchBetweenDate($startDate, $endDate);
+                                    }
+
+                                    // Search by start date only:
+                                    if (!empty($startDate) && empty($endDate) && empty($searchValue)) {
+                                        $searchOrderList = OrdersBUS::getInstance()->searchAfterDate($startDate);
+                                    }
+
+                                    //Search by end date only:
+                                    if (empty($startDate) && !empty($endDate) && empty($searchValue)) {
+                                        $searchOrderList = OrdersBUS::getInstance()->searchBeforeDate($endDate);
+                                    }
+
+                                    //Search by status only if it's not empty
+                                    if ($statusSearch != 'NONE' && empty($searchValue) && empty($startDate) && empty($endDate)) {
+                                        $searchOrderList = OrdersBUS::getInstance()->getOrdersByStatus($statusSearch);
+                                    }
+
+                                    //Search by search term and date if both are not empty, date could be start date / end date:
+                                    if (!empty($searchValue) && (!empty($startDate) || !empty($endDate))) {
+                                        if (!empty($searchValue) && (!empty($startDate) || !empty($endDate))) {
+                                            $searchOrderList = OrdersBUS::getInstance()->searchModel($searchValue, ['id', 'customer_name', 'customer_phone', 'customer_address', 'total_amount']);
+                                            if (!empty($startDate) && !empty($endDate)) {
+                                                $searchOrderList = array_filter($searchOrderList, function ($order) use ($startDate, $endDate) {
+                                                    $orderDate = $order->getOrderDate();
+                                                    return $orderDate >= $startDate && $orderDate <= $endDate;
+                                                });
+                                            }
+                                            if (!empty($startDate) && empty($endDate)) {
+                                                $searchOrderList = array_filter($searchOrderList, function ($order) use ($startDate) {
+                                                    $orderDate = $order->getOrderDate();
+                                                    return $orderDate >= $startDate;
+                                                });
+                                            }
+                                            if (empty($startDate) && !empty($endDate)) {
+                                                $searchOrderList = array_filter($searchOrderList, function ($order) use ($endDate) {
+                                                    $orderDate = $order->getOrderDate();
+                                                    return $orderDate <= $endDate;
+                                                });
+                                            }
+                                        }
+                                    }
+
+                                    //Search by search term and status only if both are not empty:
+                                    if (!empty($searchValue) && $statusSearch != 'NONE' && empty($startDate) && empty($endDate)) {
+                                        $searchOrderList = OrdersBUS::getInstance()->searchModel($searchValue, ['id', 'customer_name', 'customer_phone', 'customer_address', 'total_amount']);
+                                        $searchOrderList = array_filter($searchOrderList, function ($order) use ($statusSearch) {
+                                            return $order->getStatus() == $statusSearch;
+                                        });
+                                    }
+
+                                    //Search by date and status only if both are not empty, date could be start date / end date:
+                                    if (empty($searchValue) && $statusSearch != 'NONE' && (!empty($startDate) || !empty($endDate))) {
+                                        $searchOrderList = OrdersBUS::getInstance()->getOrdersByStatus($statusSearch);
+                                        if (!empty($startDate) && !empty($endDate)) {
+                                            $searchOrderList = array_filter($searchOrderList, function ($order) use ($startDate, $endDate) {
+                                                $orderDate = $order->getOrderDate();
+                                                return $orderDate >= $startDate && $orderDate <= $endDate;
+                                            });
+                                        }
+                                        if (!empty($startDate) && empty($endDate)) {
+                                            $searchOrderList = array_filter($searchOrderList, function ($order) use ($startDate) {
+                                                $orderDate = $order->getOrderDate();
+                                                return $orderDate >= $startDate;
+                                            });
+                                        }
+                                        if (empty($startDate) && !empty($endDate)) {
+                                            $searchOrderList = array_filter($searchOrderList, function ($order) use ($endDate) {
+                                                $orderDate = $order->getOrderDate();
+                                                return $orderDate <= $endDate;
+                                            });
+                                        }
+                                    }
+
+                                    //Search both by search term, date and status if all are not empty, date could be start date / end date:
+                                    if (!empty($searchValue) && $statusSearch != 'NONE' && (!empty($startDate) || !empty($endDate))) {
+                                        $searchOrderList = OrdersBUS::getInstance()->searchModel($searchValue, ['id', 'customer_name', 'customer_phone', 'customer_address', 'total_amount']);
+                                        $searchOrderList = array_filter($searchOrderList, function ($order) use ($statusSearch) {
+                                            return $order->getStatus() == $statusSearch;
+                                        });
+                                        if (!empty($startDate) && !empty($endDate)) {
+                                            $searchOrderList = array_filter($searchOrderList, function ($order) use ($startDate, $endDate) {
+                                                $orderDate = $order->getOrderDate();
+                                                return $orderDate >= $startDate && $orderDate <= $endDate;
+                                            });
+                                        }
+                                        if (!empty($startDate) && empty($endDate)) {
+                                            $searchOrderList = array_filter($searchOrderList, function ($order) use ($startDate) {
+                                                $orderDate = $order->getOrderDate();
+                                                return $orderDate >= $startDate;
+                                            });
+                                        }
+                                        if (empty($startDate) && !empty($endDate)) {
+                                            $searchOrderList = array_filter($searchOrderList, function ($order) use ($endDate) {
+                                                $orderDate = $order->getOrderDate();
+                                                return $orderDate <= $endDate;
+                                            });
+                                        }
+                                    }
+                                }
+                                if (count($searchOrderList) == 0) {
+                                    echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+                                    echo "No result found!";
+                                    echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+                                    echo "</div>";
+                                }
+
+                                //Display the search result:
+                                foreach ($searchOrderList as $order) {
+                                    showOrder($order);
+                                }
+                            }
+                        }
+
+                        ?>
+
+                        <?php
+                        if (isPost()) {
+                            if (isset($_POST['orderId']) && isset($_POST['status'])) {
+                                $orderId = $_POST['orderId'];
+                                error_log($orderId);
+                                $status = $_POST['status'];
+                                error_log($status);
+                                $order = OrdersBUS::getInstance()->getModelById($orderId);
+                                $order->setStatus($status);
+                                OrdersBUS::getInstance()->updateModel($order);
+                                OrdersBUS::getInstance()->refreshData();
+                            }
+                        }
+                        ?>
+                    </table>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    <script>
+                        function updateOrderStatus(orderId, status) {
+                            $.ajax({
+                                type: 'POST',
+                                url: 'http://localhost/frontend/index.php?module=dashboard&view=order.view',
+                                data: {
+                                    orderId: orderId,
+                                    status: status
+                                },
+                                success: function (data) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    </script>
+                </div>
             </main>
 
             <?php include (__DIR__ . '/../inc/app/app.php'); ?>

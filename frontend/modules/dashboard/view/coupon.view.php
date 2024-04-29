@@ -152,31 +152,47 @@ function showCouponList($coupon)
                                 echo "</div>";
                                 $couponsList = CouponsBUS::getInstance()->getAllModels();
                             } else {
-                                // Search by search term if it's not empty
-                                if (!empty($search)) {
+                                // Search by search term only if it's not empty
+                                if (!empty($search) && empty($startDate) && empty($endDate)) {
                                     $couponsList = CouponsBUS::getInstance()->searchModel($search, ['code', 'quantity', 'percent', 'description']);
                                 }
 
-                                // Search by date range if both dates are not empty
-                                if (!empty($startDate) && !empty($endDate)) {
+                                // Search by date range only if both dates are not empty
+                                if (!empty($startDate) && !empty($endDate) && empty($search)) {
                                     $couponsList = CouponsBUS::getInstance()->searchBetweenDate($startDate, $endDate);
                                 }
 
                                 // Search by start date if only start date is not empty
-                                if (!empty($startDate) && empty($endDate)) {
+                                if (!empty($startDate) && empty($endDate) && empty($search)) {
                                     $couponsList = CouponsBUS::getInstance()->searchAfterDate($startDate);
                                 }
 
                                 // Search by end date if only end date is not empty
-                                if (empty($startDate) && !empty($endDate)) {
+                                if (empty($startDate) && !empty($endDate) && empty($search)) {
                                     $couponsList = CouponsBUS::getInstance()->searchBeforeDate($endDate);
                                 }
 
-                                // Filter by search term if both search term and date are not empty
+                                // Search by search term and date if both are not empty, date could be start date / end date, 1 ò the date can be empty:
                                 if (!empty($search) && (!empty($startDate) || !empty($endDate))) {
-                                    $couponsList = array_filter($couponsList, function ($coupon) use ($search) {
-                                        return $coupon->getCode() == $search;
-                                    });
+                                    $couponsList = CouponsBUS::getInstance()->searchModel($search, ['code', 'quantity', 'percent', 'description']);
+                                    if (!empty($startDate) && !empty($endDate)) {
+                                        $couponsList = array_filter($couponsList, function ($coupon) use ($startDate, $endDate) {
+                                            $expired = $coupon->getExpired();
+                                            return $expired >= $startDate && $expired <= $endDate;
+                                        });
+                                    }
+                                    if (!empty($startDate) && empty($endDate)) {
+                                        $couponsList = array_filter($couponsList, function ($coupon) use ($startDate) {
+                                            $expired = $coupon->getExpired();
+                                            return $expired >= $startDate;
+                                        });
+                                    }
+                                    if (empty($startDate) && !empty($endDate)) {
+                                        $couponsList = array_filter($couponsList, function ($coupon) use ($endDate) {
+                                            $expired = $coupon->getExpired();
+                                            return $expired <= $endDate;
+                                        });
+                                    }
                                 }
                             }
 

@@ -20,7 +20,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
 
 function showProductList($product)
 {
-    return "
+    echo "
         <tr>
             <td><img src='{$product->getImage()}' alt='{$product->getName()}' class='rounded float-start'></td>
             <td class='text-center'>{$product->getId()}</td>
@@ -104,28 +104,6 @@ function showProductList($product)
                         //By default, the product list shows all: 
                         if (!isPost() || (isPost() && !isset($_POST['productSearchButtonName']))) {
                             foreach ($productList as $product): ?>
-                                <!-- <tr>
-                                <td class='col-1'><img src='<?php echo $product->getImage(); ?>'
-                                        alt='<?php echo $product->getName(); ?>' class='rounded float-start'>
-                                </td>
-                                <td class='col-3'><?= $product->getName() ?></td>
-                                <td class='col-2'><?= $product->getCategoryId() ?></td>
-                                <td class='col-4'><?= $product->getDescription() ?></td>
-                                <td class='col-1'><?= $product->getPrice() ?></td>
-                                <td class='col-1'>
-                                    <div class='product-action'>
-                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#editModal">
-                                            <span data-feather="tool"></span>
-                                            Update
-                                        </button>
-                                        <button class="btn btn-sm btn-danger">
-                                            <span data-feather="trash-2"></span>
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr> -->
                                 <?= showProductList($product); ?>
                             <?php endforeach;
                         } ?>
@@ -136,36 +114,22 @@ function showProductList($product)
                             $filterAll = filter();
                             if (isset($_POST['productSearchButtonName'])) {
                                 $searchQuery = $_POST['productSearch'];
+                                $searchResult = null;
                                 if (empty($searchQuery)) {
                                     echo '
-                <script>
-                alert("Search cannot be empty!");
-                window.location.href = "?module=dashboard&view=product.view";
-                </script>';
+                                    <script>
+                                    alert("Search cannot be empty!");
+                                    window.location.href = "?module=dashboard&view=product.view";
+                                    </script>';
                                 } else {
                                     $searchResultFromSearchBar = ProductBUS::getInstance()->searchModel($searchQuery, ['id', 'name', 'price', 'description']);
-
                                     // Check if searchModel returned any results
-                                    if (empty($searchResultFromSearchBar)) {
+                                    if (empty($searchResultFromSearchBar) || count($searchResultFromSearchBar) == 0) {
                                         echo '<script>alert("No results found for your search.");</script>';
+                                        echo '<script>window.location.href = "?module=dashboard&view=product.view";</script>';
                                     } else {
-                                        //Filter $productList to only show products that matched the search results:
-                                        $searchFinal = array();
-                                        foreach ($productList as $product) {
-                                            foreach ($searchResultFromSearchBar as $searchResult) {
-                                                if ($product->getId() == $searchResult->getId()) {
-                                                    array_push($searchFinal, $product);
-                                                }
-                                            }
-                                        }
-
-                                        // Check if any products matched the search results
-                                        if (empty($searchFinal)) {
-                                            echo '<script>alert("No matching products found.");</script>';
-                                        } else {
-                                            foreach ($searchFinal as $product) {
-                                                showProductList($product);
-                                            }
+                                        foreach ($searchResultFromSearchBar as $product) {
+                                            showProductList($product);
                                         }
                                     }
                                 }
@@ -174,7 +138,6 @@ function showProductList($product)
                         ?>
                     </tbody>
                 </table>
-
 
                 <!-- Add modal -->
                 <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

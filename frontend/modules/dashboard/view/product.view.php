@@ -74,7 +74,6 @@ function showProductList($product)
                     </div>
                 </div>
 
-                <!-- TODO: The search bar doesn't work anymore... weird-->
                 <form action="" method="POST">
                     <div class="search-group input-group py-2">
                         <input type="text" name="productSearch" id="productSearchBar" class="searchInput form-control">
@@ -177,7 +176,7 @@ function showProductList($product)
                                         </select>
                                     </div>
                                     <div class="col-7">
-                                        <label for="inputPhone" class="form-label">Description</label>
+                                        <label for="inputDescription" class="form-label">Description</label>
                                         <textarea class="form-control" id="w3review" name="description" row="1"
                                             cols="40"></textarea>
                                     </div>

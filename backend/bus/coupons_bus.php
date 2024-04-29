@@ -48,7 +48,7 @@ class CouponsBUS implements BUSInterface
         return null;
     }
 
-    public function addModel($couponsModel): int
+    public function addModel($couponsModel)
     {
         $this->validateModel($couponsModel);
         $result = CouponsDAO::getInstance()->insert($couponsModel);
@@ -71,11 +71,21 @@ class CouponsBUS implements BUSInterface
         return $result;
     }
 
-    public function deleteModel($couponsModel): int
+    public function checkForDuplicateCode($code)
     {
-        $result = CouponsDAO::getInstance()->delete($couponsModel);
+        for ($i = 0; $i < count($this->couponsList); $i++) {
+            if ($this->couponsList[$i]->getCode() == $code) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function deleteModel($id)
+    {
+        $result = CouponsDAO::getInstance()->delete($id);
         if ($result) {
-            $index = array_search($couponsModel, $this->couponsList);
+            $index = array_search($id, array_column($this->couponsList, 'id'));
             unset($this->couponsList[$index]);
             $this->refreshData();
         }
@@ -94,7 +104,10 @@ class CouponsBUS implements BUSInterface
             $couponsModel->getQuantity() == null ||
             $couponsModel->getPercent() == null ||
             $couponsModel->getExpired() == null ||
-            $couponsModel->getDescription() == null
+            $couponsModel->getDescription() == null ||
+            $couponsModel->getQuantity() < 0 ||
+            $couponsModel->getPercent() < 0 ||
+            $couponsModel->getPercent() > 100
         ) {
             throw new InvalidArgumentException("Invalid coupons model");
         }
@@ -103,6 +116,27 @@ class CouponsBUS implements BUSInterface
     public function searchModel(string $value, array $columns)
     {
         return CouponsDAO::getInstance()->search($value, $columns);
+    }
+
+    public function searchBetweenDate($before, $after)
+    {
+        return array_filter($this->couponsList, function ($coupon) use ($before, $after) {
+            return $coupon->getExpired() >= $before && $coupon->getExpired() <= $after;
+        });
+    }
+
+    public function searchBeforeDate($before)
+    {
+        return array_filter($this->couponsList, function ($coupon) use ($before) {
+            return $coupon->getExpired() <= $before;
+        });
+    }
+
+    public function searchAfterDate($after)
+    {
+        return array_filter($this->couponsList, function ($coupon) use ($after) {
+            return $coupon->getExpired() >= $after;
+        });
     }
 
     public function applyDiscount($couponsModel, $orderTotal): float

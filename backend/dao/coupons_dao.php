@@ -65,7 +65,7 @@ class CouponsDAO implements DAOInterface
 
     public function insert($couponsModel): int
     {
-        $query = "INSERT INTO coupons (code, quantity, percent, expired, description) VALUES (?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO coupons (code, quantity, percent, expired, description) VALUES (?, ?, ?, ?, ?)";
         $args = [$couponsModel->getCode(), $couponsModel->getQuantity(), $couponsModel->getPercent(), $couponsModel->getExpired(), $couponsModel->getDescription()];
         return DatabaseConnection::executeUpdate($query, ...$args);
     }

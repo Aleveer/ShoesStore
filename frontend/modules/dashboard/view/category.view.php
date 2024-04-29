@@ -68,7 +68,8 @@ use backend\bus\CategoriesBUS;
                                         Update
                                     </button>
                                     <?php if (count(ProductBUS::getInstance()->searchModel($categories->getId(), ['category_id'])) > 0) { ?>
-                                        <button class="btn btn-sm btn-secondary" disabled style="display: none;">
+                                        <button class="btn btn-sm btn-secondary" id='deleteCategoryBtnId'
+                                            name='deleteCategoryBtnName' disabled style="display: none;">
                                             <span data-feather="trash-2"></span>
                                             Delete
                                         </button>

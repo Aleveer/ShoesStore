@@ -30,7 +30,9 @@ function showOrder($order)
     echo '<td>' . $order->getCustomerName() . '</td>';
     echo '<td>' . $order->getOrderDate() . '</td>';
     echo '<td>' . $order->getCustomerAddress() . '</td>';
-    echo '<td>' . PaymentMethodsBUS::getInstance()->getModelById(PaymentsBUS::getInstance()->getModelByOrderId($order->getId())->getId())->getMethodName() . '</td>';
+    $paymentData = PaymentsBUS::getInstance()->getModelByOrderId($order->getId());
+    $paymentMethod = PaymentMethodsBUS::getInstance()->getModelById($paymentData->getMethodId());
+    echo '<td>' . $paymentMethod->getMethodName() . '</td>';
     echo '<td>' . $order->getTotalAmount() . '</td>';
     echo '<td class="text-center">';
     echo '<select class="form-control" name="status" id="orderStatus" onchange="updateOrderStatus(' . $order->getId() . ', this.value)">';

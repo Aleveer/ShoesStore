@@ -104,7 +104,7 @@ if (isLogin()) {
                     $check = 0;
                     foreach ($sizeItemsProduct as $s) {
                         if ($s->getQuantity() > 0) {
-                            echo '<div class="button-container"><button id="sizeItemProduct" class="squish-in" name="sizeItem" data-quantity="' . $s->getQuantity() . '">' . $s->getSizeId() . '</button></div>';
+                            echo '<div class="button-container"><button id="sizeItemProduct" class="squish-in" name="sizeItem" data-quantity="' . $s->getQuantity() . '">' . /*$s->getSizeId()*/ preg_replace('/[^0-9]/', '', SizeBUS::getInstance()->getModelById($s->getSizeId())->getName()) . '</button></div>';
                             $check = 1;
                         }
                     }

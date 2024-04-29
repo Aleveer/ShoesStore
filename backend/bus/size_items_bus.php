@@ -43,7 +43,7 @@ class SizeItemsBUS implements BUSInterface
         return $result;
     }
 
-    public function updateModel($sizeItemsModel): int
+    public function updateModel($sizeItemsModel)
     {
         $this->validateModel($sizeItemsModel);
         $result = SizeItemsDAO::getInstance()->update($sizeItemsModel);

@@ -91,7 +91,7 @@ function showProductList($product)
                             <th></th>
                             <th class='text-center'>ID</th>
                             <th class='col-3'>Product Name</th>
-                            <th class='col-1'>Categories</th>
+                            <th class='col-1'>Category</th>
                             <th class='col-5'>Description</th>
                             <th class='col-1 text-center'>Price</th>
                             <th class='col-2 text-center'>Action</th>

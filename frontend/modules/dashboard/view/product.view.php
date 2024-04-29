@@ -76,7 +76,8 @@ function showProductList($product)
 
                 <form action="" method="POST">
                     <div class="search-group input-group py-2">
-                        <input type="text" name="productSearch" id="productSearchBar" class="searchInput form-control">
+                        <input type="text" name="productSearch" id="productSearchBar" class="searchInput form-control"
+                            placeholder="Search anything here...">
                         <button type="submit" id="productSearchButton" name="productSearchButtonName"
                             class="btn btn-sm btn-primary align-middle px-3">
                             <span data-feather="search"></span>

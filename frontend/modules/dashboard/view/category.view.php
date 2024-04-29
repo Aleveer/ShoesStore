@@ -67,11 +67,18 @@ use backend\bus\CategoriesBUS;
                                         <span data-feather="tool"></span>
                                         Update
                                     </button>
-                                    <button class="btn btn-sm btn-danger" id='deleteCategoryBtnId'
-                                        name='deleteCategoryBtnName'>
-                                        <span data-feather="trash-2"></span>
-                                        Delete
-                                    </button>
+                                    <?php if (count(ProductBUS::getInstance()->searchModel($categories->getId(), ['category_id'])) > 0) { ?>
+                                        <button class="btn btn-sm btn-secondary" disabled style="display: none;">
+                                            <span data-feather="trash-2"></span>
+                                            Delete
+                                        </button>
+                                    <?php } else { ?>
+                                        <button class="btn btn-sm btn-danger" id='deleteCategoryBtnId'
+                                            name='deleteCategoryBtnName'>
+                                            <span data-feather="trash-2"></span>
+                                            Delete
+                                        </button>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <!-- Edit modal -->
@@ -171,14 +178,9 @@ use backend\bus\CategoriesBUS;
             //TODO: Fix notification:
             if (isPost()) {
                 if (isset($_POST['deleteCategoryBtn'])) {
-                    error_log('Delete button clicked');
                     $categoryId = $_POST['categoryId'];
-                    $categoryModel = CategoriesBUS::getInstance()->getModelById($categoryId);
-                    if (CategoriesBUS::getInstance()->deleteModel($categoryModel->getId())) {
+                    if (CategoriesBUS::getInstance()->deleteModel($categoryId)) {
                         CategoriesBUS::getInstance()->refreshData();
-                        //Once created, refresh the page:
-                        echo '<script>alert("Deleted successfully");</script>';
-                        echo '<script>window.location.href = "?module=dashboard&view=product.view";</script>';
                     } else {
                         echo '<script>alert("Delete failed");</script>';
                     }

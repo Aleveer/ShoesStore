@@ -16,16 +16,16 @@ $(document).ready(function () {
                 return;
             }
             $.ajax({
-                url: window.location.href,
+                url: 'http://localhost/frontend/index.php?module=dashboard&view=category.view',
                 method: "POST",
                 dataType: "html",
                 data: {
                     categoryName: categoryName.value,
                     saveBtn: true
                 },
-                success: function (data) {
+                success: function () {
                     alert("Category added successfully");
-                    categoryName.value = "";
+                    window.location.reload();
                 },
                 error: function (data) {
                     alert("Error adding category");

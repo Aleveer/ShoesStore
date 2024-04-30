@@ -100,7 +100,7 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
 
-            <!-- Row 3 -->
+            <hr class="m-1">
 
             <div class="col">
                 <label for="inputPrice" class="form-label">Price</label>
@@ -109,8 +109,8 @@ if (isset($_GET['id'])) {
             </div>
             <div class="col">
                 <label for="inputPhone" class="form-label">Description</label>
-                <textarea class="form-control" id="w3Editreview" name="w3review" row="5"
-                    cols="40"><?php echo ProductBUS::getInstance()->getModelById($id)->getDescription(); ?></textarea>
+                <textarea class="form-control" id="w3Editreview" name="w3review" rows="6"
+                    cols="50"><?php echo ProductBUS::getInstance()->getModelById($id)->getDescription(); ?></textarea>
             </div>
         </div>
 

@@ -1,9 +1,6 @@
 <?php
 use backend\bus\UserBUS;
 use backend\bus\OrdersBUS;
-use backend\bus\OrderItemsBUS;
-use backend\bus\ProductsBUS;
-use backend\bus\CategoriesBUS;
 use backend\bus\TokenLoginBUS;
 use backend\services\PasswordUtilities;
 use backend\services\session;
@@ -14,6 +11,14 @@ requireLogin();
 $token = session::getInstance()->getSession('tokenLogin');
 $tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
 $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
+
+//Only customer can access this page:
+if ($userModel->getRoleId() != 4) {
+    //Echo a message then redirect to the user's homepage
+    echo '<script>alert("You are not authorized to access this page!")</script>';
+    redirect('?module=indexphp&action=userhomepage');
+}
+
 $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->getId());
 //$orderItemsListBasedOnOrderFromUser = OrderItemsBUS::getInstance()->getAllModels();
 ?>

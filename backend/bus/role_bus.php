@@ -33,7 +33,7 @@ class RoleBUS implements BUSInterface
     {
         return RoleDAO::getInstance()->getById($id);
     }
-    public function addModel($roleModel): int
+    public function addModel($roleModel)
     {
         $this->validateModel($roleModel);
         $result = RoleDAO::getInstance()->insert($roleModel);

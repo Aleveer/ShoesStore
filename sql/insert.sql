@@ -941,12 +941,12 @@ VALUES
 INSERT INTO
     `permissions`(id, name)
 VALUES
-    (1, 'Quản Lý Sản Phẩm '),
-    (2, 'Quản Lý Kho Hàng'),
-    (3, 'Quản Lý Hóa Đơn'),
-    (4, 'Quản Lý Tài Khoản'),
-    (5, 'Thống Kê Doanh Số'),
-    (6, 'Quản Lý Phân Quyền');
+    (1, 'Product Management'),
+    (2, 'Inventory Management'),
+    (3, 'Invoice Management'),
+    (4, 'Account Management'),
+    (5, 'Sales Statistics'),
+    (6, 'Permission Management');
 
 INSERT INTO
     `roles_permissions`(`role_id`, `permission_id`)

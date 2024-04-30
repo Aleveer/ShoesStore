@@ -36,7 +36,7 @@ class RolePermissionDAO implements DAOInterface
         $id = $rs['id'];
         $roleId = $rs['role_id'];
         $permissionId = $rs['permission_id'];
-        return new RolePermissionsModel($id, $roleId, $permissionId);
+        return new RolePermissionsModel($id, $permissionId, $roleId);
     }
 
     public function getAll(): array

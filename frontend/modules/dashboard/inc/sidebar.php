@@ -1,10 +1,29 @@
 <?php
+use backend\bus\RoleBUS;
+use backend\bus\RolePermissionBUS;
+use backend\bus\TokenLoginBUS;
+use backend\bus\UserBUS;
+use backend\services\session;
+
 function isActivePage($currentPage, $pageName)
 {
     if ($currentPage === $pageName) {
         return 'active';
     }
     return '';
+}
+
+$token = session::getInstance()->getSession('tokenLogin');
+$tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
+$userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
+
+//Get roles-permissions:
+//roles = RoleBUS::getInstance()->getModelById($userModel->getRoleId());
+error_log("User Role" . $userModel->getRoleId());
+$rolesPermission = RolePermissionBUS::getInstance()->getModelByRoleId($userModel->getRoleId());
+
+foreach ($rolesPermission as $rolePermission) {
+    error_log($rolePermission->getPermissionId());
 }
 ?>
 

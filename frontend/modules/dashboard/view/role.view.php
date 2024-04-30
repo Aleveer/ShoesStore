@@ -66,7 +66,7 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                                     $permissions = RolePermissionBUS::getInstance()->searchModel($role->getId(), ['role_id']);
                                     if ($permissions != null) {
                                         foreach ($permissions as $permission) {
-                                            echo PermissionBUS::getInstance()->getModelById($permission->getRoleId())->getName() . "<br>";
+                                            echo PermissionBUS::getInstance()->getModelById($permission->getPermissionId())->getName() . "<br>";
                                         }
                                     } else {
                                         echo "No permission";

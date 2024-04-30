@@ -50,55 +50,8 @@ $userList = UserBUS::getInstance()->getAllModels();
                 </div>
 
                 <!-- BODY DATABASE -->
-                <table class="table align-middle table-borderless table-hover text-start">
-                    <thead>
-                        <tr class="align-middle">
-                            <th></th>
-                            <th>Username</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Manage</th>
-                        </tr>
-                    </thead>
-                    <?php foreach ($userList as $user): ?>
-                        <tbody>
-                            <tr>
-                                <td class='col-1'><img src="<?php echo $user->getImage(); ?>"
-                                        style="width: 50px; height: 50px;" alt="ATR">
-                                </td>
-                                </td>
-                                <td class='col-1'><?= $user->getUsername() ?></td>
-                                <td class='col-2'><?= $user->getName() ?></td>
-                                <td class='col-2'><?= $user->getEmail() ?></td>
-                                <td class='col-1'><?= $user->getPhone() ?></td>
-                                <td class="col-2"><?= $user->getAddress() ?></td>
-                                <td class='col-1'>
-                                    <?= RoleBUS::getInstance()->getModelById($user->getRoleId())->getName(); ?>
-                                </td>
-                                <td class='col-1'><?= $user->getStatus() ?></td>
-                                <td>
-                                    <a href='http://localhost/frontend/index.php?module=dashboard&view=account.update&id=<?= $user->getId() ?>'
-                                        class='btn btn-sm btn-primary'>
-                                        <span data-feather='tool'></span>
-                                    </a>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" id="lockAccountBtn">
-                                        <span data-feather="lock"></span>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" id='unlockAccountBtn' name='unlockAccountBtn'>
-                                        <span data-feather="unlock"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-            </div>
-        </div>
-    <?php endforeach; ?>
-    </table>
-    </main>
+                <?php include ('account.table.php') ?>
+            </main>
 
     <!-- Add modal -->
     <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -170,7 +123,7 @@ $userList = UserBUS::getInstance()->getAllModels();
         </div>
     </div>
 
-    <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+        <?php include (__DIR__ . '/../inc/app/app.php'); ?>
 
 </body>
 

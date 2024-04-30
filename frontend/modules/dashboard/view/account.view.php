@@ -88,8 +88,8 @@ $userList = UserBUS::getInstance()->getAllModels();
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal" id="lockAccountBtn">
                                         <span data-feather="lock"></span>
                                     </button>
-                                    <button class="btn btn-sm btn-danger" id='deleteSizeItemBtn' name='deleteSizeItemBtn'>
-                                        <span data-feather="trash-2"></span>
+                                    <button class="btn btn-sm btn-danger" id='unlockAccountBtn' name='unlockAccountBtn'>
+                                        <span data-feather="unlock"></span>
                                     </button>
                                 </td>
                             </tr>

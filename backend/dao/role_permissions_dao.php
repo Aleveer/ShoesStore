@@ -63,6 +63,31 @@ class RolePermissionDAO implements DAOInterface
         return null;
     }
 
+    public function getByRoleId($roleId)
+    {
+        $query = "SELECT * FROM roles_permissions WHERE role_id = ?";
+        $result = DatabaseConnection::executeQuery($query, $roleId);
+        $rolePermissionList = [];
+        while ($row = $result->fetch_assoc()) {
+            $rolePermissionModel = $this->createRolePermissionModel($row);
+            array_push($rolePermissionList, $rolePermissionModel);
+        }
+        return $rolePermissionList;
+    }
+
+    public function getByRoleIdAndPermissionId($roleId, $permissionId)
+    {
+        $query = "SELECT * FROM roles_permissions WHERE role_id = ? AND permission_id = ?";
+        $result = DatabaseConnection::executeQuery($query, $roleId, $permissionId);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                return $this->createRolePermissionModel($row);
+            }
+        }
+        return null;
+    }
+
     public function insert($rolePermission): int
     {
         $insertSql = "INSERT INTO roles_permissions (role_id, permission_id) VALUES (?, ?)";
@@ -88,6 +113,12 @@ class RolePermissionDAO implements DAOInterface
     {
         $deleteSql = "DELETE FROM roles_permissions WHERE id = ?";
         return DatabaseConnection::executeUpdate($deleteSql, $id);
+    }
+
+    public function deleteByRoleId($roleId): int
+    {
+        $deleteSql = "DELETE FROM roles_permissions WHERE role_id = ?";
+        return DatabaseConnection::executeUpdate($deleteSql, $roleId);
     }
 
     public function search(string $condition, $columnNames): array

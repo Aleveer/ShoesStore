@@ -1,5 +1,6 @@
 <?php
 use backend\bus\RolePermissionBUS;
+use backend\models\RolePermissionsModel;
 
 $title = 'Roles Setup';
 if (!defined('_CODE')) {
@@ -73,7 +74,7 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                                     ?>
                                 </td>
                                 <td class='col-1'>
-                                    <?php if ($role->getName() !== 'customer') { ?>
+                                    <?php if ($role->getName() !== 'customer' && $role->getName() !== 'admin') { ?>
                                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editRoleModal_<?= $role->getId() ?>">
                                             <span data-feather="tool"></span>
@@ -98,11 +99,12 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                                                 <input type="text" id="inputName_<?= $role->getId() ?>" name="inputName"
                                                     class="form-control" value="<?php echo $role->getName() ?>" readonly>
                                                 <label for="inputPermission" class="form-label">Permissions</label>
-                                                <div id="inputPermission" class="form-control">
+                                                <div class="form-control">
                                                     <?php foreach ($permissionList as $permission): ?>
-                                                        <input class="form-check-input mx-1 col-1" type="checkbox" value=""
+                                                        <input class="form-check-input mx-1 col-1" type="checkbox"
+                                                            value="<?= $permission->getId() ?>"
                                                             id="<?= $permission->getId() ?>">
-                                                        <label class="form-check-label col-5" for="flexCheckDefault">
+                                                        <label class="form-check-label col-5" for="<?= $permission->getId() ?>">
                                                             <?= $permission->getName() ?>
                                                         </label>
                                                     <?php endforeach; ?>
@@ -111,8 +113,8 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-bs-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary"
-                                                    data-bs-dismiss="modal">Save</button>
+                                                <button type="submit" class="btn btn-primary" id="updateBtnId"
+                                                    name="updateBtnName">Update</button>
                                             </div>
                                         </form>
                                     </div>
@@ -141,9 +143,9 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                                 <label for="inputPermission" class="form-label">Permissions</label>
                                 <div id="inputPermission" class="form-control">
                                     <?php foreach ($permissionList as $permission): ?>
-                                        <input class="form-check-input mx-1 col-1" type="checkbox" value=""
-                                            id="<?= $permission->getId() ?>">
-                                        <label class="form-check-label col-5" for="flexCheckDefault">
+                                        <input class="form-check-input mx-1 col-1" type="checkbox"
+                                            value="<?= $permission->getId() ?>" id="<?= $permission->getId() ?>">
+                                        <label class="form-check-label col-5" for="<?= $permission->getId() ?>">
                                             <?= $permission->getName() ?>
                                         </label>
                                     <?php endforeach; ?>
@@ -158,8 +160,37 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                 </div>
             </div>
 
+            <?php
+            //Handle update role permission:
+            if (isset($_POST['updateBtnName'])) {
+                error_log("Update role permission");
+
+                $roleId = $_POST['id'];
+                $roleName = $_POST['name'];
+                $permissions = isset($_POST['permissions']) ? array_unique($_POST['permissions']) : null;
+
+                // Delete all existing permissions for the role
+                RolePermissionBUS::getInstance()->deleteModelByRoleId($roleId);
+
+                if (!is_null($permissions)) {
+                    foreach ($permissions as $permission) {
+                        // Add each permission
+                        $rolePermission = new RolePermissionsModel(null, null, null);
+                        $rolePermission->setRoleId($roleId);
+                        $rolePermission->setPermissionId($permission);
+                        RolePermissionBUS::getInstance()->addModel($rolePermission);
+                    }
+                }
+
+                RolePermissionBUS::getInstance()->refreshData();
+            }
+            ?>
             <?php include (__DIR__ . '/../inc/app/app.php'); ?>
             <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <!-- <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_coupon.js"></script> -->
+            <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/update_roles_permissions.js"></script>
+            <!-- <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_coupon.js"></script> -->
 </body>
 
 </html>

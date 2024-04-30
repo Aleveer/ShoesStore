@@ -7,7 +7,7 @@ if (!defined('_CODE')) {
 if (!isAllowToDashBoard()) {
     die('Access denied');
 }
-include(__DIR__ .'/../inc/head.php');
+include (__DIR__ . '/../inc/head.php');
 
 use backend\bus\PermissionBUS;
 
@@ -17,13 +17,13 @@ $permissionList = PermissionBUS::getInstance()->getAllModels();
 
 <body>
     <!-- HEADER -->
-    <?php include(__DIR__ .'/../inc/header.php'); ?>
+    <?php include (__DIR__ . '/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include(__DIR__ .'/../inc/sidebar.php'); ?>
+            <?php include (__DIR__ . '/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-9 ms-sm-auto col-lg-10 px-4">
@@ -32,26 +32,22 @@ $permissionList = PermissionBUS::getInstance()->getAllModels();
                     <h1 class="h2">
                         <?= $title ?>
                     </h1>
-                    <div class="search-group input-group">
-                        <input type="text" id="productSearch" class="searchInput form-control">
-                        <button type="button" class="btn btn-sm btn-primary align-middle padx-0 pady-0">
-                            <span data-feather="search"></span>
-                        </button>
-                    </div>
+
                     <div class="btn-toolbar mb-2 mb-0">
-                        <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal" 
-                                data-bs-target="#addPermissionModal" id="addPermission" class="addBtn">
+                        <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
+                            data-bs-target="#addPermissionModal" id="addPermission" class="addBtn">
                             <span data-feather="plus"></span>
                             Add
                         </button>
                     </div>
                 </div>
 
-                <?php include("permission.table.php") ?>
+                <?php include ("permission.table.php") ?>
             </main>
 
             <!-- Add Permissions Modal -->
-            <div class="modal fade" id="addPermissionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="addPermissionModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -71,8 +67,9 @@ $permissionList = PermissionBUS::getInstance()->getAllModels();
             </div>
 
 
-             <!-- Edit permission modal -->
-             <div class="modal fade" id="editPermissionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- Edit permission modal -->
+            <div class="modal fade" id="editPermissionModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -91,7 +88,8 @@ $permissionList = PermissionBUS::getInstance()->getAllModels();
                 </div>
             </div>
         </div>
-    <?php include(__DIR__ . '/../inc/app/app.php'); ?>
-    <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
+        <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+        <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
 </body>
+
 </html>

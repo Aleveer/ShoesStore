@@ -180,39 +180,40 @@ function showProductList($product)
 
                                         // Get the products for the current page
                                         $productsForCurrentPage = $productChunks[$page - 1];
+                                        // Calculate the total number of pages
+                                        $totalPages = count($productChunks);
+
+                                        echo "<nav aria-label='Page navigation example'>";
+                                        echo "<ul class='pagination justify-content-center'>";
+
+                                        // Add previous button
+                                        if ($page > 1) {
+                                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page - 1) . "'>Previous</a></li>";
+                                        }
+
+                                        for ($i = 1; $i <= $totalPages; $i++) {
+                                            // Highlight the current page
+                                            if ($i == $page) {
+                                                echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
+                                            } else {
+                                                echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
+                                            }
+                                        }
+
+                                        // Add next button
+                                        if ($page < $totalPages) {
+                                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page + 1) . "'>Next</a></li>";
+                                        }
+
+                                        echo "</ul>";
+                                        echo "</nav>";
 
                                         foreach ($productsForCurrentPage as $product): ?>
                                             <?= showProductList($product); ?>
                                         <?php endforeach;
                                     }
 
-                                    // Calculate the total number of pages
-                                    $totalPages = count($productChunks);
 
-                                    echo "<nav aria-label='Page navigation example'>";
-                                    echo "<ul class='pagination justify-content-center'>";
-
-                                    // Add previous button
-                                    if ($page > 1) {
-                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page - 1) . "'>Previous</a></li>";
-                                    }
-
-                                    for ($i = 1; $i <= $totalPages; $i++) {
-                                        // Highlight the current page
-                                        if ($i == $page) {
-                                            echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
-                                        } else {
-                                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
-                                        }
-                                    }
-
-                                    // Add next button
-                                    if ($page < $totalPages) {
-                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page + 1) . "'>Next</a></li>";
-                                    }
-
-                                    echo "</ul>";
-                                    echo "</nav>";
                                 }
                             }
                         }

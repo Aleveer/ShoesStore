@@ -136,9 +136,6 @@ class OrdersDAO implements DAOInterface
             $ordersModel = $this->createOrdersModel($row);
             array_push($ordersList, $ordersModel);
         }
-        if (count($ordersList) === 0) {
-            throw new Exception("No records found for the given condition: " . $condition);
-        }
         return $ordersList;
     }
 }

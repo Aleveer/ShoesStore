@@ -2,7 +2,9 @@
 use backend\bus\RoleBUS;
 use backend\bus\UserBUS;
 use backend\enums\StatusEnums;
+use backend\models\UserModel;
 use backend\services\PasswordUtilities;
+use backend\services\validation;
 
 $title = 'Accounts';
 
@@ -137,8 +139,8 @@ $userList = UserBUS::getInstance()->getAllModels();
                         <div class="col-md-2">
                             <label for="inputGender" class="form-label">Gender</label>
                             <select id="inputGender" class="form-select">
-                                <option value="1" selected>Male</option>
-                                <option value="0">Female</option>
+                                <option value="0" selected>Male</option>
+                                <option value="1">Female</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -188,12 +190,81 @@ $userList = UserBUS::getInstance()->getAllModels();
             UserBUS::getInstance()->updateModel($user);
             UserBUS::getInstance()->refreshData();
         }
+
+        if (isset($_POST['saveBtn'])) {
+            $username = $_POST['username'];
+            //Check validation:
+            // if (validation::isValidUsername($username) == false) {
+            //     echo "<script>alert('Username is invalid!')</script>";
+            //     error_log("Username is invalid!");
+            //     return;
+            // }
+            $newPassword = $_POST['password'];
+            //Check validation:
+            // if (validation::isValidPassword($newPassword) == false) {
+            //     echo "<script>alert('Password is invalid!')</script>";
+            //     error_log("Password is invalid!");
+            //     return;
+            // }
+    
+            $password = PasswordUtilities::hashPassword($newPassword);
+            $email = $_POST['email'];
+            if (UserBUS::getInstance()->isEmailTaken($email)) {
+                echo "<script>alert('Email is already taken!')</script>";
+                error_log("Email is already taken!");
+                return;
+            }
+
+            //check validation:
+            if (validation::isValidEmail($email) == false) {
+                echo "<script>alert('Email is invalid!')</script>";
+                error_log("Email is invalid!");
+                return;
+            }
+
+            $name = $_POST['name'];
+            //check validation:
+            // if (validation::isValidName($name) == false) {
+            //     echo "<script>alert('Name is invalid!')</script>";
+            //     error_log("Name is invalid!");
+            //     return;
+            // }
+    
+            $phone = $_POST['phone'];
+            if (UserBUS::getInstance()->isPhoneTaken($phone)) {
+                echo "<script>alert('Phone number is already taken!')</script>";
+                error_log("Phone number is already taken!");
+                return;
+            }
+
+            if (validation::isValidPhoneNumber($phone) == false) {
+                echo "<script>alert('Phone number is invalid!')</script>";
+                error_log("Phone number is invalid!");
+                return;
+            }
+
+            $gender = $_POST['gender'];
+            $role = $_POST['role'];
+            $address = $_POST['address'];
+            //check validation:
+            if (validation::isValidAddress($address) == false) {
+                echo "<script>alert('Address is invalid!')</script>";
+                error_log("Address is invalid!");
+                return;
+            }
+            $image = $_POST['image'];
+
+            $newUser = new UserModel(null, $username, $password, $email, $name, $phone, $gender, $image, $role, StatusEnums::INACTIVE, $address, null, null, null, null);
+            UserBUS::getInstance()->addModel($newUser);
+            UserBUS::getInstance()->refreshData();
+        }
     }
     ?>
     <?php include (__DIR__ . '/../inc/app/app.php'); ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
     <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/account_status.js"></script>
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_account.js"></script>
 </body>
 
 </html>

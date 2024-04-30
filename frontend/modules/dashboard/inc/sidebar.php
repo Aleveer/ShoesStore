@@ -78,7 +78,7 @@ function isActivePage($currentPage, $pageName)
                 <a class="nav-link <?php echo isActivePage($_GET['view'], 'role.view'); ?>"
                     href="?module=dashboard&view=role.view">
                     <span data-feather="tool"></span>
-                    Roles
+                    Roles Setup
                 </a>
             </li>
             <!-- <li class="nav-item">

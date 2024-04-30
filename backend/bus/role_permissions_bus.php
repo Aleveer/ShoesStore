@@ -34,7 +34,7 @@ class RolePermissionBUS implements BUSInterface
         $this->rolePermissionList = RolePermissionDAO::getInstance()->getAll();
     }
 
-    public function getModelById(int $id)
+    public function getModelById($id)
     {
         return RolePermissionDAO::getInstance()->getById($id);
     }

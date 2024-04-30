@@ -171,10 +171,7 @@ $userList = UserBUS::getInstance()->getAllModels();
     </div>
 
     <?php include (__DIR__ . '/../inc/app/app.php'); ?>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_user.js"></script>
-    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/update_user.js"></script>
-    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_user.js"></script>
+
 </body>
 
 </html>

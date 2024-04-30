@@ -32,7 +32,7 @@ class SizeItemsBUS implements BUSInterface
     {
         return SizeItemsDAO::getInstance()->getById($id);
     }
-    public function addModel($sizeItemsModel): int
+    public function addModel($sizeItemsModel)
     {
         $this->validateModel($sizeItemsModel);
         $result = SizeItemsDAO::getInstance()->insert($sizeItemsModel);

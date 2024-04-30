@@ -103,10 +103,53 @@ function showProductList($product)
                         <?php
                         //By default, the product list shows all: 
                         if (!isPost() || (isPost() && !isset($_POST['productSearchButtonName']))) {
-                            foreach ($productList as $product): ?>
-                                <?= showProductList($product); ?>
-                            <?php endforeach;
-                        } ?>
+                            if (count($productList) > 0) {
+                                // Get the current page number from the URL, if it's not set default to 1
+                                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+                                // By default, the product list shows all: 
+                                if (!isPost() || (isPost() && !isset($_POST['productSearchButtonName']))) {
+                                    // Split the product list into chunks of 12
+                                    $productChunks = array_chunk($productList, 12);
+
+                                    // Get the products for the current page
+                                    $productsForCurrentPage = $productChunks[$page - 1];
+
+                                    foreach ($productsForCurrentPage as $product): ?>
+                                        <?= showProductList($product); ?>
+                                    <?php endforeach;
+                                }
+
+                                // Calculate the total number of pages
+                                $totalPages = count($productChunks);
+
+                                echo "<nav aria-label='Page navigation example'>";
+                                echo "<ul class='pagination justify-content-center'>";
+
+                                // Add previous button
+                                if ($page > 1) {
+                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page - 1) . "'>Previous</a></li>";
+                                }
+
+                                for ($i = 1; $i <= $totalPages; $i++) {
+                                    // Highlight the current page
+                                    if ($i == $page) {
+                                        echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
+                                    } else {
+                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
+                                    }
+                                }
+
+                                // Add next button
+                                if ($page < $totalPages) {
+                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page + 1) . "'>Next</a></li>";
+                                }
+
+                                echo "</ul>";
+                                echo "</nav>";
+                            }
+                        }
+                        ?>
 
                         <!-- Function -->
                         <?php
@@ -129,10 +172,47 @@ function showProductList($product)
                                         echo "No result found!";
                                         echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
                                         echo "</div>";
+                                    } else {
+                                        // Get the current page number from the URL, if it's not set default to 1
+                                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                        // Split the product list into chunks of 12
+                                        $productChunks = array_chunk($searchResult, 12);
+
+                                        // Get the products for the current page
+                                        $productsForCurrentPage = $productChunks[$page - 1];
+
+                                        foreach ($productsForCurrentPage as $product): ?>
+                                            <?= showProductList($product); ?>
+                                        <?php endforeach;
                                     }
-                                }
-                                foreach ($searchResult as $product) {
-                                    showProductList($product);
+
+                                    // Calculate the total number of pages
+                                    $totalPages = count($productChunks);
+
+                                    echo "<nav aria-label='Page navigation example'>";
+                                    echo "<ul class='pagination justify-content-center'>";
+
+                                    // Add previous button
+                                    if ($page > 1) {
+                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page - 1) . "'>Previous</a></li>";
+                                    }
+
+                                    for ($i = 1; $i <= $totalPages; $i++) {
+                                        // Highlight the current page
+                                        if ($i == $page) {
+                                            echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
+                                        } else {
+                                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
+                                        }
+                                    }
+
+                                    // Add next button
+                                    if ($page < $totalPages) {
+                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page + 1) . "'>Next</a></li>";
+                                    }
+
+                                    echo "</ul>";
+                                    echo "</nav>";
                                 }
                             }
                         }

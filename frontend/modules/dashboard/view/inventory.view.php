@@ -2,6 +2,7 @@
 use backend\bus\CategoriesBUS;
 use backend\bus\SizeBUS;
 use backend\bus\SizeItemsBUS;
+use backend\models\SizeItemsModel;
 
 $title = 'Inventory';
 if (!defined('_CODE')) {
@@ -36,19 +37,26 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     <h1 class="h2">
                         <?= $title ?>
                     </h1>
-                    <form method="POST" style="width: 70%;">
-                        <div class="search-group input-group">
-                            <input type="text" id="productSearch" class="searchInput form-control" name="searchValue"
-                                placeholder="Search product name here...">
-                            <button type="submit" class="btn btn-sm btn-primary align-middle padx-0 pady-0"
-                                name="searchBtnName" id="searchBtnId">
-                                <span data-feather="search"></span>
-                            </button>
-                        </div>
-                    </form>
 
-                    <div class=""></div>
+                    <div class="btn-toolbar mb-2 mb-0">
+                        <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
+                            data-bs-target="#addModal" id="addSizeItem" class="addBtn">
+                            <span data-feather="plus"></span>
+                            Add
+                        </button>
+                    </div>
                 </div>
+
+                <form method="POST" style="width: 70%;">
+                    <div class="search-group input-group">
+                        <input type="text" id="productSearch" class="searchInput form-control" name="searchValue"
+                            placeholder="Search product name here...">
+                        <button type="submit" class="btn btn-sm btn-primary align-middle padx-0 pady-0"
+                            name="searchBtnName" id="searchBtnId">
+                            <span data-feather="search"></span>
+                        </button>
+                    </div>
+                </form>
 
                 <table class="table align-middle table-borderless table-hover">
                     <thead class="table-light">
@@ -86,30 +94,28 @@ $productList = ProductBUS::getInstance()->getAllModels();
                             <tbody>
                                 <?php foreach ($sizes as $size): ?>
                                     <tr>
-                                        <td class='col-1'><img src='<?php echo $product->getImage(); ?>' alt=''
-                                                class='rounded float-start'></td>
-                                        <td class='col-2'><?php echo $product->getName(); ?></td>
-                                        <td class='col-2'>
+                                        <td><img src='<?php echo $product->getImage(); ?>' alt='' class='rounded float-start'>
+                                        </td>
+                                        <td><?php echo $product->getName(); ?></td>
+                                        <td>
                                             <?php $categoryName = CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName(); ?>
                                             <?php echo $categoryName; ?>
                                         </td>
-                                        <td class='col-2'>
+                                        <td>
                                             <?php echo preg_replace('/[^0-9]/', '', SizeBUS::getInstance()->getModelById($size->getSizeId())->getName()); ?><br>
                                         </td>
-                                        <td class='col-2'>
+                                        <td>
                                             <?php echo $size->getQuantity(); ?><br>
                                         </td>
-                                        <td class='col-2'>
+                                        <td>
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                                 data-bs-target="#editQuantityModal_<?= $product->getId() ?>_<?= $size->getSizeId() ?>">
                                                 <span data-feather="tool"></span>
-                                                Update
                                             </button>
                                             <button class="btn btn-sm btn-danger"
                                                 id='deleteSizeItemBtn_<?= $product->getId() ?>_<?= $size->getSizeId() ?>'
                                                 name='deleteSizeItemBtn'>
                                                 <span data-feather="trash-2"></span>
-                                                Delete
                                             </button>
                                         </td>
                                     </tr>
@@ -200,30 +206,28 @@ $productList = ProductBUS::getInstance()->getAllModels();
                                 <tbody>
                                 <?php foreach ($sizes as $size): ?>
                                         <tr>
-                                            <td class='col-1'><img src='<?php echo $product->getImage(); ?>' alt=''
-                                                    class='rounded float-start'></td>
-                                            <td class='col-2'><?php echo $product->getName(); ?></td>
-                                            <td class='col-2'>
+                                            <td><img src='<?php echo $product->getImage(); ?>' alt='' class='rounded float-start'>
+                                            </td>
+                                            <td><?php echo $product->getName(); ?></td>
+                                            <td>
                                             <?php $categoryName = CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName(); ?>
                                             <?php echo $categoryName; ?>
                                             </td>
-                                            <td class='col-2'>
+                                            <td>
                                             <?php echo preg_replace('/[^0-9]/', '', SizeBUS::getInstance()->getModelById($size->getSizeId())->getName()); ?><br>
                                             </td>
-                                            <td class='col-2'>
+                                            <td>
                                             <?php echo $size->getQuantity(); ?><br>
                                             </td>
-                                            <td class='col-2'>
+                                            <td>
                                                 <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                                     data-bs-target="#editQuantityModal_<?= $product->getId() ?>_<?= $size->getSizeId() ?>">
                                                     <span data-feather="tool"></span>
-                                                    Update
                                                 </button>
                                                 <button class="btn btn-sm btn-danger"
                                                     id='deleteSizeItemBtn_<?= $product->getId() ?>_<?= $size->getSizeId() ?>'
                                                     name='deleteSizeItemBtn'>
                                                     <span data-feather="trash-2"></span>
-                                                    Delete
                                                 </button>
                                             </td>
                                         </tr>
@@ -280,9 +284,101 @@ $productList = ProductBUS::getInstance()->getAllModels();
 
                     } ?>
                 </table>
+
+                <!-- Add modal -->
+                <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Item</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="row g-3">
+                                    <div class="col-7">
+                                        <label for="inputProductName" class="form-label">Product Name</label>
+                                        <select id="inputProductName" class="form-select" name="productName">
+                                            <?php
+                                            $productsListChecking = ProductBUS::getInstance()->getAllModels();
+                                            $sizeListChecking = SizeBUS::getInstance()->getAllModels();
+                                            $sizeItemsListChecking = SizeItemsBUS::getInstance()->getAllModels();
+                                            $allProductsFullyAssigned = true;
+                                            $assignedProducts = [];
+                                            foreach ($sizeItemsListChecking as $sizeItem) {
+                                                $assignedProducts[$sizeItem->getProductId()][] = $sizeItem->getSizeId();
+                                            }
+
+                                            foreach ($productsListChecking as $product) {
+                                                $isFullyAssigned = true;
+                                                foreach ($sizeListChecking as $size) {
+                                                    if (!isset($assignedProducts[$product->getId()]) || !in_array($size->getId(), $assignedProducts[$product->getId()])) {
+                                                        $isFullyAssigned = false;
+                                                        break;
+                                                    }
+                                                }
+                                                if (!$isFullyAssigned) {
+                                                    echo "<option value='" . $product->getId() . "'>" . $product->getName() . "</option>";
+                                                    $allProductsFullyAssigned = false;
+                                                }
+                                            }
+
+                                            if ($allProductsFullyAssigned) {
+                                                echo "<option value=''>None</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-5">
+                                        <label for="inputSize" class="form-label">Sizes</label>
+                                        <select id="inputSizeId" class="form-select" name="size">
+                                            <?php
+                                            $sizeList1 = SizeBUS::getInstance()->getAllModels();
+                                            foreach ($sizeList1 as $size1) {
+                                                echo "<option value='" . preg_replace(' /[^0-9]/', '', $size1->getId()) .
+                                                    "'>" . $size1->getName() . "</option>";
+                                            } ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="inputPrice" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="inputQuantity" name="quantity">
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="saveButton"
+                                    name="saveBtnName">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
             <?php
+            //TODO: Fix notification not showing up.
             if (isPost()) {
+                //Handle add size item:
+                if (isset($_POST['saveBtnName'])) {
+                    $productId = $_POST['productName'];
+                    $sizeId = $_POST['size'];
+                    $quantity = $_POST['quantity'];
+                    $checkingAssignedSizeItem = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $productId);
+
+                    if ($checkingAssignedSizeItem != null) {
+                        echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+                        echo "This size is already assigned to this product!";
+                        echo "<button type='button' class='btn-close' data-bs-dismiss='alert' onclick='window.history.back(); aria-label='Close'></button>";
+                        echo "</div>";
+                        $checkingAssignedSizeItem->setQuantity($checkingAssignedSizeItem->getQuantity() + $quantity);
+                        SizeItemsBUS::getInstance()->updateModel($checkingAssignedSizeItem);
+                        SizeItemsBUS::getInstance()->refreshData();
+                    }
+
+                    $newSizeItemModel = new SizeItemsModel(null, $productId, $sizeId, $quantity);
+                    SizeItemsBUS::getInstance()->addModel($newSizeItemModel);
+                    SizeItemsBUS::getInstance()->refreshData();
+                }
                 //Handle update quantity:
                 if (isset($_POST['button'])) {
                     $productId = $_POST['productId'];
@@ -312,4 +408,5 @@ $productList = ProductBUS::getInstance()->getAllModels();
             <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_sizeitem.js"></script>
             <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/update_sizeitem.js"></script>
             <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_sizeitem.js"></script>
+
 </body>

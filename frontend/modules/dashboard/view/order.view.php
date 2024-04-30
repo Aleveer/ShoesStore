@@ -103,23 +103,6 @@ function showOrder($order)
                             <option value="canceled">Canceled</option>
                             <option value="accepted">Accepted</option>
                         </select>
-                        <!-- <div class="card card-body rounded-0 d-flex flex-row justify-content-between mt-2">
-                            <div class="form-check form-check-inline me-2">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                                    value="Order">
-                                <label class="form-check-label" for="inlineRadio1">By Order ID</label>
-                            </div>
-                            <div class="form-check form-check-inline me-2">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
-                                    value="User">
-                                <label class="form-check-label" for="inlineRadio3">By User ID</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4"
-                                    value="Something">
-                                <label class="form-check-label" for="inlineRadio4">By Something</label>
-                            </div>
-                        </div> -->
                     </form>
                 </div>
 
@@ -142,10 +125,50 @@ function showOrder($order)
                         </thead>
                         <?php
                         if (!isPost() || (isPost() && !isset($_POST['searchBtnName']))) {
-                            foreach ($orderList as $order) {
-                                showOrder($order);
+                            if (count($orderList) > 0) {
+                                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+                                // Split the order list into chunks of 12
+                                $orderChunks = array_chunk($orderList, 12);
+
+                                // Get the orders for the current page
+                                $ordersForCurrentPage = $orderChunks[$page - 1];
+
+                                foreach ($ordersForCurrentPage as $order): ?>
+                                    <?= showOrder($order); ?>
+                                <?php endforeach;
+
+
+                                // Calculate the total number of pages
+                                $totalPages = count($orderChunks);
+
+                                echo "<nav aria-label='Page navigation example'>";
+                                echo "<ul class='pagination justify-content-center'>";
+
+                                // Add previous button
+                                if ($page > 1) {
+                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=order.view&page=" . ($page - 1) . "'>Previous</a></li>";
+                                }
+
+                                for ($i = 1; $i <= $totalPages; $i++) {
+                                    // Highlight the current page
+                                    if ($i == $page) {
+                                        echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=order.view&page=$i'>$i</a></li>";
+                                    } else {
+                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=order.view&page=$i'>$i</a></li>";
+                                    }
+                                }
+
+                                // Add next button
+                                if ($page < $totalPages) {
+                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=order.view&page=" . ($page + 1) . "'>Next</a></li>";
+                                }
+
+                                echo "</ul>";
+                                echo "</nav>";
                             }
                         }
+
                         ?>
 
                         <!--Handling search bar-->

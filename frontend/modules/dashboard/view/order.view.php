@@ -184,7 +184,7 @@ function showOrder($order)
                                 //Initiate the list:
                                 $searchOrderList = array();
                                 //If both search bar and date picker and status are empty, show all orders:
-                                if (empty($searchValue) && empty($startDate) && empty($endDate) && $statusSearch == 'NONE') {
+                                if (empty($searchValue) && trim($searchValue) == '' && empty($startDate) && empty($endDate) && $statusSearch == 'NONE') {
                                     echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
                                     echo "Please input at least one of the search bar or date picker or shipping status to search!";
                                     echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
@@ -192,33 +192,33 @@ function showOrder($order)
                                     $searchOrderList = $orderList;
                                 } else {
                                     // Search by search term only if it's not empty and others are empty:
-                                    if (!empty($searchValue) && empty($startDate) && empty($endDate) && $statusSearch == 'NONE') {
+                                    if (!empty($searchValue) && trim($searchValue) != '' && empty($startDate) && empty($endDate) && $statusSearch == 'NONE') {
                                         $searchOrderList = OrdersBUS::getInstance()->searchModel($searchValue, ['id', 'customer_name', 'customer_phone', 'customer_address', 'total_amount']);
                                     }
 
                                     // Search by both start date and end date only if it's not empty
-                                    if (!empty($startDate) && !empty($endDate) && empty($searchValue)) {
+                                    if (!empty($startDate) && !empty($endDate) && empty($searchValue) && trim($searchValue) == '') {
                                         $searchOrderList = OrdersBUS::getInstance()->searchBetweenDate($startDate, $endDate);
                                     }
 
                                     // Search by start date only:
-                                    if (!empty($startDate) && empty($endDate) && empty($searchValue)) {
+                                    if (!empty($startDate) && empty($endDate) && empty($searchValue) && trim($searchValue) == '') {
                                         $searchOrderList = OrdersBUS::getInstance()->searchAfterDate($startDate);
                                     }
 
                                     //Search by end date only:
-                                    if (empty($startDate) && !empty($endDate) && empty($searchValue)) {
+                                    if (empty($startDate) && !empty($endDate) && empty($searchValue) && trim($searchValue) == '') {
                                         $searchOrderList = OrdersBUS::getInstance()->searchBeforeDate($endDate);
                                     }
 
                                     //Search by status only if it's not empty
-                                    if ($statusSearch != 'NONE' && empty($searchValue) && empty($startDate) && empty($endDate)) {
+                                    if ($statusSearch != 'NONE' && empty($searchValue) && trim($searchValue) == '' && empty($startDate) && empty($endDate)) {
                                         $searchOrderList = OrdersBUS::getInstance()->getOrdersByStatus($statusSearch);
                                     }
 
                                     //Search by search term and date if both are not empty, date could be start date / end date:
-                                    if (!empty($searchValue) && (!empty($startDate) || !empty($endDate))) {
-                                        if (!empty($searchValue) && (!empty($startDate) || !empty($endDate))) {
+                                    if (!empty($searchValue) && trim($searchValue) != '' && (!empty($startDate) || !empty($endDate))) {
+                                        if (!empty($searchValue) && trim($searchValue) != '' && (!empty($startDate) || !empty($endDate))) {
                                             $searchOrderList = OrdersBUS::getInstance()->searchModel($searchValue, ['id', 'customer_name', 'customer_phone', 'customer_address', 'total_amount']);
                                             if (!empty($startDate) && !empty($endDate)) {
                                                 $searchOrderList = array_filter($searchOrderList, function ($order) use ($startDate, $endDate) {
@@ -242,7 +242,7 @@ function showOrder($order)
                                     }
 
                                     //Search by search term and status only if both are not empty:
-                                    if (!empty($searchValue) && $statusSearch != 'NONE' && empty($startDate) && empty($endDate)) {
+                                    if (!empty($searchValue) && trim($searchValue) != '' && $statusSearch != 'NONE' && empty($startDate) && empty($endDate)) {
                                         $searchOrderList = OrdersBUS::getInstance()->searchModel($searchValue, ['id', 'customer_name', 'customer_phone', 'customer_address', 'total_amount']);
                                         $searchOrderList = array_filter($searchOrderList, function ($order) use ($statusSearch) {
                                             return $order->getStatus() == $statusSearch;
@@ -250,7 +250,7 @@ function showOrder($order)
                                     }
 
                                     //Search by date and status only if both are not empty, date could be start date / end date:
-                                    if (empty($searchValue) && $statusSearch != 'NONE' && (!empty($startDate) || !empty($endDate))) {
+                                    if (empty($searchValue) && trim($searchValue) == '' && $statusSearch != 'NONE' && (!empty($startDate) || !empty($endDate))) {
                                         $searchOrderList = OrdersBUS::getInstance()->getOrdersByStatus($statusSearch);
                                         if (!empty($startDate) && !empty($endDate)) {
                                             $searchOrderList = array_filter($searchOrderList, function ($order) use ($startDate, $endDate) {
@@ -273,7 +273,7 @@ function showOrder($order)
                                     }
 
                                     //Search both by search term, date and status if all are not empty, date could be start date / end date:
-                                    if (!empty($searchValue) && $statusSearch != 'NONE' && (!empty($startDate) || !empty($endDate))) {
+                                    if (!empty($searchValue) && trim($searchValue) != '' && $statusSearch != 'NONE' && (!empty($startDate) || !empty($endDate))) {
                                         $searchOrderList = OrdersBUS::getInstance()->searchModel($searchValue, ['id', 'customer_name', 'customer_phone', 'customer_address', 'total_amount']);
                                         $searchOrderList = array_filter($searchOrderList, function ($order) use ($statusSearch) {
                                             return $order->getStatus() == $statusSearch;

@@ -1,9 +1,11 @@
 <?php
 use backend\bus\RoleBUS;
+use backend\bus\TokenLoginBUS;
 use backend\bus\UserBUS;
 use backend\enums\StatusEnums;
 use backend\models\UserModel;
 use backend\services\PasswordUtilities;
+use backend\services\session;
 use backend\services\validation;
 
 $title = 'Accounts';
@@ -18,6 +20,38 @@ if (!isAllowToDashBoard()) {
 include (__DIR__ . '/../inc/head.php');
 include (__DIR__ . '/../inc/app/app.php');
 $userList = UserBUS::getInstance()->getAllModels();
+
+//Get current logged in user
+$token = session::getInstance()->getSession('tokenLogin');
+$tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
+$userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
+
+function showUserList($user, $currentLoggedInUser)
+{
+    echo "<tr>";
+    echo "<td class='col-1'><img src='" . $user->getImage() . "' style='width: 50px; height: 50px;' alt='ATR'></td>";
+    echo "<td class='col-1'>" . $user->getUsername() . "</td>";
+    echo "<td class='col-2'>" . $user->getName() . "</td>";
+    echo "<td class='col-2'>" . $user->getEmail() . "</td>";
+    echo "<td class='col-1'>" . $user->getPhone() . "</td>";
+    echo "<td class='col-2'>" . $user->getAddress() . "</td>";
+    echo "<td class='col-1'>" . RoleBUS::getInstance()->getModelById($user->getRoleId())->getName() . "</td>";
+    echo "<td class='col-1'>" . $user->getStatus() . "</td>";
+    echo "<td>";
+    echo "<a href='http://localhost/frontend/index.php?module=dashboard&view=account.update&id=" . $user->getId() . "' class='btn btn-sm btn-primary'>";
+    echo "<span data-feather='tool'></span>";
+    echo "</a>";
+    if ($user->getId() !== $currentLoggedInUser->getId()) {
+        echo "<button class='btn btn-sm btn-warning' id='lockAccountBtn_" . $user->getId() . "'>";
+        echo "<span data-feather='lock'></span>";
+        echo "</button>";
+        echo "<button class='btn btn-sm btn-danger' id='unlockAccountBtn_" . $user->getId() . "' name='unlockAccountBtn'>";
+        echo "<span data-feather='unlock'></span>";
+        echo "</button>";
+    }
+    echo "</td>";
+    echo "</tr>";
+}
 ?>
 
 <body>
@@ -37,12 +71,6 @@ $userList = UserBUS::getInstance()->getAllModels();
                     <h1 class="h2">
                         <?= $title ?>
                     </h1>
-                    <div class="search-group input-group">
-                        <input type="text" id="accountSearch" class="searchInput form-control">
-                        <button type="button" class="btn btn-sm btn-primary align-middle padx-0 pady-0">
-                            <span data-feather="search"></span>
-                        </button>
-                    </div>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
                             data-bs-target="#addModal" id="addAcount" class="addBtn">
@@ -51,7 +79,16 @@ $userList = UserBUS::getInstance()->getAllModels();
                         </button>
                     </div>
                 </div>
-
+                <form action="" method="POST">
+                    <div class="search-group input-group">
+                        <input type="text" id="accountSearch" name="accountSearch" class="searchInput form-control"
+                            placeholder="Search account here.." style="width: 200px;">
+                        <button type="submit" class="btn btn-sm btn-primary align-middle padx-0 pady-0"
+                            name="accountSearchName">
+                            <span data-feather="search"></span>
+                        </button>
+                    </div>
+                </form>
                 <!-- BODY DATABASE -->
                 <table class="table align-middle table-borderless table-hover text-start">
                     <thead>
@@ -67,40 +104,117 @@ $userList = UserBUS::getInstance()->getAllModels();
                             <th>Manage</th>
                         </tr>
                     </thead>
-                    <?php foreach ($userList as $user): ?>
-                        <tbody>
-                            <tr>
-                                <td class='col-1'><img src="<?php echo $user->getImage(); ?>"
-                                        style="width: 50px; height: 50px;" alt="ATR">
-                                </td>
-                                </td>
-                                <td class='col-1'><?= $user->getUsername() ?></td>
-                                <td class='col-2'><?= $user->getName() ?></td>
-                                <td class='col-2'><?= $user->getEmail() ?></td>
-                                <td class='col-1'><?= $user->getPhone() ?></td>
-                                <td class="col-2"><?= $user->getAddress() ?></td>
-                                <td class='col-1'>
-                                    <?= RoleBUS::getInstance()->getModelById($user->getRoleId())->getName(); ?>
-                                </td>
-                                <td class='col-1'><?= $user->getStatus() ?></td>
-                                <td>
-                                    <a href='http://localhost/frontend/index.php?module=dashboard&view=account.update&id=<?= $user->getId() ?>'
-                                        class='btn btn-sm btn-primary'>
-                                        <span data-feather='tool'></span>
-                                    </a>
-                                    <button class="btn btn-sm btn-warning" id="lockAccountBtn_<?= $user->getId() ?>">
-                                        <span data-feather="lock"></span>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" id='unlockAccountBtn_<?= $user->getId() ?>'
-                                        name='unlockAccountBtn'>
-                                        <span data-feather="unlock"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-            </div>
+                    <?php
+                    if (!isPost() || (isPost() && !isset($_POST['accountSearchName']))) {
+                        if (count($userList) > 0) {
+                            $page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+                            if (!isPost() || (isPost() && !isset($_POST['accountSearchName']))) {
+                                $userChunks = array_chunk($userList, 9);
+                                $accountsForCurrentPage = $userChunks[$page - 1];
+                                foreach ($accountsForCurrentPage as $account): ?>
+                                    <?= showUserList($account, $userModel); ?>
+                                <?php endforeach;
+                            }
+
+                            // Calculate the total number of pages
+                            $totalPages = count($userChunks);
+
+                            echo "<nav aria-label='Page navigation example'>";
+                            echo "<ul class='pagination justify-content-center'>";
+
+                            // Add previous button
+                            if ($page > 1) {
+                                echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=account.view&page=" . ($page - 1) . "'>Previous</a></li>";
+                            }
+
+                            for ($i = 1; $i <= $totalPages; $i++) {
+                                // Highlight the current page
+                                if ($i == $page) {
+                                    echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=account.view&page=$i'>$i</a></li>";
+                                } else {
+                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=account.view&page=$i'>$i</a></li>";
+                                }
+                            }
+
+                            // Add next button
+                            if ($page < $totalPages) {
+                                echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=account.view&page=" . ($page + 1) . "'>Next</a></li>";
+                            }
+
+                            echo "</ul>";
+                            echo "</nav>";
+                        }
+                    }
+                    ?>
+                    <?php
+                    // Handle search function:
+                    if (isPost()) {
+                        $filterAll = filter();
+                        if (isset($_POST['accountSearchName'])) {
+                            error_log("Searching for account...");
+                            $searchQuery = $_POST['accountSearch'];
+                            $searchResult = array();
+                            if (empty($searchQuery) || trim($searchQuery) == "") {
+                                echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+                                echo "Please input the search bar to search!";
+                                echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+                                echo "</div>";
+                            } else {
+                                $searchResult = UserBUS::getInstance()->searchModel($searchQuery, ['id', 'username', 'email', 'name', 'phone', 'address']);
+                                // Check if searchModel returned any results
+                                if (empty($searchResult) || count($searchResult) == 0) {
+                                    echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+                                    echo "No result found!";
+                                    echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+                                    echo "</div>";
+                                } else {
+                                    // Get the current page number from the URL, if it's not set default to 1
+                                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                    // Split the user list into chunks of 9
+                                    $userChunks = array_chunk($searchResult, 9);
+
+                                    // Get the users for the current page
+                                    $usersForCurrentPage = $userChunks[$page - 1];
+                                    // Calculate the total number of pages
+                                    $totalPages = count($userChunks);
+
+                                    echo "<nav aria-label='Page navigation example'>";
+                                    echo "<ul class='pagination justify-content-center'>";
+
+                                    // Add previous button
+                                    if ($page > 1) {
+                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=account.view&page=" . ($page - 1) . "'>Previous</a></li>";
+                                    }
+
+                                    for ($i = 1; $i <= $totalPages; $i++) {
+                                        // Highlight the current page
+                                        if ($i == $page) {
+                                            echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=account.view&page=$i'>$i</a></li>";
+                                        } else {
+                                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=account.view&page=$i'>$i</a></li>";
+                                        }
+                                    }
+
+                                    // Add next button
+                                    if ($page < $totalPages) {
+                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=account.view&page=" . ($page + 1) . "'>Next</a></li>";
+                                    }
+
+                                    echo "</ul>";
+                                    echo "</nav>";
+                                    foreach ($usersForCurrentPage as $user): ?>
+                                        <?= showUserList($user, $userModel); ?>
+                                    <?php endforeach;
+                                }
+
+
+                            }
+                        }
+                    }
+                    ?>
         </div>
-    <?php endforeach; ?>
+    </div>
     </table>
     </main>
 
@@ -162,7 +276,7 @@ $userList = UserBUS::getInstance()->getAllModels();
                         </div>
                         <div class="col-6">
                             <label for="inputImg">Image</label>
-                            <input type="file" class="form-control" name="imgProduct" id="inputImg" accept="image/*">
+                            <input type="file" class="form-control" name="imgaccount" id="inputImg" accept="image/*">
                         </div>
                 </div>
                 <div class="modal-footer">

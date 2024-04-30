@@ -93,7 +93,7 @@ $userList = UserBUS::getInstance()->getAllModels();
                                 </td>
                             </tr>
                         </tbody>
-                        <!-- Edit modal -->
+                        <!-- Edit modal TODO: Re-design this:-->
                         <div class="modal fade" id="editModal_<?= $user->getId() ?>" data-bs-backdrop="static"
                             data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"
                             style="width: 100%">

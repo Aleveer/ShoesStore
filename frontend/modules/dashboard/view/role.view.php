@@ -39,11 +39,11 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                         <?= $title ?>
                     </h1>
                     <div class="btn-toolbar mb-2 mb-0">
-                        <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
+                        <!-- <button type="button" class="btn btn-sm btn-success align-middle" data-bs-toggle="modal"
                             data-bs-target="#addRoleModal" id="addProduct" class="addBtn">
                             <span data-feather="plus"></span>
                             Add
-                        </button>
+                        </button> -->
                     </div>
                 </div>
 
@@ -126,9 +126,8 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                 </table>
             </main>
 
-
             <!-- Add Role Modal -->
-            <div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            <!-- <div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -153,44 +152,44 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> -->
+        </div>
+        <?php
+        //Handle update role permission:
+        if (isset($_POST['updateBtnName'])) {
+            error_log("Update role permission");
 
-            <?php
-            //Handle update role permission:
-            if (isset($_POST['updateBtnName'])) {
-                error_log("Update role permission");
+            $roleId = $_POST['id'];
+            $roleName = $_POST['name'];
+            $permissions = isset($_POST['permissions']) ? array_unique($_POST['permissions']) : null;
 
-                $roleId = $_POST['id'];
-                $roleName = $_POST['name'];
-                $permissions = isset($_POST['permissions']) ? array_unique($_POST['permissions']) : null;
+            // Delete all existing permissions for the role
+            RolePermissionBUS::getInstance()->deleteModelByRoleId($roleId);
 
-                // Delete all existing permissions for the role
-                RolePermissionBUS::getInstance()->deleteModelByRoleId($roleId);
-
-                if (!is_null($permissions)) {
-                    foreach ($permissions as $permission) {
-                        // Add each permission
-                        $rolePermission = new RolePermissionsModel(null, null, null);
-                        $rolePermission->setRoleId($roleId);
-                        $rolePermission->setPermissionId($permission);
-                        RolePermissionBUS::getInstance()->addModel($rolePermission);
-                    }
+            if (!is_null($permissions)) {
+                foreach ($permissions as $permission) {
+                    // Add each permission
+                    $rolePermission = new RolePermissionsModel(null, null, null);
+                    $rolePermission->setRoleId($roleId);
+                    $rolePermission->setPermissionId($permission);
+                    RolePermissionBUS::getInstance()->addModel($rolePermission);
                 }
-
-                RolePermissionBUS::getInstance()->refreshData();
             }
-            ?>
-            <?php include (__DIR__ . '/../inc/app/app.php'); ?>
-            <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <!-- <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_coupon.js"></script> -->
-            <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/update_roles_permissions.js"></script>
-            <!-- <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_coupon.js"></script> -->
+
+            RolePermissionBUS::getInstance()->refreshData();
+        }
+        ?>
+        <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+        <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_coupon.js"></script> -->
+        <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/update_roles_permissions.js"></script>
+        <!-- <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_coupon.js"></script> -->
 </body>
 
 </html>

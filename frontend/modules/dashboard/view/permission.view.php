@@ -14,7 +14,6 @@ use backend\bus\PermissionBUS;
 $permissionList = PermissionBUS::getInstance()->getAllModels();
 ?>
 
-
 <body>
     <!-- HEADER -->
     <?php include (__DIR__ . '/../inc/header.php'); ?>
@@ -108,5 +107,3 @@ $permissionList = PermissionBUS::getInstance()->getAllModels();
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/update_permission.js"></script>
 </body>
-
-</html>

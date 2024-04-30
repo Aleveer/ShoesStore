@@ -1,6 +1,7 @@
 <?php
 use backend\bus\RoleBUS;
 use backend\bus\UserBUS;
+use backend\enums\StatusEnums;
 use backend\services\PasswordUtilities;
 
 $title = 'Accounts';
@@ -85,10 +86,11 @@ $userList = UserBUS::getInstance()->getAllModels();
                                         class='btn btn-sm btn-primary'>
                                         <span data-feather='tool'></span>
                                     </a>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" id="lockAccountBtn">
+                                    <button class="btn btn-sm btn-warning" id="lockAccountBtn_<?= $user->getId() ?>">
                                         <span data-feather="lock"></span>
                                     </button>
-                                    <button class="btn btn-sm btn-danger" id='unlockAccountBtn' name='unlockAccountBtn'>
+                                    <button class="btn btn-sm btn-danger" id='unlockAccountBtn_<?= $user->getId() ?>'
+                                        name='unlockAccountBtn'>
                                         <span data-feather="unlock"></span>
                                     </button>
                                 </td>
@@ -169,9 +171,29 @@ $userList = UserBUS::getInstance()->getAllModels();
             </div>
         </div>
     </div>
+    <?php
+    if (isPost()) {
+        if (isset($_POST['lockBtn'])) {
+            $id = $_POST['id'];
+            $user = UserBUS::getInstance()->getModelById($id);
+            $user->setStatus(strtolower(StatusEnums::BANNED));
+            UserBUS::getInstance()->updateModel($user);
+            UserBUS::getInstance()->refreshData();
+        }
 
+        if (isset($_POST['unlockBtn'])) {
+            $id = $_POST['id'];
+            $user = UserBUS::getInstance()->getModelById($id);
+            $user->setStatus(strtolower(StatusEnums::INACTIVE));
+            UserBUS::getInstance()->updateModel($user);
+            UserBUS::getInstance()->refreshData();
+        }
+    }
+    ?>
     <?php include (__DIR__ . '/../inc/app/app.php'); ?>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/account_status.js"></script>
 </body>
 
 </html>

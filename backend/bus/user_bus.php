@@ -34,7 +34,7 @@ class UserBUS implements BUSInterface
         $this->userList = UserDAO::getInstance()->getAll();
     }
 
-    public function getModelById(int $id)
+    public function getModelById($id)
     {
         return UserDAO::getInstance()->getById($id);
     }

@@ -1,6 +1,7 @@
 <?php
 use backend\bus\RoleBUS;
 use backend\bus\UserBUS;
+use backend\services\PasswordUtilities;
 
 $title = 'Accounts';
 
@@ -52,77 +53,77 @@ $userList = UserBUS::getInstance()->getAllModels();
                 <?php include ('account.table.php') ?>
             </main>
 
-            <!-- Add modal -->
-            <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true" style="width: 100%">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Account</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form class="row g-3">
-                                <div class="col-md-4">
-                                    <label for="inputUsername" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="inputUsername">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="inputPassword" class="form-label">Password</label>
-                                    <input type="text" name="" id="inputPassword" class="form-control">
-                                </div>
-                                <div class="col-5">
-                                    <label for="inputEmail" class="form-label">Email</label>
-                                    <input type="text" class="form-control" id="inputEmail">
-                                </div>
-                                <div class="col-5">
-                                    <label for="inputName" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="inputName">
-                                </div>
-                                <div class="col-3">
-                                    <label for="inputPhone" class="form-label">Phone</label>
-                                    <input type="text" class="form-control" id="inputPhone">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="inputGender" class="form-label">Gender</label>
-                                    <select id="inputGender" class="form-select">
-                                        <option value="1" selected>Male</option>
-                                        <option value="0">Female</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="inputRole" class="form-label">Role</label>
-                                    <select name="" id="inputRole" class="form-select">
-                                        <option value="1">Admin</option>
-                                        <option value="2">Manager</option>
-                                        <option value="3">Employee</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="inputAddress" class="form-label">Address</label>
-                                    <input type="text" name="" id="inputAddress" class="form-control">
-                                </div>
-                                <div class="col-6  userImg">
-                                    <img id="imgPreview" src="..\..\..\..\templates\images\680098.jpg"
-                                        alt="Preview Image" a class="img-circle">
-                                </div>
-                                <div class="col-6">
-                                    <label for="inputImg">Img</label>
-                                    <input type="file" class="form-control" name="imgProduct" id="inputImg"
-                                        accept="image/*">
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                        </form>
-                    </div>
+    <!-- Add modal -->
+    <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true" style="width: 100%">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Account</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                    <form class="row g-3">
+                        <div class="col-md-4">
+                            <label for="inputUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="inputUsername" name="inputUsernameName">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="inputPassword" class="form-label">Password</label>
+                            <input type="password" name="" id="inputPassword" name="inputPasswordName"
+                                class="form-control">
+                        </div>
+                        <div class="col-5">
+                            <label for="inputEmail" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="inputEmail" name="inputEmailName">
+                        </div>
+                        <div class="col-5">
+                            <label for="inputName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="inputName" name="inputNameName">
+                        </div>
+                        <div class="col-3">
+                            <label for="inputPhone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="inputPhone" name="inputPhoneName">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="inputGender" class="form-label">Gender</label>
+                            <select id="inputGender" class="form-select">
+                                <option value="1" selected>Male</option>
+                                <option value="0">Female</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="inputRole" class="form-label">Role</label>
+                            <select name="" id="inputRole" class="form-select">
+                                <option value="1">Admin</option>
+                                <option value="2">Manager</option>
+                                <option value="3">Employee</option>
+                                <option value="4">Customer</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputAddress" class="form-label">Address</label>
+                            <input type="text" name="inputAddressName" id="inputAddress" class="form-control">
+                        </div>
+                        <div class="col-6  userImg">
+                            <img id="imgPreview" src="..\..\..\..\templates\images\680098.jpg" alt="Preview Image" a
+                                class="img-circle">
+                        </div>
+                        <div class="col-6">
+                            <label for="inputImg">Image</label>
+                            <input type="file" class="form-control" name="imgProduct" id="inputImg" accept="image/*">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+                </div>
+                </form>
             </div>
+        </div>
+    </div>
 
-
-            <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+        <?php include (__DIR__ . '/../inc/app/app.php'); ?>
 
 </body>
 

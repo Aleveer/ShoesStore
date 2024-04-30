@@ -234,7 +234,9 @@ tbody tr:first-child {
 }
 
 .userImg {
+    width: 50%;
     position: relative;
+    aspect-ratio: 1/1;
 }
 
 .userImg img {

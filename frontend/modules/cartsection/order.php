@@ -111,15 +111,21 @@ foreach ($cartListFromUser as $cartModel) {
                         <?php
                         foreach ($cartListFromUser as $cartModel) {
                             $productModel = ProductBUS::getInstance()->getModelById($cartModel->getProductId());
-                            if (!$productModel) {
-                                error_log('Failed to get product model for ID: ' . $cartModel->getProductId());
-                                continue; // Skip this iteration and move to the next cartId
+                            $sizeItemsModel = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($cartModel->getSizeId(), $cartModel->getProductId());
+
+                            if (!$productModel || !$sizeItemsModel) {
+                                error_log('Failed to get product model for ID: ' . $cartModel->getProductId() . ' or size item for ID: ' . $cartModel->getSizeId());
+                                echo '<script>';
+                                echo 'alert("A product you have in cart is not available or out of stock!")';
+                                echo '</script>';
+                                CartsBUS::getInstance()->deleteModel($cartModel->getId());
+                                CartsBUS::getInstance()->refreshData();
+                                echo '<script>';
+                                echo 'window.location.href = "?module=cartsection&action=cart"';
+                                echo '</script>';
+                                break;
                             }
-                            $sizeModel = SizeBUS::getInstance()->getModelById($cartModel->getSizeId());
-                            if (!$sizeModel) {
-                                error_log('Failed to get size model for ID: ' . $cartModel->getSizeId());
-                                continue; // Skip this iteration and move to the next cartId
-                            }
+
                             echo '<tr>';
                             echo '<td class="col-1"><img src="' . $productModel->getImage() . '" alt="" class="cart-item-img"></td>';
                             echo '<td class="col-4 cart-item-name text-start">' . $productModel->getName() . '</td>';

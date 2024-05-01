@@ -102,11 +102,22 @@ if (isLogin()) {
                     Size:
                     <?php
                     $check = 0;
+                    $sizes = [];
                     foreach ($sizeItemsProduct as $s) {
                         if ($s->getQuantity() > 0) {
-                            echo '<div class="button-container"><button id="sizeItemProduct" class="squish-in" name="sizeItem" data-quantity="' . $s->getQuantity() . '">' . /*$s->getSizeId()*/ preg_replace('/[^0-9]/', '', SizeBUS::getInstance()->getModelById($s->getSizeId())->getName()) . '</button></div>';
-                            $check = 1;
+                            $sizeModel = SizeBUS::getInstance()->getModelById($s->getSizeId());
+                            $sizeId = $sizeModel->getId();
+                            $sizeName = preg_replace('/[^0-9]/', '', $sizeModel->getName());
+                            $sizes[$sizeId] = ['name' => $sizeName, 'quantity' => $s->getQuantity()];
                         }
+                    }
+
+                    // Sort sizes from small to large
+                    ksort($sizes);
+
+                    foreach ($sizes as $sizeId => $sizeData) {
+                        echo '<div class="button-container"><button id="sizeItemProduct_' . $sizeId . '" class="squish-in" name="sizeItem" data-quantity="' . $sizeData['quantity'] . '">' . $sizeData['name'] . '</button></div>';
+                        $check = 1;
                     }
                     if ($check == 0) {
                         echo 'This product is out of stock!';
@@ -129,21 +140,21 @@ if (isLogin()) {
                 }
                 if ($hideButton) {
                     //Hide button add to cart:
-                    echo '<button class="addtocart" name="addToCart" style="display:none;">';
+                    echo '<button class="addtocart" name="addToCart" id="addToCartId" style="display:none;">';
                     //Lock the quantity input:
                     echo '<script>document.getElementById("pquantity").disabled = true;</script>';
                 } else {
-                    echo '<button class="addtocart" name="addToCart">';
+                    echo '<button class="addtocart" name="addToCart" id="addToCartId">';
                 }
                 ?>
                 <i class="fa-solid fa-cart-shopping"> Add+</i>
                 </button>
                 <?php
                 if (!isLogin()) {
-                    echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("You have to login in order to add a product to cart!")});</script>';
+                    echo '<script>document.querySelector(".addToCart").addEventListener("click", function() {alert("You have to login in order to add a product to cart!")});</script>';
                 } else {
                     if (isPost()) {
-                        if (isset($_POST['addtocart'])) {
+                        if (isset($_POST['addToCart'])) {
                             switch ($userModel->getStatus()) {
                                 case StatusEnums::BANNED:
                                     $data = array(
@@ -203,6 +214,21 @@ if (isLogin()) {
 
                                 //Check if the quantity is greater than the quantity of the product:
                                 $sizeItems = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $product->getId());
+                                if ($sizeItems === null) {
+                                    error_log('Failed to get size item for size ID: ' . $sizeId . ' and product ID: ' . $product->getId());
+                                    $data = array(
+                                        'status' => 'error',
+                                        'message' => 'Size item not found'
+                                    );
+                                    echo json_encode($data);
+                                    return;
+                                }
+
+                                if ($quantity > $sizeItems->getQuantity()) {
+                                    $cart->setQuantity($sizeItems->getQuantity());
+                                } else {
+                                    $cart->setQuantity($quantity);
+                                }
                                 if ($quantity > $sizeItems->getQuantity()) {
                                     $cart->setQuantity($sizeItems->getQuantity());
                                 } else {

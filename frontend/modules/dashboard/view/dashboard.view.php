@@ -9,6 +9,10 @@ if (!isAllowToDashBoard()) {
     die('Access denied');
 }
 
+if (!checkPermission(5)) {
+    die('Access denied');
+}
+
 include (__DIR__ . '/../inc/head.php');
 
 ?>

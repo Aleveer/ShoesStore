@@ -6,12 +6,13 @@ $(document).ready(function () {
         console.log("size clicked");
         $(".squish-in").css("color", "");
         $(this).css("color", "black");
-        sizeId = $(this).text(); // Retrieving size ID from button text
+        sizeId = $(this).attr('id').split('_')[1]; // Retrieving size ID from button ID
     });
 
-    var addtoCartButton = $(".addtocart");
-    if (addtoCartButton.length) {
-        addtoCartButton.on("click", function () {
+    var addToCartButton = $(".addToCart");
+    if (addToCartButton.length) {
+        addToCartButton.on("click", function () {
+            console.log("add to cart clicked");
             var quantity = $('[name="pquantity"]').val(); // Retrieving quantity
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get("id");
@@ -44,9 +45,9 @@ $(document).ready(function () {
                 type: "POST",
                 dataType: "html",
                 data: {
-                    addtocart: true,
+                    addToCart: true,
                     sizeItem: sizeId,
-                    pquantity: quantity, 
+                    pquantity: quantity,
                 },
 
                 success: function (data) {

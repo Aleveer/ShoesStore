@@ -14,6 +14,11 @@ if (!defined('_CODE')) {
 if (!isAllowToDashBoard()) {
     die('Access denied');
 }
+
+if (!checkPermission(4)) {
+    die('Access denied');
+}
+
 include (__DIR__ . '/../inc/head.php');
 
 //Get current logged in user
@@ -109,8 +114,10 @@ if (isset($_GET['id'])) {
                 <!-- Status -->
                 <div class="col-md-3">
                     <label for="inputStatus" class="form-label">Status</label>
-                    <select id="inputEditStatus" class="form-select">
-                        <?php $status = UserBUS::getInstance()->getModelById($id)->getStatus(); ?>
+                    <?php
+                    $status = UserBUS::getInstance()->getModelById($id)->getStatus();
+                    ?>
+                    <select id="inputEditStatus" class="form-select" <?php echo $currentLoggedInUser->getId() == $id ? 'disabled' : ''; ?>>
                         <option value="active" <?php echo $status == StatusEnums::ACTIVE ? 'selected' : ''; ?>>Active
                         </option>
                         <option value="inactive" <?php echo $status == StatusEnums::INACTIVE ? 'selected' : ''; ?>>
@@ -134,14 +141,21 @@ if (isset($_GET['id'])) {
                 <!-- Role -->
                 <div class="col-md-4">
                     <label for="inputAccountRole" class="form-label">Role</label>
-                    <select id="inputEditAccountRole" class="form-select">
+                    <select id="inputEditAccountRole" class="form-select" <?= $isCurrentUser ? 'disabled' : '' ?>>
                         <?php
-                        $roles = RoleBUS::getInstance()->getAllModels();
-                        foreach ($roles as $role) {
-                            $selected = ($role->getId() == UserBUS::getInstance()->getModelById($id)->getRoleId()) ? 'selected' : '';
-                            echo '<option value="' . $role->getId() . '" ' . $selected . ' data-value="' . $role->getId() . '">' . $role->getName() . '</option>';
-                        }
-                        ?>
+                        $editUserRole = $user->getRoleId();
+                        if ($currentLoggedInUser->getRoleId() == 1): ?>
+                            <option value="2" <?= $editUserRole == 2 ? 'selected' : '' ?>>Manager</option>
+                            <option value="3" <?= $editUserRole == 3 ? 'selected' : '' ?>>Employee</option>
+                            <option value="4" <?= $editUserRole == 4 ? 'selected' : '' ?>>Customer</option>
+                        <?php elseif ($currentLoggedInUser->getRoleId() == 2): ?>
+                            <option value="2" <?= $editUserRole == 2 ? 'selected' : '' ?>>Manager</option>
+                            <option value="3" <?= $editUserRole == 3 ? 'selected' : '' ?>>Employee</option>
+                            <option value="4" <?= $editUserRole == 4 ? 'selected' : '' ?>>Customer</option>
+                        <?php elseif ($currentLoggedInUser->getRoleId() == 3): ?>
+                            <option value="3" <?= $editUserRole == 3 ? 'selected' : '' ?>>Employee</option>
+                            <option value="4" <?= $editUserRole == 4 ? 'selected' : '' ?>>Customer</option>
+                        <?php endif; ?>
                     </select>
                 </div>
                 <!-- Image -->

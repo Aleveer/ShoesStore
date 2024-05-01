@@ -1,6 +1,4 @@
 <?php
-use backend\bus\RoleBUS;
-use backend\bus\RolePermissionBUS;
 use backend\bus\TokenLoginBUS;
 use backend\bus\UserBUS;
 use backend\services\session;
@@ -16,17 +14,6 @@ function isActivePage($currentPage, $pageName)
 $token = session::getInstance()->getSession('tokenLogin');
 $tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
 $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
-$rolesPermission = RolePermissionBUS::getInstance()->getModelByRoleId($userModel->getRoleId());
-
-function checkPermission($rolesPermission, $permissionId)
-{
-    foreach ($rolesPermission as $rolePermission) {
-        if ($rolePermission->getPermissionId() == $permissionId) {
-            return true;
-        }
-    }
-    return false;
-}
 ?>
 
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
@@ -34,7 +21,7 @@ function checkPermission($rolesPermission, $permissionId)
         <ul class="nav flex-column">
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 5)) {
+                if (checkPermission(5)) {
                     ?>
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'dashboard.view'); ?>" aria-current="page"
                         href="?module=dashboard&view=dashboard.view">
@@ -47,7 +34,7 @@ function checkPermission($rolesPermission, $permissionId)
             </li>
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 3)) {
+                if (checkPermission(3)) {
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'order.view'); ?>"
@@ -62,7 +49,7 @@ function checkPermission($rolesPermission, $permissionId)
             </li>
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 1)) {
+                if (checkPermission(1)) {
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'product.view'); ?>"
@@ -77,7 +64,7 @@ function checkPermission($rolesPermission, $permissionId)
             </li>
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 2)) {
+                if (checkPermission(2)) {
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'category.view'); ?>"
@@ -92,7 +79,7 @@ function checkPermission($rolesPermission, $permissionId)
             </li>
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 2)) {
+                if (checkPermission(2)) {
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'size.view'); ?>"
@@ -114,7 +101,7 @@ function checkPermission($rolesPermission, $permissionId)
             </li>
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 2)) {
+                if (checkPermission(2)) {
                     ?>
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'inventory.view'); ?>"
                         href="?module=dashboard&view=inventory.view">
@@ -127,7 +114,7 @@ function checkPermission($rolesPermission, $permissionId)
             </li>
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 4)) {
+                if (checkPermission(4)) {
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'account.view'); ?>"
@@ -141,7 +128,7 @@ function checkPermission($rolesPermission, $permissionId)
                 ?>
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 6)) {
+                if (checkPermission(6)) {
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'permission.view'); ?>"
@@ -155,7 +142,7 @@ function checkPermission($rolesPermission, $permissionId)
                 ?>
             <li class="nav-item">
                 <?php
-                if (checkPermission($rolesPermission, 6)) {
+                if (checkPermission(6)) {
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'role.view'); ?>"

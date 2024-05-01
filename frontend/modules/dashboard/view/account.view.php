@@ -17,6 +17,11 @@ if (!defined('_CODE')) {
 if (!isAllowToDashBoard()) {
     die('Access denied');
 }
+
+if (!checkPermission(4)) {
+    die('Access denied');
+}
+
 include (__DIR__ . '/../inc/head.php');
 include (__DIR__ . '/../inc/app/app.php');
 $userList = UserBUS::getInstance()->getAllModels();
@@ -39,7 +44,6 @@ function showUserList($user, $currentLoggedInUser)
     $canEdit = (($currentUserRole == '1' && $displayUserRole != '1') || ($currentUserRole == '1' && $isCurrentUser)) ||
         (($currentUserRole == '2' && $displayUserRole > '2') || ($currentUserRole == '2' && $isCurrentUser)) ||
         ($currentUserRole == '3' && $displayUserRole == '4');
-
 
     echo "<tr>";
     echo "<td class='col-1'><img src='" . $user->getImage() . "' style='width: 50px; height: 50px;' alt='ATR'></td>";
@@ -276,7 +280,6 @@ function showUserList($user, $currentLoggedInUser)
                             <label for="inputRole" class="form-label">Role</label>
                             <select name="" id="inputRole" class="form-select">
                                 <?php if ($userModel->getRoleId() == 1): ?>
-                                    <option value="1">Admin</option>
                                     <option value="2">Manager</option>
                                     <option value="3">Employee</option>
                                     <option value="4">Customer</option>

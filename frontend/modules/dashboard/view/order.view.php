@@ -84,18 +84,18 @@ function showOrder($order)
                     <form action="" method="POST" class="m-0 col-lg-6">
                         <div class="input-group">
                             <input type="text" id="orderSearchBarId" name="orderSearchBarName"
-                                class="searchInput form-control" placeholder="Search anything here..."
+                                class="searchInput form-control my-2 rounded-0" placeholder="Search anything here..."
                                 style="width: 100%;">
-                            <input type="date" id="startDate" name="startDate" class="form-control"
+                            <input type="date" id="startDate" name="startDate" class="form-control rounded-0"
                                 style="width: 120px;" placeholder="Start Date">
-                            <input type="date" id="endDate" name="endDate" class="form-control" style="width: 120px;"
+                            <input type="date" id="endDate" name="endDate" class="form-control rounded-0" style="width: 120px;"
                                 placeholder="End Date">
                             <button type="submit" class="btn btn-sm btn-primary align-middle padx-0 pady-0"
                                 id="searchBtnId" name="searchBtnName">
                                 <span data-feather="search"></span>
                             </button>
                         </div>
-                        <select class="form-control" name="statusSearchName" id="orderStatusSearchId">
+                        <select class="form-control rounded-0 my-2" name="statusSearchName" id="orderStatusSearchId">
                             <option value="NONE">---</option>
                             <option value="pending">Pending</option>
                             <option value="shipping">Shipping</option>

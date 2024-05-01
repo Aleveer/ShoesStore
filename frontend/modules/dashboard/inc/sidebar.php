@@ -97,7 +97,7 @@ function checkPermission($rolesPermission, $permissionId)
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'size.view'); ?>"
                         href="?module=dashboard&view=size.view">
-                        <span data-feather="list"></span>
+                        <span data-feather="hash"></span>
                         Sizes
                     </a>
                 </li>

@@ -74,7 +74,7 @@ function showProductList($product)
                     </div>
                 </div>
 
-                <form action="" method="POST">
+                <form action="" method="POST" class="m-0 col-lg-6">
                     <div class="search-group input-group py-2">
                         <input type="text" name="productSearch" id="productSearchBar" class="searchInput form-control"
                             placeholder="Search anything here...">
@@ -124,7 +124,7 @@ function showProductList($product)
                                 $totalPages = count($productChunks);
 
                                 echo "<nav aria-label='Page navigation example'>";
-                                echo "<ul class='pagination justify-content-center'>";
+                                echo "<ul class='pagination justify-content-start'>";
 
                                 // Add previous button
                                 if ($page > 1) {

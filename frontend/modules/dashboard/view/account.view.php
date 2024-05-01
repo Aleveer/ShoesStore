@@ -40,7 +40,6 @@ function showUserList($user, $currentLoggedInUser)
         (($currentUserRole == '2' && $displayUserRole > '2') || ($currentUserRole == '2' && $isCurrentUser)) ||
         ($currentUserRole == '3' && $displayUserRole == '4');
 
-
     echo "<tr>";
     echo "<td class='col-1'><img src='" . $user->getImage() . "' style='width: 50px; height: 50px;' alt='ATR'></td>";
     echo "<td class='col-1'>" . $user->getUsername() . "</td>";
@@ -276,7 +275,6 @@ function showUserList($user, $currentLoggedInUser)
                             <label for="inputRole" class="form-label">Role</label>
                             <select name="" id="inputRole" class="form-select">
                                 <?php if ($userModel->getRoleId() == 1): ?>
-                                    <option value="1">Admin</option>
                                     <option value="2">Manager</option>
                                     <option value="3">Employee</option>
                                     <option value="4">Customer</option>

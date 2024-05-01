@@ -16,6 +16,7 @@ function isActivePage($currentPage, $pageName)
 $token = session::getInstance()->getSession('tokenLogin');
 $tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
 $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
+
 $rolesPermission = RolePermissionBUS::getInstance()->getModelByRoleId($userModel->getRoleId());
 
 function checkPermission($rolesPermission, $permissionId)

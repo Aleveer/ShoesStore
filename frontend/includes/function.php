@@ -1,5 +1,6 @@
 <?php
 
+use backend\bus\RolePermissionBUS;
 use backend\enums\StatusEnums;
 
 if (!defined('_CODE')) {
@@ -176,5 +177,21 @@ function isAllowToDashBoard()
         return false;
     } else {
         return true;
+    }
+}
+
+function checkPermission($permissionId)
+{
+    if (isLogin()) {
+        $tokenLogin = session::getInstance()->getSession('tokenLogin');
+        $userId = TokenLoginBUS::getInstance()->getModelByToken($tokenLogin)->getUserId();
+        $userModel = UserBUS::getInstance()->getModelById($userId);
+        $rolesPermission = RolePermissionBUS::getInstance()->getModelByRoleId($userModel->getRoleId());
+        foreach ($rolesPermission as $rolePermission) {
+            if ($rolePermission->getPermissionId() == $permissionId) {
+                return true;
+            }
+        }
+        return false;
     }
 }

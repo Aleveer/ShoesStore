@@ -7,6 +7,11 @@ if (!defined('_CODE')) {
 if (!isAllowToDashBoard()) {
     die('Access denied');
 }
+
+if (!checkPermission(6)) {
+    die('Access denied');
+}
+
 include (__DIR__ . '/../inc/head.php');
 
 use backend\bus\PermissionBUS;

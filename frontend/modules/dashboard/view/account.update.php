@@ -14,6 +14,11 @@ if (!defined('_CODE')) {
 if (!isAllowToDashBoard()) {
     die('Access denied');
 }
+
+if (!checkPermission(4)) {
+    die('Access denied');
+}
+
 include (__DIR__ . '/../inc/head.php');
 
 //Get current logged in user

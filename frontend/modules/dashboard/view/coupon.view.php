@@ -11,6 +11,7 @@ if (!defined('_CODE')) {
 if (!isAllowToDashBoard()) {
     die('Access denied');
 }
+
 include (__DIR__ . '/../inc/head.php');
 include (__DIR__ . '/../inc/app/app.php');
 

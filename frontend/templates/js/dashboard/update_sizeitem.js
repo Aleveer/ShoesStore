@@ -19,8 +19,8 @@ $(document).ready(function () {
 
         if (newQuantity < 0) {
             var checkingQuantity = currentQuantity + newQuantity;
-            if (checkingQuantity < 0) {
-                alert('Quantity cannot be negative');
+            if (checkingQuantity < 1) {
+                alert('Quantity cannot be less than 1');
                 return;
             }
         }
@@ -38,7 +38,7 @@ $(document).ready(function () {
             success: function (response) {
                 // handle success
                 console.log('Update successful');
-                alert('Updated successfully');
+
                 //Refresh the page
                 window.location.reload();
             },

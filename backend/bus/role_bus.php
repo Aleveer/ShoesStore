@@ -29,7 +29,7 @@ class RoleBUS implements BUSInterface
     {
         $this->roleList = RoleDAO::getInstance()->getAll();
     }
-    public function getModelById(int $id)
+    public function getModelById($id)
     {
         return RoleDAO::getInstance()->getById($id);
     }
@@ -43,10 +43,10 @@ class RoleBUS implements BUSInterface
         }
         return $result;
     }
-    public function updateModel($roleModel): int
+    public function updateModel($roleModel)
     {
         $this->validateModel($roleModel);
-        $result = RoleDAO::getInstance()->update($roleModel);
+        $result = RoleDAO::getInstance()->update($roleModel->getId());
         if ($result) {
             $index = array_search($roleModel, $this->roleList);
             $this->roleList[$index] = $roleModel;
@@ -54,7 +54,7 @@ class RoleBUS implements BUSInterface
         }
         return $result;
     }
-    public function deleteModel($roleModel): int
+    public function deleteModel($roleModel)
     {
         $result = RoleDAO::getInstance()->delete($roleModel);
         if ($result) {

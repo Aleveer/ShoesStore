@@ -77,103 +77,128 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     <?php
                     if (!isPost() || (!isPost() && !isset($_POST['searchBtnName']))) {
                         $products = SizeItemsBUS::getInstance()->getAllModels();
-                        $groupedProducts = [];
+                        $sizeItemList = SizeItemsBUS::getInstance()->getAllModels();
 
-                        // Group products by their ID
-                        foreach ($products as $product) {
-                            $productId = $product->getProductId();
-                            if (!isset($groupedProducts[$productId])) {
-                                $groupedProducts[$productId] = [
-                                    'product' => ProductBUS::getInstance()->getModelById($productId),
-                                    'sizes' => []
-                                ];
-                            }
-                            $groupedProducts[$productId]['sizes'][] = $product;
-                        }
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
 
-                        // Now iterate over the grouped products
-                        foreach ($groupedProducts as $groupedProduct):
-                            $product = $groupedProduct['product'];
-                            $sizes = $groupedProduct['sizes'];
+                        $sizeItemChunks = array_chunk($sizeItemList, 12);
+                        $sizeItemsForCurrentPage = $sizeItemChunks[$page - 1];
+                        foreach ($sizeItemsForCurrentPage as $sizeItem) {
+                            $product = ProductBUS::getInstance()->getModelById($sizeItem->getProductId());
+                            $size = SizeBUS::getInstance()->getModelById($sizeItem->getSizeId());
                             ?>
                             <tbody>
-                                <?php foreach ($sizes as $size): ?>
-                                    <tr>
-                                        <td><img src='<?php echo $product->getImage(); ?>' alt='' class='rounded float-start'>
-                                        </td>
-                                        <td><?php echo $product->getName(); ?></td>
-                                        <td>
-                                            <?php $categoryName = CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName(); ?>
-                                            <?php echo $categoryName; ?>
-                                        </td>
-                                        <td>
-                                            <?php echo preg_replace('/[^0-9]/', '', SizeBUS::getInstance()->getModelById($size->getSizeId())->getName()); ?><br>
-                                        </td>
-                                        <td>
-                                            <?php echo $size->getQuantity(); ?><br>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#editQuantityModal_<?= $product->getId() ?>_<?= $size->getSizeId() ?>">
-                                                <span data-feather="tool"></span>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger"
-                                                id='deleteSizeItemBtn_<?= $product->getId() ?>_<?= $size->getSizeId() ?>'
-                                                name='deleteSizeItemBtn'>
-                                                <span data-feather="trash-2"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <!-- edit quantity modal -->
-                                    <div class="modal fade"
-                                        id="editQuantityModal_<?= $product->getId() ?>_<?= $size->getSizeId() ?>" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <form id="form_<?= $product->getId() ?>_<?= $size->getSizeId() ?>">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Size Quantity</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <label for="inputSize" class="form-label">Size</label>
-                                                        <input type="text" name="inputSize" id="inputSize" class="form-control"
-                                                            value="<?= preg_replace('/[^0-9]/', '', SizeBUS::getInstance()->getModelById($size->getSizeId())->getName()) ?>"
-                                                            readonly>
+                                <tr>
+                                    <td><img src='<?php echo $product->getImage(); ?>' alt='' class='rounded float-start'>
+                                    </td>
+                                    <td><?php echo $product->getName(); ?></td>
+                                    <td>
+                                        <?php $categoryName = CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName(); ?>
+                                        <?php echo $categoryName; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo preg_replace('/[^0-9]/', '', $size->getName()); ?><br>
+                                    </td>
+                                    <td>
+                                        <?php echo $sizeItem->getQuantity(); ?><br>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#editQuantityModal_<?= $product->getId() ?>_<?= $size->getId() ?>">
+                                            <span data-feather="tool"></span>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger"
+                                            id='deleteSizeItemBtn_<?= $product->getId() ?>_<?= $size->getId() ?>'
+                                            name='deleteSizeItemBtn'>
+                                            <span data-feather="trash-2"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- edit quantity modal -->
+                                <div class="modal fade" id="editQuantityModal_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                    tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <form id="form_<?= $product->getId() ?>_<?= $size->getId() ?>">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Size Quantity</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <label for="inputSize" class="form-label">Size</label>
+                                                    <input type="text" name="inputSize" id="inputSize" class="form-control"
+                                                        value="<?= preg_replace('/[^0-9]/', '', $size->getName()) ?>" readonly>
 
-                                                        <label
-                                                            for="inputQuantity_<?= $product->getId() ?>_<?= $size->getSizeId() ?>"
-                                                            class="form-label">Current
-                                                            Quantity</label>
-                                                        <input type="number" name="inputQuantity"
-                                                            id="inputQuantity_<?= $product->getId() ?>_<?= $size->getSizeId() ?>"
-                                                            class="form-control" value="<?= $size->getQuantity() ?>" readonly>
+                                                    <label for="inputQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                                        class="form-label">Current
+                                                        Quantity</label>
+                                                    <input type="number" name="inputQuantity"
+                                                        id="inputQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                                        class="form-control" value="<?= $sizeItem->getQuantity() ?>" readonly>
 
-                                                        <label
-                                                            for="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getSizeId() ?>"
-                                                            class="form-label">New Quantity</label>
-                                                        <input type="number" name="inputNewQuantity"
-                                                            id="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getSizeId() ?>"
-                                                            class="form-control">
-                                                        <p class="text-danger"> Tip: Negative number for decreasing quantity, else
-                                                            increasing quantity from
-                                                            current quantity</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Save</button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                                    <label for="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                                        class="form-label">New Quantity</label>
+                                                    <input type="number" name="inputNewQuantity"
+                                                        id="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                                        class="form-control">
+                                                    <p class="text-danger"> Tip: Negative number for decreasing quantity, else
+                                                        increasing quantity from
+                                                        current quantity</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
-                                <?php endforeach; ?>
+                                </div>
                             </tbody>
-                        <?php endforeach; ?>
+                            <?php
+                        }
+
+                        $totalPages = count($sizeItemChunks);
+
+                        echo "<nav aria-label='Page navigation example'>";
+                        echo "<ul class='pagination justify-content-center'>";
+
+                        // Add previous button
+                        if ($page > 1) {
+                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=inventory.view&page=" . ($page - 1) . "'>Previous</a></li>";
+                        }
+
+                        $range = 2; // Change this to increase or decrease the range of pages displayed around the current page
+                        for ($i = 1; $i <= $totalPages; $i++) {
+                            // If the page number is within the range of the current page or is the first or last page, display it
+                            if ($i == $page || $i == 1 || $i == $totalPages || ($i > $page - $range && $i < $page + $range)) {
+                                // Highlight the current page
+                                if ($i == $page) {
+                                    echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=inventory.view&page=$i'>$i</a></li>";
+                                } else {
+                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=inventory.view&page=$i'>$i</a></li>";
+                                }
+                            }
+                            // If the page number is just outside the range of the current page, display an ellipsis
+                            else if ($i == $page - $range - 1 || $i == $page + $range + 1) {
+                                echo "<li class='page-item disabled'><a class='page-link'>...</a></li>";
+                            }
+                        }
+
+                        // Add next button
+                        if ($page < $totalPages) {
+                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=inventory.view&page=" . ($page + 1) . "'>Next</a></li>";
+                        }
+
+                        echo "</ul>";
+                        echo "</nav>";
+                        ?>
+
                         </tbody>
-                    <?php } else if (isPost() && isset($_POST['searchBtnName'])) {
+                        <?php
+                    }
+                    if (isPost() && isset($_POST['searchBtnName'])) {
                         $searchValue = $_POST['searchValue'];
                         if (empty($searchValue) || trim($searchValue) == '') {
                             echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
@@ -189,105 +214,87 @@ $productList = ProductBUS::getInstance()->getAllModels();
                             echo "<button type='button' class='btn-close' data-bs-dismiss='alert' onclick='window.history.back(); aria-label='Close'></button>";
                             echo "</div>";
                         }
-                        $groupedProducts = [];
 
-                        // Group products by their ID
+                        //Show search result:
                         foreach ($products as $product) {
-                            $productId = $product->getId();
-                            $sizes = SizeItemsBUS::getInstance()->getModelByProductId($productId);
-                            if (!isset($groupedProducts[$productId])) {
-                                $groupedProducts[$productId] = [
-                                    'product' => $product,
-                                    'sizes' => $sizes
-                                ];
-                            }
-                        }
-
-                        // Now iterate over the grouped products
-                        foreach ($groupedProducts as $groupedProduct):
-                            $product = $groupedProduct['product'];
-                            $sizes = $groupedProduct['sizes'];
-                            ?>
+                            $sizeItems = SizeItemsBUS::getInstance()->getModelByProductId($product->getId());
+                            foreach ($sizeItems as $sizeItem) {
+                                $size = SizeBUS::getInstance()->getModelById($sizeItem->getSizeId());
+                                ?>
                                 <tbody>
-                                <?php foreach ($sizes as $size): ?>
-                                        <tr>
-                                            <td><img src='<?php echo $product->getImage(); ?>' alt='' class='rounded float-start'>
-                                            </td>
-                                            <td><?php echo $product->getName(); ?></td>
-                                            <td>
+                                    <tr>
+                                        <td><img src='<?php echo $product->getImage(); ?>' alt='' class='rounded float-start'>
+                                        </td>
+                                        <td><?php echo $product->getName(); ?></td>
+                                        <td>
                                             <?php $categoryName = CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName(); ?>
                                             <?php echo $categoryName; ?>
-                                            </td>
-                                            <td>
-                                            <?php echo preg_replace('/[^0-9]/', '', SizeBUS::getInstance()->getModelById($size->getSizeId())->getName()); ?><br>
-                                            </td>
-                                            <td>
-                                            <?php echo $size->getQuantity(); ?><br>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                    data-bs-target="#editQuantityModal_<?= $product->getId() ?>_<?= $size->getSizeId() ?>">
-                                                    <span data-feather="tool"></span>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger"
-                                                    id='deleteSizeItemBtn_<?= $product->getId() ?>_<?= $size->getSizeId() ?>'
-                                                    name='deleteSizeItemBtn'>
-                                                    <span data-feather="trash-2"></span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <!-- edit quantity modal -->
-                                        <div class="modal fade"
-                                            id="editQuantityModal_<?= $product->getId() ?>_<?= $size->getSizeId() ?>" tabindex="-1"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <form id="form_<?= $product->getId() ?>_<?= $size->getSizeId() ?>">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Size Quantity</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <label for="inputSize" class="form-label">Size</label>
-                                                            <input type="text" name="inputSize" id="inputSize" class="form-control"
-                                                                value="<?= preg_replace('/[^0-9]/', '', SizeBUS::getInstance()->getModelById($size->getSizeId())->getName()) ?>"
-                                                                readonly>
+                                        </td>
+                                        <td>
+                                            <?php echo preg_replace('/[^0-9]/', '', $size->getName()); ?><br>
+                                        </td>
+                                        <td>
+                                            <?php echo $sizeItem->getQuantity(); ?><br>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                data-bs-target="#editQuantityModal_<?= $product->getId() ?>_<?= $size->getId() ?>">
+                                                <span data-feather="tool"></span>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger"
+                                                id='deleteSizeItemBtn_<?= $product->getId() ?>_<?= $size->getId() ?>'
+                                                name='deleteSizeItemBtn'>
+                                                <span data-feather="trash-2"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <!-- edit quantity modal -->
+                                    <div class="modal fade" id="editQuantityModal_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                        tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <form id="form_<?= $product->getId() ?>_<?= $size->getId() ?>">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Size Quantity</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <label for="inputSize" class="form-label">Size</label>
+                                                        <input type="text" name="inputSize" id="inputSize" class="form-control"
+                                                            value="<?= preg_replace('/[^0-9]/', '', $size->getName()) ?>" readonly>
 
-                                                            <label
-                                                                for="inputQuantity_<?= $product->getId() ?>_<?= $size->getSizeId() ?>"
-                                                                class="form-label">Current
-                                                                Quantity</label>
-                                                            <input type="number" name="inputQuantity"
-                                                                id="inputQuantity_<?= $product->getId() ?>_<?= $size->getSizeId() ?>"
-                                                                class="form-control" value="<?= $size->getQuantity() ?>" readonly>
+                                                        <label for="inputQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                                            class="form-label">Current
+                                                            Quantity</label>
+                                                        <input type="number" name="inputQuantity"
+                                                            id="inputQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                                            class="form-control" value="<?= $sizeItem->getQuantity() ?>" readonly>
 
-                                                            <label
-                                                                for="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getSizeId() ?>"
-                                                                class="form-label">New Quantity</label>
-                                                            <input type="number" name="inputNewQuantity"
-                                                                id="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getSizeId() ?>"
-                                                                class="form-control">
-                                                            <p class="text-danger"> Tip: Negative number for decreasing quantity, else
-                                                                increasing quantity from
-                                                                current quantity</p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Save</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                        <label for="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                                            class="form-label">New Quantity</label>
+                                                        <input type="number" name="inputNewQuantity"
+                                                            id="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
+                                                            class="form-control">
+                                                        <p class="text-danger"> Tip: Negative number for decreasing quantity, else
+                                                            increasing quantity from
+                                                            current quantity</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                <?php endforeach; ?>
+                                    </div>
                                 </tbody>
-                        <?php endforeach; ?>
-                            </tbody>
-                        <?php
-
-                    } ?>
+                                <?php
+                            }
+                        }
+                    }
+                    ?>
                 </table>
 
                 <!-- Add modal -->

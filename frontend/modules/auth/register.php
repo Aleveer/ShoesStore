@@ -1,13 +1,4 @@
 <?php
-
-// use services\validation;
-// use services\session;
-// use BUS\UserBUS;
-// use Models\UserModel;
-// use Enums\StatusEnums;
-// use Enums\RolesEnums;
-// use services\PasswordUtilities;
-
 use backend\services\session;
 use backend\bus\UserBUS;
 use backend\enums\StatusEnums;
@@ -170,7 +161,8 @@ $data = [
                     <button type="submit" class="btn btn-primary btn-block mg-form"
                         style="width:100%; margin-top:16px;">Register</button>
                     <hr>
-                    <p class="text-center"><a href="?module=auth&action=login">Already have an account? Log in here</a></p>
+                    <p class="text-center"><a href="?module=auth&action=login">Already have an account? Log in here</a>
+                    </p>
             </form>
         </div>
     </div>

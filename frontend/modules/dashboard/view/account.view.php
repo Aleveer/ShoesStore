@@ -34,12 +34,12 @@ function showUserList($user, $currentLoggedInUser)
     $isCurrentUser = $currentLoggedInUser->getId() == $user->getId();
 
     // Admins can edit anyone but not for other admins, admin can edit themselves
-    // Managers can edit employees and customers, but not admins or other managers
+    // Managers can edit them self employees and customers, but not admins or other managers
     // Employees can edit customers, but not other employees, managers, or admins:
-
     $canEdit = (($currentUserRole == '1' && $displayUserRole != '1') || ($currentUserRole == '1' && $isCurrentUser)) ||
-        ($currentUserRole == '2' && $displayUserRole > '2') ||
+        (($currentUserRole == '2' && $displayUserRole > '2') || ($currentUserRole == '2' && $isCurrentUser)) ||
         ($currentUserRole == '3' && $displayUserRole == '4');
+
 
     echo "<tr>";
     echo "<td class='col-1'><img src='" . $user->getImage() . "' style='width: 50px; height: 50px;' alt='ATR'></td>";

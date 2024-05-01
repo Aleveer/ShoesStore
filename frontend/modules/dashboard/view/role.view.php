@@ -187,9 +187,7 @@ $roleList = RoleBUS::getInstance()->getAllModels();
         <?php include (__DIR__ . '/../inc/app/app.php'); ?>
         <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_coupon.js"></script> -->
         <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/update_roles_permissions.js"></script>
-        <!-- <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_coupon.js"></script> -->
 </body>
 
 </html>

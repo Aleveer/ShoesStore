@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
     $isCurrentUser = $currentLoggedInUser->getId() == $user->getId();
 
     $canEdit = (($currentUserRole == '1' && $editUserRole != '1') || ($currentUserRole == '1' && $isCurrentUser)) ||
-        ($currentUserRole == '2' && $editUserRole > '2') ||
+        (($currentUserRole == '2' && $editUserRole > '2') || ($currentUserRole == '2' && $isCurrentUser)) ||
         ($currentUserRole == '3' && $editUserRole == '4');
 
     if (!$canEdit) {

@@ -26,7 +26,7 @@ $cartListFromUser = CartsBUS::getInstance()->getModelByUserId($userModel->getId(
 
 if (count($cartListFromUser) == 0) {
     echo '<script>';
-    echo 'alert("Giỏ hàng của bạn đang trống!")';
+    echo 'alert("Your cart is currently empty!")';
     echo '</script>';
     echo '<script>';
     echo 'window.location.href = "?module=cartsection&action=cart"';
@@ -36,7 +36,7 @@ if (count($cartListFromUser) == 0) {
 
 if ($userModel->getRoleId() == 1 || $userModel->getRoleId() == 2 || $userModel->getRoleId() == 3) {
     echo '<script>';
-    echo 'alert("Bạn không có quyền truy cập vào trang này!")';
+    echo 'alert("You don\'t have access to this page!")';
     echo '</script>';
     echo '<script>';
     echo 'window.location.href = "?module=indexphp&action=product"';
@@ -175,7 +175,7 @@ foreach ($cartListFromUser as $cartModel) {
                 }
 
                 //Check if the discount code has remaining quantity = 0
-                if ($discountModel->getQuantity() == 0) {
+                if ($discountModel != null && $discountModel->getQuantity() == 0) {
                     echo '<script>';
                     echo 'alert("Discount code has run out!")';
                     echo '</script>';
@@ -186,7 +186,7 @@ foreach ($cartListFromUser as $cartModel) {
                 }
 
                 //Check if the discount code is expired:
-                if ($discountModel->getExpired() < $currentDate) {
+                if ($discountModel != null && $discountModel->getExpired() < $currentDate) {
                     echo '<script>';
                     echo 'alert("Discount code has expired!")';
                     echo '</script>';
@@ -204,9 +204,11 @@ foreach ($cartListFromUser as $cartModel) {
                 echo '</script>';
 
                 //Update the coupon remaining quantity:
-                $discountModel->setQuantity($discountModel->getQuantity() - 1);
-                CouponsBUS::getInstance()->updateModel($discountModel);
-                CouponsBUS::getInstance()->refreshData();
+                if ($discountModel != null) {
+                    $discountModel->setQuantity($discountModel->getQuantity() - 1);
+                    CouponsBUS::getInstance()->updateModel($discountModel);
+                    CouponsBUS::getInstance()->refreshData();
+                }
             }
 
             //Create the order:
@@ -219,7 +221,7 @@ foreach ($cartListFromUser as $cartModel) {
             $customerPhone = $_POST['inputPhoneNumber'];
             $customerAddress = $_POST['inputAddress'];
 
-            if (empty($customerName) || empty($customerPhone) || empty($customerAddress)) {
+            if (empty($customerName) || empty($customerPhone) || empty($customerAddress) || trim($customerName) == "" || trim($customerPhone) == "" || trim($customerAddress) == "") {
                 echo '<script>';
                 echo 'alert("Please write all the information!")';
                 echo '</script>';

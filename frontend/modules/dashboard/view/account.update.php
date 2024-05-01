@@ -1,8 +1,10 @@
 <?php
 use backend\bus\RoleBUS;
+use backend\bus\TokenLoginBUS;
 use backend\bus\UserBUS;
 use backend\enums\StatusEnums;
 use backend\services\PasswordUtilities;
+use backend\services\session;
 
 $title = 'Edit Account Information';
 if (!defined('_CODE')) {
@@ -14,6 +16,11 @@ if (!isAllowToDashBoard()) {
 }
 include (__DIR__ . '/../inc/head.php');
 
+//Get current logged in user
+$token = session::getInstance()->getSession('tokenLogin');
+$tokenModel = TokenLoginBUS::getInstance()->getModelByToken($token);
+$currentLoggedInUser = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
+
 global $id;
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -21,10 +28,24 @@ if (isset($_GET['id'])) {
     if ($user === null) {
         die('User does not exist');
     }
+
+    // Check if the current user is allowed to edit the user specified by the id parameter
+    $currentUserRole = $currentLoggedInUser->getRoleId();
+    $editUserRole = $user->getRoleId();
+    $isCurrentUser = $currentLoggedInUser->getId() == $user->getId();
+
+    $canEdit = (($currentUserRole == '1' && $editUserRole != '1') || ($currentUserRole == '1' && $isCurrentUser)) ||
+        ($currentUserRole == '2' && $editUserRole > '2') ||
+        ($currentUserRole == '3' && $editUserRole == '4');
+
+    if (!$canEdit) {
+        die('Access denied');
+    }
 } else {
     die('User id is missing');
 }
 ?>
+
 
 <div id="header">
     <meta charset="UTF-8">

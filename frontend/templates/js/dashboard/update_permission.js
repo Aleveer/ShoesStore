@@ -11,6 +11,13 @@ $(document).ready(function () {
             return;
         }
 
+        //Check for empty permission name:
+        //Trim first then check if it's empty
+        if (permissionName.trim() === '') {
+            alert('Please enter a valid permission name');
+            return;
+        }
+
         $.ajax({
             url: 'http://localhost/frontend/index.php?module=dashboard&view=permission.view',
             type: 'POST',

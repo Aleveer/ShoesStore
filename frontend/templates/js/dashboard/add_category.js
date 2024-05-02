@@ -26,6 +26,8 @@ $(document).ready(function () {
                 success: function (data) {
                     if (data.status == "success") {
                         alert(data.message);
+                        //Close the modal
+                        $('#addCategoryModal').modal('hide');
                         window.location.reload();
                     } else if (data.status == "error") {
                         alert(data.message);

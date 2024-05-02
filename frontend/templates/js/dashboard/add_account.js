@@ -58,6 +58,8 @@ $(document).ready(function () {
                 success: function (data) {
                     if (data.status == "success") {
                         alert(data.message);
+                        //Close the modal
+                        $('#addAccountModal').modal('hide');
                         // Redirect to account view page
                         window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=account.view";
                     } else if (data.status == "error") {

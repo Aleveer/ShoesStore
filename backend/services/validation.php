@@ -30,11 +30,11 @@ class validation
         return self::isMatch($username, $regex);
     }
 
-    public static function isValidPassword($password)
-    {
-        $regex = "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$/";
-        return self::isMatch($password, $regex);
-    }
+    // public static function isValidPassword($password)
+    // {
+    //     $regex = "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$/";
+    //     return self::isMatch($password, $regex);
+    // }
 
     public static function isValidPhoneNumber($phoneNumber)
     {
@@ -51,7 +51,7 @@ class validation
     public static function isValidPrice($input)
     {
         $regex = "/^[1-9]\\d*(\\.\\d+)?$/";
-        return self::isMatch($input, $regex) && (float)$input > 0;
+        return self::isMatch($input, $regex) && (float) $input > 0;
     }
 
     public static function isValidAddress($address)

@@ -39,7 +39,7 @@ class UserBUS implements BUSInterface
         return UserDAO::getInstance()->getById($id);
     }
 
-    public function getModelByEmail(string $email)
+    public function getModelByEmail($email)
     {
         $this->userList = UserDAO::getInstance()->getAll();
         for ($i = 0; $i < count($this->userList); $i++) {
@@ -205,9 +205,10 @@ class UserBUS implements BUSInterface
             $errors['password']['required'] = "Password is required";
         }
 
-        if (!$validation->isValidPassword($password)) {
-            $errors['password']['valid'] = "Invalid password";
-        }
+        //TODO: Fix the validate password section at backend not working as expected:
+        // if (!$validation->isValidPassword($password)) {
+        //     $errors['password']['valid'] = "Invalid password";
+        // }
 
         if (strlen($password) < 8) {
             $errors['password']['min-length'] = "Password must be at least 8 characters";

@@ -275,8 +275,7 @@ function showProductList($product)
                                             accept=".jpg, .jpeg, .png">
                                     </div>
                                     <div class="col-5 productImg">
-                                        <img id="imgPreview" src="..\..\..\..\templates\images\680098.jpg"
-                                            alt="Preview Image">
+                                        <img id="imgPreview" src="" alt="Preview Image">
                                     </div>
                             </div>
                             <div class="modal-footer">

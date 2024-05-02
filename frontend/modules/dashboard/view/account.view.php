@@ -255,8 +255,7 @@ function showUserList($user, $currentLoggedInUser)
                         </div>
                         <div class="col-md-3">
                             <label for="inputPassword" class="form-label">Password</label>
-                            <input type="password" name="" id="inputPassword" name="inputPasswordName"
-                                class="form-control">
+                            <input type="password" id="inputPassword" name="inputPasswordName" class="form-control">
                         </div>
                         <div class="col-5">
                             <label for="inputEmail" class="form-label">Email</label>
@@ -297,8 +296,7 @@ function showUserList($user, $currentLoggedInUser)
                             <input type="text" name="inputAddressName" id="inputAddress" class="form-control">
                         </div>
                         <div class="col-6  userImg">
-                            <img id="imgPreview" src="..\..\..\..\templates\images\680098.jpg" alt="Preview Image" a
-                                class="img-circle">
+                            <img id="imgPreview" src="" alt="Preview Image" a class="img-circle">
                         </div>
                         <div class="col-6">
                             <label for="inputImg">Image</label>

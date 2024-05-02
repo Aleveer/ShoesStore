@@ -205,10 +205,9 @@ class UserBUS implements BUSInterface
             $errors['password']['required'] = "Password is required";
         }
 
-        //TODO: Fix the validate password section at backend not working as expected:
-        // if (!$validation->isValidPassword($password)) {
-        //     $errors['password']['valid'] = "Invalid password";
-        // }
+        if (!$validation->isValidPassword($password)) {
+            $errors['password']['valid'] = "Invalid password";
+        }
 
         if (strlen($password) < 8) {
             $errors['password']['min-length'] = "Password must be at least 8 characters";

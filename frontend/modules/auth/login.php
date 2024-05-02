@@ -12,7 +12,7 @@ if (!defined('_CODE')) {
 }
 
 $data = [
-    'pageTitle' => 'Đăng nhập'
+    'pageTitle' => 'Sign in'
 ];
 
 if (isPost()) {

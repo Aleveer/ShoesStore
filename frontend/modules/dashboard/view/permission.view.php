@@ -1,4 +1,5 @@
 <?php
+ob_start();
 $title = 'Permissions';
 if (!defined('_CODE')) {
     die('Access denied');
@@ -104,6 +105,8 @@ $permissionList = PermissionBUS::getInstance()->getAllModels();
                 $permissionModel->setName($permissionName);
                 PermissionBUS::getInstance()->updateModel($permissionModel);
                 PermissionBUS::getInstance()->refreshData();
+                ob_end_clean();
+                return jsonResponse('success', 'Update permission successfully');
             }
         }
         ?>

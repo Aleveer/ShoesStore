@@ -195,3 +195,10 @@ function checkPermission($permissionId)
         return false;
     }
 }
+
+function jsonResponse($status, $message)
+{
+    header('Content-Type: application/json');
+    echo json_encode(['status' => $status, 'message' => $message]);
+    exit;
+}

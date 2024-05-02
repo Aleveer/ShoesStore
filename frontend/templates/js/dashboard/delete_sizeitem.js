@@ -19,17 +19,20 @@ $(document).ready(function () {
             $.ajax({
                 url: 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view',
                 type: 'POST',
+                datatype: 'json',
                 data: {
                     productId: productId,
                     sizeId: sizeId,
                     delete: true
                 },
-                success: function (response) {
-                    // handle success
-                    console.log('Delete successful');
-                    alert('Deleted successfully');
-                    // Remove the row from the table
-                    $(this).closest('tr').remove();
+                success: function (data) {
+                    if (data.status == "success") {
+                        alert(data.message);
+                        $(this).closest('tr').remove();
+                        window.location.reload();
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     // handle error

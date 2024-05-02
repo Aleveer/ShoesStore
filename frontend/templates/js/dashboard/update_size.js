@@ -25,14 +25,19 @@ $(document).ready(function () {
         $.ajax({
             url: 'http://localhost/frontend/index.php?module=dashboard&view=size.view',
             method: 'POST',
-            datatype: 'html',
+            datatype: 'json',
             data: {
                 id: sizeId,
                 name: sizeName,
                 editButtonName: true
             },
-            success: function () {
-                window.location.reload();
+            success: function (data) {
+                if (data.status == "success") {
+                    alert(data.message);
+                    window.location.reload();
+                } else if (data.status == "error") {
+                    alert(data.message);
+                }
             },
             error: function (xhr, status, error) {
                 // handle any errors

@@ -28,6 +28,7 @@ $(document).ready(function () {
         $.ajax({
             url: 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view',
             type: 'POST',
+            datatype: 'json',
             data: {
                 productId: productId,
                 sizeId: sizeId,
@@ -35,12 +36,13 @@ $(document).ready(function () {
                 currentQuantity: currentQuantity,
                 button: true
             },
-            success: function (response) {
-                // handle success
-                console.log('Update successful');
-
-                //Refresh the page
-                window.location.reload();
+            success: function (data) {
+                if (data.status == "success") {
+                    alert(data.message);
+                    window.location.reload();
+                } else if (data.status == "error") {
+                    alert(data.message);
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 // handle error

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\RolePermissionBUS;
 use backend\models\RolePermissionsModel;
 
@@ -185,8 +186,9 @@ $roleList = RoleBUS::getInstance()->getAllModels();
                     RolePermissionBUS::getInstance()->addModel($rolePermission);
                 }
             }
-
             RolePermissionBUS::getInstance()->refreshData();
+            ob_end_clean();
+            return jsonResponse('success', 'Update role permission successfully');
         }
         ?>
         <?php include (__DIR__ . '/../inc/app/app.php'); ?>

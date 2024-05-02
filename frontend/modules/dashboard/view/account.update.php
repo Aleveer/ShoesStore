@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\RoleBUS;
 use backend\bus\TokenLoginBUS;
 use backend\bus\UserBUS;
@@ -218,24 +219,32 @@ if (isset($_GET['id'])) {
             $name = $_POST['nameEdit'] ?? '';
             $email = $_POST['emailEdit'] ?? '';
 
-            if (UserBUS::getInstance()->isEmailTaken($email)) {
-                echo "<script>alert('Email is already taken!')</script>";
+            //Check for valid email
+            if (validation::isValidEmail($email) == false) {
+                error_log("Invalid email!");
+                ob_end_clean();
+                return jsonResponse('error', 'Invalid email!');
+            }
+
+            if (UserBUS::getInstance()->isEmailTaken($email, $id)) {
                 error_log("Email is already taken!");
-                return;
+                ob_end_clean();
+                return jsonResponse('error', 'Email is already taken!');
             }
 
             $phone = $_POST['phoneEdit'] ?? '';
-            //Check valid phone number
             if (validation::isValidPhoneNumber($phone) == false) {
-                echo "<script>alert('Invalid phone number!')</script>";
                 error_log("Invalid phone number!");
-                return;
+                ob_end_clean();
+                return jsonResponse('error', 'Invalid phone number!');
             }
 
-            if (UserBUS::getInstance()->isPhoneTaken($phone)) {
-                echo "<script>alert('Phone number is already taken!')</script>";
+            if (UserBUS::getInstance()->isPhoneTaken($phone, $id)) {
                 error_log("Phone number is already taken!");
-                return;
+                error_log($phone);
+                error_log('User id: ' . $id);
+                ob_end_clean();
+                return jsonResponse('error', 'Phone number is already taken!');
             }
 
             $gender = $_POST['genderEdit'] ?? '';
@@ -261,6 +270,8 @@ if (isset($_GET['id'])) {
             $accountUpdate->setImage($imageData);
             UserBUS::getInstance()->updateModel($accountUpdate);
             UserBUS::getInstance()->refreshData();
+            ob_end_clean();
+            return jsonResponse('success', 'Update account successfully!');
         }
     }
     ?>

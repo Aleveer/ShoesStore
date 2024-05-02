@@ -14,15 +14,19 @@ $(document).ready(function () {
         $.ajax({
             url: 'http://localhost/frontend/index.php?module=dashboard&view=permission.view',
             type: 'POST',
+            dataType: 'json',
             data: {
                 id: permissionId,
                 name: permissionName,
                 submit: true
             },
-            success: function (response) {
-                // Handle success - you might want to show a success message, or update the permission name in the table
-                console.log('Permission updated successfully');
-                $('#editPermissionModal_' + permissionId).modal('hide'); // Close the modal
+            success: function (data) {
+                if (data.status == "success") {
+                    alert(data.message);
+                    $('#editPermissionModal_' + permissionId).modal('hide'); // Close the modal
+                } else if (data.status == "error") {
+                    alert(data.message);
+                }
             },
             error: function (response) {
                 // Handle error - you might want to show an error message

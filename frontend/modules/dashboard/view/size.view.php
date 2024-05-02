@@ -1,7 +1,6 @@
 <?php
-use backend\bus\ProductBUS;
+ob_start();
 use backend\bus\SizeItemsBUS;
-use backend\models\CategoriesModel;
 use backend\models\SizeModel;
 
 $title = 'Sizes';
@@ -149,26 +148,27 @@ use backend\bus\SizeBUS;
                     </div>
                 </div>
             </div>
+
             <?php
+            //TODO: Notifcation not showing up
             if (isPost()) {
                 if (isset($_POST['saveBtn'])) {
-                    error_log('Save button for size clicked');
                     $sizeName = $_POST['sizeName'];
                     $sizeName = 'Size ' . $sizeName;
                     //Check for duplicate sizeName:
                     foreach (SizeBUS::getInstance()->getAllModels() as $size) {
                         if ($size->getName() == $sizeName) {
-                            echo '<script>alert("Size already exists");</script>';
                             error_log('Size already exists');
-                            return;
+                            ob_end_clean();
+                            return jsonResponse('error', 'Size already exists');
                         }
                     }
                     $sizeModel = new SizeModel(null, null);
                     $sizeModel->setName($sizeName);
                     SizeBUS::getInstance()->addModel($sizeModel);
                     SizeBUS::getInstance()->refreshData();
-                    //Once created, refresh the page:
-                    echo '<script>window.location.href = "?module=dashboard&view=size.view";</script>';
+                    ob_end_clean();
+                    return jsonResponse('success', 'Size added successfully');
                 }
             }
             ?>
@@ -185,9 +185,8 @@ use backend\bus\SizeBUS;
                     if ($sizeName != $sizeModel->getName()) {
                         foreach (SizeBUS::getInstance()->getAllModels() as $size) {
                             if ($size->getName() == $sizeName) {
-                                echo '<script>alert("Size already exists");</script>';
                                 error_log('Size already exists');
-                                return;
+                                return jsonResponse('error', 'Size already exists');
                             }
                         }
                     }
@@ -198,21 +197,23 @@ use backend\bus\SizeBUS;
 
                     SizeBUS::getInstance()->updateModel($sizeModel);
                     SizeBUS::getInstance()->refreshData();
-                    //Once created, refresh the page:
-                    echo '<script>window.location.href = "?module=dashboard&view=product.view";</script>';
+                    ob_end_clean();
+                    return jsonResponse('success', 'Size updated successfully');
                 }
             }
             ?>
 
             <?php
-            //TODO: Fix notification:
             if (isPost()) {
                 if (isset($_POST['deleteSizeBtn'])) {
                     $sizeId = $_POST['sizeId'];
                     if (SizeBUS::getInstance()->deleteModel($sizeId)) {
                         SizeBUS::getInstance()->refreshData();
+                        ob_end_clean();
+                        return jsonResponse('success', 'Size deleted successfully');
                     } else {
-                        echo '<script>alert("Delete failed");</script>';
+                        ob_end_clean();
+                        return jsonResponse('error', 'Size cannot be deleted because it is being used in a product.');
                     }
                 }
             }

@@ -14,14 +14,17 @@ $(document).ready(function () {
             $.ajax({
                 url: window.location.href,
                 method: 'POST',
-                dataType: 'html',
+                dataType: 'json',
                 data: {
                     productId: productId,
                     deleteButton: true,
                 },
-                success: function (response) {
-                    console.log('Delete request successful');
-                    alert('Product hidden successfully');
+                success: function (data) {
+                    if (data.status == "success") {
+                        alert(data.message);
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.log('Delete request failed');
@@ -45,9 +48,14 @@ $(document).ready(function () {
                         productId: productId,
                         completelyDeleteProduct: true,
                     },
-                    success: function (response) {
-                        //Reload the page
-                        window.location.href = 'http://localhost/frontend/index.php?module=dashboard&view=product.view';
+                    success: function (data) {
+                        if (data.status == "success") {
+                            alert(data.message);
+                            //refresh page
+                            window.location.reload();
+                        } else if (data.status == "error") {
+                            alert(data.message);
+                        }
                     },
                     error: function (xhr, status, error) {
                         console.log('Completely delete request failed');

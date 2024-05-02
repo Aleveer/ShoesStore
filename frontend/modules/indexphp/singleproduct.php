@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\ProductBUS;
 use backend\bus\SizeBUS;
 use backend\bus\SizeItemsBUS;
@@ -61,6 +62,7 @@ if (isLogin()) {
         });
     </script>
 </div>
+
 
 <body>
     <div class="singleproduct">
@@ -140,43 +142,33 @@ if (isLogin()) {
                 }
                 if ($hideButton) {
                     //Hide button add to cart:
-                    echo '<button class="addtocart" name="addToCart" id="addToCartId" style="display:none;">';
+                    echo '<button class="addtocart" name="addToCart" style="display:none;">';
                     //Lock the quantity input:
                     echo '<script>document.getElementById("pquantity").disabled = true;</script>';
                 } else {
-                    echo '<button class="addtocart" name="addToCart" id="addToCartId">';
+                    echo '<button class="addtocart" name="addToCart">';
                 }
                 ?>
                 <i class="fa-solid fa-cart-shopping"> Add+</i>
                 </button>
                 <?php
                 if (!isLogin()) {
-                    echo '<script>document.querySelector(".addToCart").addEventListener("click", function() {alert("You have to login in order to add a product to cart!")});</script>';
+                    echo '<script>document.querySelector(".addtocart").addEventListener("click", function() {alert("You have to login in order to add a product to cart!")});</script>';
                 } else {
                     if (isPost()) {
-                        if (isset($_POST['addToCart'])) {
+                        if (isset($_POST['addtocart'])) {
                             switch ($userModel->getStatus()) {
                                 case StatusEnums::BANNED:
-                                    $data = array(
-                                        'status' => 'error',
-                                        'message' => 'Your account has been banned. You cannot perform this action'
-                                    );
-                                    echo json_encode($data);
-                                    error_log(json_encode($data));
-                                    exit();
-
+                                    ob_end_clean();
+                                    return jsonResponse('error', 'Your account has been banned. You cannot perform this action');
                                 case StatusEnums::INACTIVE:
-                                    $data = array(
-                                        'status' => 'error',
-                                        'message' => 'Your account has not been activated. Please log in again to activate your account'
-                                    );
-                                    echo json_encode($data);
                                     $userModel->setStatus(StatusEnums::INACTIVE);
                                     UserBUS::getInstance()->updateModel($userModel);
                                     TokenLoginBUS::getInstance()->deleteModel($tokenModel);
                                     session::getInstance()->removeSession('tokenLogin');
-                                    redirect('?module=auth&action=login');
-                                    exit();
+                                    ob_end_clean();
+                                    return jsonResponse('error', 'Your account has not been activated. Please log in again to activate your account');
+                                // redirect('?module=auth&action=login');
                             }
 
                             $filterAll = filter();
@@ -187,24 +179,13 @@ if (isLogin()) {
                             if ($cartItem != null) {
                                 $sizeItem = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $product->getId());
                                 if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
-                                    $data = array(
-                                        'status' => 'error',
-                                        'message' => 'The quantity of the product in the cart can\'t exceeds the remaining quantity of the product'
-                                    );
-                                    echo json_encode($data);
-                                    error_log(json_encode($data));
-                                    return;
+                                    return jsonResponse('error', 'The quantity of the product in the cart can\'t exceeds the remaining quantity of the product');
                                 } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
-                                    $data = array(
-                                        'status' => 'success',
-                                        'message' => 'The product is already in your cart, the quantity of the product has been updated'
-                                    );
                                     $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
                                     CartsBUS::getInstance()->updateModel($cartItem);
                                     CartsBUS::getInstance()->refreshData();
-                                    echo json_encode($data);
-                                    error_log(json_encode($data));
-                                    return;
+                                    ob_end_clean();
+                                    return jsonResponse('success', 'The product is already in your cart, the quantity of the product has been updated');
                                 }
                             } else if ($cartItem == null) {
                                 $cart = new CartsModel(null, null, null, null, null);
@@ -214,34 +195,21 @@ if (isLogin()) {
 
                                 //Check if the quantity is greater than the quantity of the product:
                                 $sizeItems = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $product->getId());
-                                if ($sizeItems === null) {
-                                    error_log('Failed to get size item for size ID: ' . $sizeId . ' and product ID: ' . $product->getId());
-                                    $data = array(
-                                        'status' => 'error',
-                                        'message' => 'Size item not found'
-                                    );
-                                    echo json_encode($data);
-                                    return;
-                                }
-
-                                if ($quantity > $sizeItems->getQuantity()) {
-                                    $cart->setQuantity($sizeItems->getQuantity());
-                                } else {
-                                    $cart->setQuantity($quantity);
+                                if ($sizeItems == null) {
+                                    ob_end_clean();
+                                    return jsonResponse('error', 'This size is not available for this product');
                                 }
                                 if ($quantity > $sizeItems->getQuantity()) {
                                     $cart->setQuantity($sizeItems->getQuantity());
+                                    ob_end_clean();
+                                    return jsonResponse('error', 'The quantity of the product can\'t exceeds the remaining quantity of the product.');
                                 } else {
                                     $cart->setQuantity($quantity);
                                 }
                                 CartsBUS::getInstance()->addModel($cart);
                                 CartsBUS::getInstance()->refreshData();
-                                $data = array(
-                                    'status' => 'success',
-                                    'message' => 'Added product to cart successfully'
-                                );
-                                error_log(json_encode($data));
-                                echo json_encode($data);
+                                ob_end_clean();
+                                return jsonResponse('success', 'Added product to cart successfully');
                             }
                         }
                     }

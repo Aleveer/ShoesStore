@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\CategoriesBUS;
 use backend\bus\SizeBUS;
 use backend\bus\SizeItemsBUS;
@@ -368,7 +369,6 @@ $productList = ProductBUS::getInstance()->getAllModels();
                 </div>
             </main>
             <?php
-            //TODO: Fix notification not showing up.
             if (isPost()) {
                 //Handle add size item:
                 if (isset($_POST['saveBtnName'])) {
@@ -390,7 +390,10 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     $newSizeItemModel = new SizeItemsModel(null, $productId, $sizeId, $quantity);
                     SizeItemsBUS::getInstance()->addModel($newSizeItemModel);
                     SizeItemsBUS::getInstance()->refreshData();
+                    ob_end_clean();
+                    return jsonResponse('success', 'Add size item successfully!');
                 }
+
                 //Handle update quantity:
                 if (isset($_POST['button'])) {
                     $productId = $_POST['productId'];
@@ -401,7 +404,10 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     $sizeItem->setQuantity($currentQuantity + $newQuantity);
                     SizeItemsBUS::getInstance()->updateModel($sizeItem);
                     SizeItemsBUS::getInstance()->refreshData();
+                    ob_end_clean();
+                    return jsonResponse('success', 'Update quantity successfully!');
                 }
+
                 //Handle delete size item:
                 if (isset($_POST['delete'])) {
                     $productId = $_POST['productId'];
@@ -409,6 +415,8 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     $sizeItem = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $productId);
                     SizeItemsBUS::getInstance()->deleteModel($sizeItem);
                     SizeItemsBUS::getInstance()->refreshData();
+                    ob_end_clean();
+                    return jsonResponse('success', 'Delete size item successfully!');
                 }
             }
             ?>

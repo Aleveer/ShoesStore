@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\CouponsBUS;
 use backend\models\CouponsModel;
 
@@ -259,14 +260,16 @@ function showCouponList($coupon)
                     </div>
                 </div>
                 <?php
-                //TODO: Fix notification not showing
                 if (isPost()) {
                     if (isset($_POST['saveBtn'])) {
                         $code = $_POST['couponCode'];
+
                         if (CouponsBUS::getInstance()->checkForDuplicateCode($code)) {
                             error_log('Duplicate code');
-                            return;
+                            ob_end_clean();
+                            return jsonResponse('error', 'Duplicate code');
                         }
+
                         $quantity = $_POST['couponQuantity'];
                         $discount = $_POST['couponDiscount'];
                         $description = $_POST['couponDescription'];
@@ -274,12 +277,15 @@ function showCouponList($coupon)
                         $currentDate = date('Y-m-d');
                         if ($expired < $currentDate) {
                             error_log('Expired date must be greater than current date');
-                            return;
+                            ob_end_clean();
+                            return jsonResponse('error', 'Expired date must be greater than current date');
                         }
 
                         $newCoupon = new CouponsModel(null, $code, $quantity, $discount, $expired, $description);
                         CouponsBUS::getInstance()->addModel($newCoupon);
                         CouponsBUS::getInstance()->refreshData();
+                        ob_end_clean();
+                        return jsonResponse('success', 'Add coupon successfully');
                     }
                 }
                 ?>
@@ -293,7 +299,7 @@ function showCouponList($coupon)
                         if ($coupon->getCode() != $code) {
                             if (CouponsBUS::getInstance()->checkForDuplicateCode($code)) {
                                 error_log('Duplicate code');
-                                return;
+                                return jsonResponse('error', 'Duplicate code');
                             }
                         }
 
@@ -309,6 +315,8 @@ function showCouponList($coupon)
                         $coupon->setExpired($expired);
                         CouponsBUS::getInstance()->updateModel($coupon);
                         CouponsBUS::getInstance()->refreshData();
+                        ob_end_clean();
+                        return jsonResponse('success', 'Update coupon successfully');
                     }
                 }
                 ?>
@@ -320,6 +328,8 @@ function showCouponList($coupon)
                         $couponModel = CouponsBUS::getInstance()->getModelById($id);
                         CouponsBUS::getInstance()->deleteModel($couponModel->getId());
                         CouponsBUS::getInstance()->refreshData();
+                        ob_end_clean();
+                        return jsonResponse('success', 'Delete coupon successfully');
                     }
                 }
                 ?>

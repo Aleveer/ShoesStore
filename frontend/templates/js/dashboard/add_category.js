@@ -18,14 +18,18 @@ $(document).ready(function () {
             $.ajax({
                 url: 'http://localhost/frontend/index.php?module=dashboard&view=category.view',
                 method: "POST",
-                dataType: "html",
+                dataType: "json",
                 data: {
                     categoryName: categoryName.value,
                     saveBtn: true
                 },
-                success: function () {
-                    alert("Category added successfully");
-                    window.location.reload();
+                success: function (data) {
+                    if (data.status == "success") {
+                        alert(data.message);
+                        window.location.reload();
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function (data) {
                     alert("Error adding category");

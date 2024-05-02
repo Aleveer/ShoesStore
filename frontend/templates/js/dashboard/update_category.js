@@ -27,15 +27,19 @@ $(document).ready(function () {
         $.ajax({
             url: window.location.href,
             method: 'POST',
-            datatype: 'html',
+            datatype: 'json',
             data: {
                 id: categoryId,
                 name: categoryName,
                 editButtonName: true
             },
-            success: function (response) {
-                // handle the response from the server
-                alert('Category updated successfully');
+            success: function (data) {
+                if (data.status == "success") {
+                    alert(data.message);
+                    window.location.reload();
+                } else if (data.status == "error") {
+                    alert(data.message);
+                }
             },
             error: function (xhr, status, error) {
                 // handle any errors

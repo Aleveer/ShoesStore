@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\CategoriesBUS;
 use backend\bus\OrderItemsBUS;
 use backend\bus\SizeItemsBUS;
@@ -296,8 +297,8 @@ function showProductList($product)
                                     $productModel->setImage($data);
                                     ProductBUS::getInstance()->addModel($productModel);
                                     ProductBUS::getInstance()->refreshData();
-                                    //Once created, refresh the page:
-                                    echo '<script>window.location.href = "?module=dashboard&view=product.view";</script>';
+                                    ob_end_clean();
+                                    return jsonResponse('success', 'Product added successfully!');
                                 }
                             }
                             ?>
@@ -308,6 +309,7 @@ function showProductList($product)
 
                 <?php
                 //Handle delete product:
+                //TODO: Fix not popping up notification
                 if (isPost()) {
                     if (isset($_POST['deleteButton'])) {
                         error_log('Delete button clicked');
@@ -329,13 +331,10 @@ function showProductList($product)
                         //Check for orders that contain the product:
                         $orders = OrderItemsBUS::getInstance()->getOrderItemsListByProductId($productId);
                         if (count($orders) > 0) {
-                            echo '<script>alert("Cannot delete product. Product is in orders.");</script>';
                             error_log('Cannot delete product. Product is in orders.');
+                            ob_end_clean();
+                            return jsonResponse('error', 'Cannot delete product. Product is in orders.');
                         } else {
-                            //Confirm to delete product:
-                            echo '<script>
-            if(confirm("Are you sure you want to delete this product? Once you delete, you cannot recover it.")) {
-                ';
                             foreach (SizeItemsBUS::getInstance()->getModelByProductId($productId) as $sizeItem) {
                                 if ($sizeItem->getProductId() == $productId) {
                                     SizeItemsBUS::getInstance()->deleteModel($sizeItem);
@@ -343,10 +342,8 @@ function showProductList($product)
                             }
                             ProductBUS::getInstance()->deleteModel($productPreparedToDel->getId());
                             ProductBUS::getInstance()->refreshData();
-                            echo '
-            window.location.href = "?module=dashboard&view=product.view";
-            }
-            </script>';
+                            ob_end_clean();
+                            return jsonResponse('success', 'Product deleted successfully!');
                         }
                     }
                 }

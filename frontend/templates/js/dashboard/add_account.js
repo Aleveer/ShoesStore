@@ -42,7 +42,7 @@ $(document).ready(function () {
             $.ajax({
                 url: window.location.href,
                 method: "POST",
-                dataType: "html",
+                dataType: "json",
                 data: {
                     username: username.value,
                     password: password.value,
@@ -56,7 +56,13 @@ $(document).ready(function () {
                     saveBtn: true,
                 },
                 success: function (data) {
-                    alert("Account created successfully");
+                    if (data.status == "success") {
+                        alert(data.message);
+                        // Redirect to account view page
+                        window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=account.view";
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert("Error creating account: " + errorThrown);

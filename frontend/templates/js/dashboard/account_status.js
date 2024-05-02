@@ -10,12 +10,18 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: 'http://localhost/frontend/index.php?module=dashboard&view=account.view',
+                datatype: 'json',
                 data: {
                     'id': id,
                     lockBtn: true
                 },
-                success: function () {
-                    console.log(`Account with id: ${id} has been locked`);
+                success: function (data) {
+                    if (data.status == "success") {
+                        alert(data.message);
+                        location.reload();
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function () {
                     console.log(`An error occurred while locking account with id: ${id}`);
@@ -36,12 +42,19 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: 'http://localhost/frontend/index.php?module=dashboard&view=account.view',
+                datatype: 'json',
                 data: {
                     'id': id,
                     unlockBtn: true
                 },
-                success: function () {
-                    console.log(`Account with id: ${id} has been unlocked`);
+                success: function (data) {
+                    if (data.status == "success") {
+                        alert(data.message);
+                        //Refresh the page:
+                        location.reload();
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function () {
                     console.log(`An error occurred while unlocking account with id: ${id}`);

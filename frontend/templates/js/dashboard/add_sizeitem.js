@@ -31,15 +31,20 @@ $(document).ready(function () {
             $.ajax({
                 url: 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view', // replace with your server script URL
                 method: "POST",
-                dataType: "html",
+                dataType: "json",
                 data: {
                     productName: productName.value,
-                    size: size, // use the value of the selected option
+                    size: size,
                     quantity: quantity.value,
                     saveBtnName: true
                 },
-                success: function () {
-                    window.location.reload();
+                success: function (data) {
+                    if (data.status == "success") {
+                        alert(data.message);
+                        window.location.reload();
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function () {
                     alert("Error adding item");

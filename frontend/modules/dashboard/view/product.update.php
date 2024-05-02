@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\CategoriesBUS;
 use backend\bus\ProductBUS;
 
@@ -162,6 +163,8 @@ if (isset($_GET['id'])) {
                 $productUpdate->setImage($data);
                 ProductBUS::getInstance()->updateModel($productUpdate);
                 ProductBUS::getInstance()->refreshData();
+                ob_end_clean();
+                return jsonResponse('success', 'Update product successfully');
             }
         }
         ?>

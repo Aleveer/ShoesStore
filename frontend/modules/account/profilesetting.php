@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\UserBUS;
 use backend\bus\OrdersBUS;
 use backend\bus\TokenLoginBUS;
@@ -29,7 +30,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
     <title>Profile Setting</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="<?php echo _WEB_HOST_TEMPLATE ?>/css/account-setting.css">
-    <link href="../../../../../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <?php layouts("header") ?>
 </div>
@@ -175,7 +176,8 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                     // Save the updated user model
                                     $userBUS->updateModel($userModel);
                                     $userBUS->refreshData();
-                                    echo '<script>alert("Apply changes successfully!")</script>';
+                                    ob_end_clean();
+                                    return jsonResponse('success', 'Apply changes successfully!');
                                 }
                             }
                             ?>
@@ -217,14 +219,12 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                         if (!PasswordUtilities::getInstance()->verifyPassword($currentPassword, $passwordHash)) {
                                             error_log("Current password is incorrect!");
                                             //echo '<script>alert("Current password is incorrect!")</script>';
-                                            echo json_encode(['success' => false, 'message' => 'Current password is incorrect!']);
-                                            return;
+                                            return jsonResponse('error', 'Current password is incorrect!');
                                         }
 
                                         if ($newPassword != $repeatNewPassword) {
                                             error_log("New passwords do not match!");
-                                            echo '<script>alert("New passwords do not match!")</script>';
-                                            return;
+                                            return jsonResponse('error', 'New passwords do not match!');
                                         }
 
                                         $newPasswordHash = PasswordUtilities::getInstance()->hashPassword($newPassword);
@@ -236,15 +236,16 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
 
                                         if (!$result) {
                                             error_log("Failed to change password!");
-                                            //echo '<script>alert("Failed to change password!")</script>';
-                                            echo json_encode(['success' => false, 'message' => 'Failed to change password!']);
-                                            return;
+                                            // //echo '<script>alert("Failed to change password!")</script>';
+                                            // echo json_encode(['success' => false, 'message' => 'Failed to change password!']);
+                                            // return;
+                                            return jsonResponse('error', 'Failed to change password!');
                                         }
 
                                         $userBUS->refreshData();
                                         error_log("Changed password successfully!");
-                                        echo json_encode(['success' => true, 'message' => 'Changed password successfully!']);
                                         echo '<script>location.reload();</script>';
+                                        return jsonResponse('success', 'Changed password successfully!');
                                     }
                                 }
                                 ?>
@@ -279,13 +280,15 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                         if ($phone != $userModel->getPhone()) {
                                             if (UserBUS::getInstance()->isPhoneTaken($phone)) {
                                                 error_log("Phone number is already taken!");
-                                                echo '<script>alert("Phone number is already taken!")</script>';
+                                                // echo '<script>alert("Phone number is already taken!")</script>';
+                                                return jsonResponse('error', 'Phone number is already taken!');
                                             } else {
                                                 if (validation::isValidPhoneNumber($phone)) {
                                                     $userModel->setPhone($phone);
                                                 } else {
                                                     error_log("Invalid phone number!");
-                                                    echo '<script>alert("Invalid phone number!")</script>';
+                                                    // echo '<script>alert("Invalid phone number!")</script>';
+                                                    return jsonResponse('error', 'Invalid phone number!');
                                                 }
                                             }
                                         }
@@ -297,7 +300,8 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                         // Save the updated user model
                                         $userBUS->updateModel($userModel);
                                         $userBUS->refreshData();
-                                        echo '<script>alert("Apply changes successfully!")</script>';
+                                        // echo '<script>alert("Apply changes successfully!")</script>';
+                                        return jsonResponse('success', 'Apply changes successfully!');
                                     }
                                 }
                                 ?>
@@ -311,7 +315,8 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
     </div>
     <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/profile_setting.js"></script>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="../../../../../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="../../../../../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 <div id="footer">

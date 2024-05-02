@@ -28,19 +28,19 @@ $(document).ready(function () {
         $.ajax({
             url: 'http://localhost/frontend/index.php?module=dashboard&view=role.view',
             method: 'POST',
-            datatype: 'html',
+            datatype: 'json',
             data: {
                 id: roleId,
                 name: roleName.val(),
                 permissions: permissions,
                 updateBtnName: true,
             },
-            success: function (response) {
-                window.location.reload();
-                // if (response === 'success') {
-                //     alert('Role updated successfully');
-                //     location.reload();
-                // }
+            success: function (data) {
+                if (data.status == "success") {
+                    alert(data.message);
+                } else if (data.status == "error") {
+                    alert(data.message);
+                }
             },
             error: function (xhr, status, error) {
                 // handle any errors

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\ProductBUS;
 use backend\models\CategoriesModel;
 
@@ -157,8 +158,8 @@ use backend\bus\CategoriesBUS;
 
                     CategoriesBUS::getInstance()->addModel($categoryModel);
                     CategoriesBUS::getInstance()->refreshData();
-                    //Once created, refresh the page:
-                    echo '<script>window.location.href = "?module=dashboard&view=product.view";</script>';
+                    ob_end_clean();
+                    return jsonResponse('success', 'Category added successfully');
                 }
             }
             ?>
@@ -174,21 +175,23 @@ use backend\bus\CategoriesBUS;
 
                     CategoriesBUS::getInstance()->updateModel($categoryModel);
                     CategoriesBUS::getInstance()->refreshData();
-                    //Once created, refresh the page:
-                    echo '<script>window.location.href = "?module=dashboard&view=product.view";</script>';
+                    ob_end_clean();
+                    return jsonResponse('success', 'Category updated successfully');
                 }
             }
             ?>
 
             <?php
-            //TODO: Fix notification:
             if (isPost()) {
                 if (isset($_POST['deleteCategoryBtn'])) {
                     $categoryId = $_POST['categoryId'];
                     if (CategoriesBUS::getInstance()->deleteModel($categoryId)) {
                         CategoriesBUS::getInstance()->refreshData();
+                        ob_end_clean();
+                        return jsonResponse('success', 'Category deleted successfully');
                     } else {
-                        echo '<script>alert("Delete failed");</script>';
+                        ob_end_clean();
+                        return jsonResponse('error', 'Category cannot be deleted');
                     }
                 }
             }

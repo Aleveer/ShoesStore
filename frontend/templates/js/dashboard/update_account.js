@@ -55,32 +55,32 @@ $(document).ready(function () {
             }
 
             // If any changes appear: check if all fields are filled and valid:
-            if (!username.value) {
+            if (!username.value || username.value.trim() === "") {
                 alert("Please enter username");
                 return;
             }
 
-            if (!password.value) {
+            if (!password.value || password.value.trim() === "") {
                 alert("Please enter password");
                 return;
             }
 
-            if (!name.value) {
+            if (!name.value || name.value.trim() === "") {
                 alert("Please enter name");
                 return;
             }
 
-            if (!email.value) {
+            if (!email.value || email.value.trim() === "") {
                 alert("Please enter email");
                 return;
             }
 
-            if (!phone.value) {
+            if (!phone.value || phone.value.trim() === "") {
                 alert("Please enter phone");
                 return;
             }
 
-            if (!address.value) {
+            if (!address.value || address.value.trim() == "") {
                 alert("Please enter address");
                 return;
             }
@@ -94,7 +94,7 @@ $(document).ready(function () {
             $.ajax({
                 url: window.location.href,
                 method: "POST",
-                dataType: "html",
+                dataType: "json",
                 data: {
                     usernameEdit: username.value,
                     passwordEdit: password.value,
@@ -108,10 +108,14 @@ $(document).ready(function () {
                     imageEdit: imageReview.src,
                     updateEditBtnName: true,
                 },
-                success: function () {
-                    alert("Account updated successfully");
-                    // Once the account has been updated, go back to the dashboard:
-                    window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=account.view";
+                success: function (data) {
+                    if (data.status == "success") {
+                        alert(data.message);
+                        // Redirect to account view page
+                        window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=account.view";
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert("Error updating account: " + errorThrown);

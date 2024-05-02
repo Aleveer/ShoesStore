@@ -142,13 +142,13 @@ class UserBUS implements BUSInterface
             $errors['username']['taken'] = "Username is taken";
         }
 
-        if ($this->isEmailTaken($userModel->getEmail())) {
-            $errors['email']['taken'] = "Email is taken";
-        }
+        // if ($this->isEmailTaken($userModel->getEmail())) {
+        //     $errors['email']['taken'] = "Email is taken";
+        // }
 
-        if ($this->isPhoneTaken($userModel->getPhone())) {
-            $errors['phone']['taken'] = "Phone number is taken";
-        }
+        // if ($this->isPhoneTaken($userModel->getPhone())) {
+        //     $errors['phone']['taken'] = "Phone number is taken";
+        // }
 
         // Validate username and password
         // if (!$validation->isValidUsername($userModel->getUsername())) {
@@ -221,19 +221,28 @@ class UserBUS implements BUSInterface
 
     public function isUsernameTaken($username)
     {
-        $usernames = array_column($this->userList, 'username');
-        return in_array($username, $usernames);
+        for ($i = 0; $i < count($this->userList); $i++) {
+            if ($this->userList[$i]->getUsername() == $username) {
+                return true;
+            }
+        }
     }
 
-    public function isEmailTaken($email)
+    public function isEmailTaken($email, $userIdToSkip)
     {
-        $emails = array_column($this->userList, 'email');
-        return in_array($email, $emails);
+        for ($i = 0; $i < count($this->userList); $i++) {
+            if ($this->userList[$i]->getEmail() == $email && $this->userList[$i]->getId() != $userIdToSkip) {
+                return true;
+            }
+        }
     }
 
-    public function isPhoneTaken($phone)
+    public function isPhoneTaken($phone, $userIdToSkip)
     {
-        $phones = array_column($this->userList, 'phone');
-        return in_array($phone, $phones);
+        for ($i = 0; $i < count($this->userList); $i++) {
+            if ($this->userList[$i]->getPhone() == $phone && $this->userList[$i]->getId() != $userIdToSkip) {
+                return true;
+            }
+        }
     }
 }

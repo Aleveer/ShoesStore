@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $.ajax({
             url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
             type: "POST",
-            dataType: "html",
+            dataType: "json",
             data: {
                 username: username.value,
                 name: name.value,

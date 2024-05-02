@@ -76,7 +76,7 @@ $(document).ready(function () {
             $.ajax({
                 url: window.location.href,
                 method: "POST",
-                dataType: "html",
+                dataType: "json",
                 data: {
                     productName: productName.value,
                     category: chosenCategory.value,
@@ -87,7 +87,11 @@ $(document).ready(function () {
                     saveBtn: true,
                 },
                 success: function (data) {
-                    alert("Product created successfully");
+                    if (data.status == "success") {
+                        alert(data.message);
+                    } else if (data.status == "error") {
+                        alert(data.message);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert("Error creating product: " + errorThrown);

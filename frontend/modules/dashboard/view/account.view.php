@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use backend\bus\RoleBUS;
 use backend\bus\TokenLoginBUS;
 use backend\bus\UserBUS;
@@ -313,6 +314,7 @@ function showUserList($user, $currentLoggedInUser)
         </div>
     </div>
     <?php
+    //TODO: Fix notification not popping up
     if (isPost()) {
         if (isset($_POST['lockBtn'])) {
             $id = $_POST['id'];
@@ -320,6 +322,8 @@ function showUserList($user, $currentLoggedInUser)
             $user->setStatus(strtolower(StatusEnums::BANNED));
             UserBUS::getInstance()->updateModel($user);
             UserBUS::getInstance()->refreshData();
+            ob_end_clean();
+            return jsonResponse('success', "Account locked successfully!");
         }
 
         if (isset($_POST['unlockBtn'])) {
@@ -328,6 +332,8 @@ function showUserList($user, $currentLoggedInUser)
             $user->setStatus(strtolower(StatusEnums::INACTIVE));
             UserBUS::getInstance()->updateModel($user);
             UserBUS::getInstance()->refreshData();
+            ob_end_clean();
+            return jsonResponse('success', "Account unlocked successfully!");
         }
 
         if (isset($_POST['saveBtn'])) {
@@ -348,17 +354,17 @@ function showUserList($user, $currentLoggedInUser)
     
             $password = PasswordUtilities::hashPassword($newPassword);
             $email = $_POST['email'];
-            if (UserBUS::getInstance()->isEmailTaken($email)) {
-                echo "<script>alert('Email is already taken!')</script>";
+            if (UserBUS::getInstance()->isEmailTaken($email, $id)) {
                 error_log("Email is already taken!");
-                return;
+                ob_end_clean();
+                return jsonResponse('error', "Email is already taken!");
             }
 
             //check validation:
             if (validation::isValidEmail($email) == false) {
-                echo "<script>alert('Email is invalid!')</script>";
                 error_log("Email is invalid!");
-                return;
+                ob_end_clean();
+                return jsonResponse('error', "Email is invalid!");
             }
 
             $name = $_POST['name'];
@@ -370,32 +376,32 @@ function showUserList($user, $currentLoggedInUser)
             // }
     
             $phone = $_POST['phone'];
-            if (UserBUS::getInstance()->isPhoneTaken($phone)) {
-                echo "<script>alert('Phone number is already taken!')</script>";
-                error_log("Phone number is already taken!");
-                return;
+            if (validation::isValidPhoneNumber($phone) == false) {
+                error_log("Phone number is invalid!");
+                ob_end_clean();
+                return jsonResponse('error', "Phone number is invalid!");
             }
 
-            if (validation::isValidPhoneNumber($phone) == false) {
-                echo "<script>alert('Phone number is invalid!')</script>";
-                error_log("Phone number is invalid!");
-                return;
+            if (UserBUS::getInstance()->isPhoneTaken($phone, $id)) {
+                error_log("Phone number is already taken!");
+                ob_end_clean();
+                return jsonResponse('error', "Phone number is already taken!");
             }
 
             $gender = $_POST['gender'];
             $role = $_POST['role'];
             $address = $_POST['address'];
-            //check validation:
             if (validation::isValidAddress($address) == false) {
-                echo "<script>alert('Address is invalid!')</script>";
                 error_log("Address is invalid!");
-                return;
+                return jsonResponse('error', "Address is invalid!");
             }
             $image = $_POST['image'];
 
             $newUser = new UserModel(null, $username, $password, $email, $name, $phone, $gender, $image, $role, StatusEnums::INACTIVE, $address, null, null, null, null);
             UserBUS::getInstance()->addModel($newUser);
             UserBUS::getInstance()->refreshData();
+            ob_end_clean();
+            return jsonResponse('success', "Account added successfully!");
         }
     }
     ?>

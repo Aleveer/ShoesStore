@@ -285,6 +285,7 @@ function showProductList($product)
                                     name="saveBtnName">Save</button>
                             </div>
                             <?php
+                            //TODO: Something weird here which causes the save button to not work when trying to input invalid data
                             if (isPost()) {
                                 if (isset($_POST['saveBtn'])) {
                                     error_log('Save button clicked');

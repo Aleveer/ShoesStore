@@ -1,20 +1,16 @@
 $(document).ready(function () {
-    $(document).on('submit', '.modal-content form', function (e) {
+    $(document).on('submit', 'form', function (e) {
         e.preventDefault();
-
+        console.log('edit form submitted');
         var permissionId = $(this).closest('.modal').attr('id').replace('editPermissionModal_', '');
         var permissionName = $('#inputName_' + permissionId).val();
-
-        //Check for valid permission name
+        //check if the permission name is empty
         if (permissionName === '') {
-            alert('Please enter a valid permission name');
+            alert('Permission cannot be empty');
             return;
         }
-
-        //Check for empty permission name:
-        //Trim first then check if it's empty
         if (permissionName.trim() === '') {
-            alert('Please enter a valid permission name');
+            alert('Permission name cannot be empty');
             return;
         }
 
@@ -36,7 +32,6 @@ $(document).ready(function () {
                 }
             },
             error: function (response) {
-                // Handle error - you might want to show an error message
                 console.error('Failed to update permission');
             }
         });

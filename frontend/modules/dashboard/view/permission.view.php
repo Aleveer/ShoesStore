@@ -101,6 +101,12 @@ $permissionList = PermissionBUS::getInstance()->getAllModels();
                 error_log('Update permission');
                 $permissionId = $_POST['id'];
                 $permissionName = $_POST['name'];
+
+                if (empty($permissionName)) {
+                    ob_end_clean();
+                    return jsonResponse('error', 'Permission name cannot be empty');
+                }
+
                 $permissionModel = PermissionBUS::getInstance()->getModelById($permissionId);
                 $permissionModel->setName($permissionName);
                 PermissionBUS::getInstance()->updateModel($permissionModel);

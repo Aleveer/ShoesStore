@@ -1,4 +1,5 @@
 <?php
+use backend\bus\RoleBUS;
 use backend\bus\UserBUS;
 use backend\enums\StatusEnums;
 use backend\models\UserModel;
@@ -8,77 +9,96 @@ if (!defined('_CODE')) {
 }
 
 if (isPost()) {
+
     $filterAll = filter();
-    $userModel = new UserModel(
-        null,
-        $filterAll['username'],
-        $filterAll['password'],
-        $filterAll['email'],
-        $filterAll['fullname'],
-        $filterAll['phone'],
-        $filterAll['gender'],
-        null,
-        4,
-        StatusEnums::INACTIVE,
-        $filterAll['address'],
-        null,
-        null,
-        null,
-        null
-    );
-    //TODO: Fix the validate model section at backend:
-    //TODO: Register not working
-    $errors = UserBUS::getInstance()->validateModel($userModel);
-    if ($filterAll['password_confirm'] == null || trim($filterAll['password_confirm']) == "") {
-        $errors['password_confirm']['required'] = 'Password confirm is required!';
-    }
-    if (!($filterAll['password_confirm'] == $filterAll['password'])) {
-        $errors['password_confirm']['comfirm'] = 'Confirm password does not match!';
-    }
-    if (count($errors) <= 0) {
-        $activeToken = sha1(uniqid() . time());
-        $userModel->setPassword(password_hash($filterAll['password'], PASSWORD_DEFAULT));
-        $userModel->setCreateAt(date("Y-m-d H:i:s"));
-        $userModel->setActiveToken($activeToken);
-        $insertStatus = UserBUS::getInstance()->addModel($userModel);
-        if ($insertStatus) {
-            $_SESSION['registerUserId'] = $insertStatus;
-            // Tạo link kích hoạt
-            $linkActive = _WEB_HOST . '?module=auth&action=active&token=' . $activeToken;
-            // Thiết lập gửi mail
-            $subject = $filterAll['fullname'] . ' vui lòng kích hoạt tài khoản!!!';
-            $content = 'Chào ' . $filterAll['fullname'] . '<br/>';
-            $content .= 'Vui lòng click vào đường link dưới đây để kích hoạt tài khoản:' . '<br/>';
-            $content .= $linkActive . '<br/>';
-            $content .= 'Trân trọng cảm ơn!!';
+    if (isset($_POST['registerBtn'])) {
+        error_log('Register button clicked!');
+        //Check email and phone number already taken:
+        $emailCheck = UserBUS::getInstance()->getModelByEmail($filterAll['email']);
+        $phoneCheck = UserBUS::getInstance()->getModelByPhone($filterAll['phone']);
+        if ($emailCheck) {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'message' => 'Email already exists!']);
+            exit;
+        }
 
+        if ($phoneCheck) {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'message' => 'Phone number already exists!']);
+            exit;
+        }
 
-            // Tiến hành gửi mail
-            $sendMailStatus = sendMail($filterAll['email'], $subject, $content);
+        $userModel = new UserModel(
+            null,
+            $filterAll['username'],
+            $filterAll['password'],
+            $filterAll['email'],
+            $filterAll['fullname'],
+            $filterAll['phone'],
+            $filterAll['gender'],
+            null,
+            RoleBUS::getInstance()->getModelById(4)->getId(),
+            StatusEnums::INACTIVE,
+            $filterAll['address'],
+            null,
+            null,
+            null,
+            null
+        );
+        //TODO: Fix the validate model section at backend: there maybe errors
+        //TODO: Fix notification message not working:
+        $errors = UserBUS::getInstance()->validateModel($userModel);
+        error_log('Errors: ' . json_encode($errors));
+        if ($filterAll['password_confirm'] == null || trim($filterAll['password_confirm']) == "") {
+            $errors['password_confirm']['required'] = 'Password confirm is required!';
+        }
+        if (!($filterAll['password_confirm'] == $filterAll['password'])) {
+            $errors['password_confirm']['comfirm'] = 'Confirm password does not match!';
+        }
+        if (count($errors) <= 0) {
+            $activeToken = sha1(uniqid() . time());
+            $userModel->setPassword(password_hash($filterAll['password'], PASSWORD_DEFAULT));
+            $userModel->setCreateAt(date("Y-m-d H:i:s"));
+            $userModel->setActiveToken($activeToken);
+            $insertStatus = UserBUS::getInstance()->addModel($userModel);
+            if ($insertStatus) {
+                $_SESSION['registerUserId'] = $insertStatus;
+                // Tạo link kích hoạt
+                $linkActive = _WEB_HOST . '?module=auth&action=active&token=' . $activeToken;
+                // Thiết lập gửi mail
+                $subject = $filterAll['fullname'] . ' vui lòng kích hoạt tài khoản!!!';
+                $content = 'Chào ' . $filterAll['fullname'] . '<br/>';
+                $content .= 'Vui lòng click vào đường link dưới đây để kích hoạt tài khoản:' . '<br/>';
+                $content .= $linkActive . '<br/>';
+                $content .= 'Trân trọng cảm ơn!!';
 
-            if ($sendMailStatus) {
-                header('Content-Type: application/json');
-                echo json_encode(['status' => 'success', 'message' => 'Đăng kí tài khoản thành công!']);
-                exit;
+                // Tiến hành gửi mail
+                $sendMailStatus = sendMail($filterAll['email'], $subject, $content);
+
+                if ($sendMailStatus) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['status' => 'success', 'message' => 'Successfully registered, please check your email to activate your account!']);
+                    exit;
+                } else {
+                    header('Content-Type: application/json');
+                    echo json_encode(['status' => 'error', 'message' => 'The system is having problems, please try again later!']);
+                    exit;
+                }
             } else {
                 header('Content-Type: application/json');
-                echo json_encode(['status' => 'error', 'message' => 'Hệ thống đang gặp sự cố, vui lòng thử lại sau!']);
+                echo json_encode(['status' => 'error', 'message' => 'The system is having problems, please try again later!']);
                 exit;
             }
         } else {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => 'Hệ thống đang gặp sự cố, vui lòng thử lại sau!']);
+            echo json_encode(['status' => 'error', 'message' => 'Please check the data', 'errors' => $errors]);
             exit;
         }
-    } else {
-        header('Content-Type: application/json');
-        echo json_encode(['status' => 'error', 'message' => 'Vui lòng kiểm tra lại dữ liệu!', 'errors' => $errors]);
-        exit;
     }
 }
 
 $data = [
-    'pageTitle' => 'Đăng ký'
+    'pageTitle' => 'Register'
 ];
 ?>
 
@@ -139,7 +159,7 @@ $data = [
                     </div>
                 </div>
 
-                <button id="registerBtn" type="button" class="btn btn-primary btn-block mg-form"
+                <button id="registerBtn" name="registerBtn" type="button" class="btn btn-primary btn-block mg-form"
                     style="width:100%; margin-top:16px;">Register</button>
                 <hr>
                 <p class="text-center"><a href="?module=auth&action=login">Already have an account? Log
@@ -150,7 +170,3 @@ $data = [
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/register_handling.js"></script>
 </body>
-
-<div id="footer">
-    <?php layouts('footer'); ?>
-</div>

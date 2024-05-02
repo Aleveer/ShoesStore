@@ -50,6 +50,17 @@ class UserBUS implements BUSInterface
         return null;
     }
 
+    public function getModelByPhone($phone)
+    {
+        $this->userList = UserDAO::getInstance()->getAll();
+        for ($i = 0; $i < count($this->userList); $i++) {
+            if ($this->userList[$i]->getPhone() === $phone) {
+                return $this->userList[$i];
+            }
+        }
+        return null;
+    }
+
     public function getModelByActiveToken(string $token)
     {
         $this->userList = UserDAO::getInstance()->getAll();
@@ -180,8 +191,6 @@ class UserBUS implements BUSInterface
         $roleId = $userModel->getRoleId();
         if ($roleId === null) {
             $errors[] = "Role is required";
-        } else {
-            $errors[] = "Invalid role";
         }
 
         // Validate phone number and address

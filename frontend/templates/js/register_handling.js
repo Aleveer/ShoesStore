@@ -26,7 +26,8 @@ $(document).ready(function () {
                     address: address,
                     password: password,
                     password_confirm: password_confirm,
-                    gender: gender
+                    gender: gender,
+                    registerBtn: true
                 },
                 success: function (data) {
                     if (data.status == 'success') {
@@ -58,6 +59,8 @@ $(document).ready(function () {
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);
+                    console.error("Status:", status);
+                    console.error("XHR:", xhr);
                     alert("Error occurred. Please try again.");
                 },
             });

@@ -30,6 +30,7 @@ class validation
         return self::isMatch($username, $regex);
     }
 
+    //TODO: Fix this shit not working
     // public static function isValidPassword($password)
     // {
     //     $regex = "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$/";

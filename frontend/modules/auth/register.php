@@ -46,7 +46,7 @@ if (isPost()) {
             null
         );
         //TODO: Fix the validate model section at backend: there maybe errors
-        //TODO: Fix notification message not working:
+        //TODO: Fix notification message may not work
         $errors = UserBUS::getInstance()->validateModel($userModel);
         error_log('Errors: ' . json_encode($errors));
         if ($filterAll['password_confirm'] == null || trim($filterAll['password_confirm']) == "") {

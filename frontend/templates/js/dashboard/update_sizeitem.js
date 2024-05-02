@@ -46,9 +46,9 @@ $(document).ready(function () {
                     alert(data.message);
                 }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (error) {
                 // handle error
-                console.log('Update failed: ' + textStatus);
+                console.log('Error: ' + error);
             }
         });
     });

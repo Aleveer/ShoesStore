@@ -314,7 +314,7 @@ function showUserList($user, $currentLoggedInUser)
         </div>
     </div>
     <?php
-    //TODO: Fix notification not popping up
+
     if (isPost()) {
         if (isset($_POST['lockBtn'])) {
             $id = $_POST['id'];

@@ -329,7 +329,7 @@ function showProductList($product)
                 }
 
                 //Handle completely delete product:
-                //TODO: Fix not popping up confirmation dialog
+                //TODO: Fix not popping up notification
                 if (isPost()) {
                     if (isset($_POST['completelyDeleteProduct'])) {
                         $productId = $_POST['productId'];

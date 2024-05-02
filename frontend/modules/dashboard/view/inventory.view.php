@@ -369,7 +369,6 @@ $productList = ProductBUS::getInstance()->getAllModels();
                 </div>
             </main>
             <?php
-            //TODO: Fix notification not popping up
             if (isPost()) {
                 //Handle add size item:
                 if (isset($_POST['saveBtnName'])) {

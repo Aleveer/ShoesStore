@@ -36,8 +36,9 @@ $(document).ready(function () {
                         alert(data.message);
                     }
                 },
-                error: function (data) {
-                    alert("Error adding category");
+                error: function (error) {
+                    // handle error
+                    console.log('Error: ' + error);
                 }
             });
         });

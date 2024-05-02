@@ -55,8 +55,9 @@ $(document).ready(function () {
                         alert(data.message);
                     }
                 },
-                error: function () {
+                error: function (error) {
                     console.log(`An error occurred while unlocking account with id: ${id}`);
+                    console.log("Error" + error);
                 }
             });
         });

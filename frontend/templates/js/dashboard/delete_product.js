@@ -12,7 +12,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                url: window.location.href,
+                url: 'http://localhost/frontend/index.php?module=dashboard&view=product.view',
                 method: 'POST',
                 dataType: 'json',
                 data: {
@@ -26,9 +26,9 @@ $(document).ready(function () {
                         alert(data.message);
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.log('Delete request failed');
-                    // Handle the error response here
+                error: function (error) {
+                    // handle error
+                    console.log('Error: ' + error);
                 }
             });
         });
@@ -41,7 +41,7 @@ $(document).ready(function () {
             if (confirm('Product will be deleted permanently. This action cannot be undone. Proceed with caution! Proceed?')) {
                 // Proceed with the delete operation
                 $.ajax({
-                    url: window.location.href,
+                    url: 'http://localhost/frontend/index.php?module=dashboard&view=product.view',
                     method: 'POST',
                     dataType: 'json',
                     data: {
@@ -57,15 +57,12 @@ $(document).ready(function () {
                             alert(data.message);
                         }
                     },
-                    error: function (xhr, status, error) {
-                        console.log('Completely delete request failed');
-                        // Handle the error response here
+                    error: function (error) {
+                        // handle error
+                        console.log('Error: ' + error);
                     }
                 });
-            } else {
-                // Cancel the delete operation
             }
-
         });
     });
 });

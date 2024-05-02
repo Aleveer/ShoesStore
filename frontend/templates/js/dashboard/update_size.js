@@ -41,9 +41,9 @@ $(document).ready(function () {
                     alert(data.message);
                 }
             },
-            error: function (xhr, status, error) {
-                // handle any errors
-                alert('An error occurred: ' + error);
+            error: function (error) {
+                // handle error
+                console.log('Error: ' + error);
             }
         });
     });

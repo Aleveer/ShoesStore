@@ -20,9 +20,9 @@ $(document).ready(function () {
                         alert(data.message);
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.log('Delete request failed');
-                    // Handle the error response here
+                error: function (error) {
+                    // handle error
+                    console.log('Error: ' + error);
                 }
             });
         });

@@ -126,6 +126,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                 </div>
                             </div>
                             <?php
+                            //TODO: Notification not working:
                             if (isPost()) {
                                 if (isset($_POST['resetButton'])) {
                                     // Convert the gender to a number: 0 for male, 1 for female
@@ -165,7 +166,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                         $userModel->setName($accountName);
                                     }
 
-                                    if ($mailAccount != $userModel->getEmail() && $mailAccount != "" && !$userBUS->isEmailTaken($mailAccount) && validation::isValidEmail($mailAccount)) {
+                                    if ($mailAccount != $userModel->getEmail() && $mailAccount != "" && !$userBUS->isEmailTaken($mailAccount, $userModel->getId()) && validation::isValidEmail($mailAccount)) {
                                         $userModel->setEmail($mailAccount);
                                     }
 
@@ -278,16 +279,14 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                         $userBUS = UserBUS::getInstance();
 
                                         if ($phone != $userModel->getPhone()) {
-                                            if (UserBUS::getInstance()->isPhoneTaken($phone)) {
+                                            if (UserBUS::getInstance()->isPhoneTaken($phone, $userModel->getId())) {
                                                 error_log("Phone number is already taken!");
-                                                // echo '<script>alert("Phone number is already taken!")</script>';
                                                 return jsonResponse('error', 'Phone number is already taken!');
                                             } else {
                                                 if (validation::isValidPhoneNumber($phone)) {
                                                     $userModel->setPhone($phone);
                                                 } else {
                                                     error_log("Invalid phone number!");
-                                                    // echo '<script>alert("Invalid phone number!")</script>';
                                                     return jsonResponse('error', 'Invalid phone number!');
                                                 }
                                             }
@@ -297,10 +296,8 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                                             $userModel->setAddress($address);
                                         }
 
-                                        // Save the updated user model
                                         $userBUS->updateModel($userModel);
                                         $userBUS->refreshData();
-                                        // echo '<script>alert("Apply changes successfully!")</script>';
                                         return jsonResponse('success', 'Apply changes successfully!');
                                     }
                                 }
@@ -315,7 +312,6 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
     </div>
     <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/profile_setting.js"></script>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <!-- <script src="../../../../../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

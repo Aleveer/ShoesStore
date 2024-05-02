@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 email: email.value,
                 maleGender: maleGender.checked,
                 femaleGender: femaleGender.checked,
+                saveButton: true,
             },
             success: function (data) {
                 console.log("sent successfully");

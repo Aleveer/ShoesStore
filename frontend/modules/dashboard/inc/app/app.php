@@ -9,3 +9,5 @@ require_once __DIR__ . '/../../../../../vendor/autoload.php';
 <script>
     feather.replace();
 </script>
+
+<script src="../../../../../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -10,7 +10,7 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: 'http://localhost/frontend/index.php?module=dashboard&view=account.view',
-                datatype: 'json',
+                dataType: 'json',
                 data: {
                     'id': id,
                     lockBtn: true
@@ -27,7 +27,6 @@ $(document).ready(function () {
                     console.log(`An error occurred while locking account with id: ${id}`);
                 }
             });
-
         });
     });
 
@@ -42,7 +41,7 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: 'http://localhost/frontend/index.php?module=dashboard&view=account.view',
-                datatype: 'json',
+                dataType: 'json',
                 data: {
                     'id': id,
                     unlockBtn: true

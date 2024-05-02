@@ -28,7 +28,7 @@ $(document).ready(function () {
         $.ajax({
             url: 'http://localhost/frontend/index.php?module=dashboard&view=role.view',
             method: 'POST',
-            datatype: 'json',
+            dataType: 'json',
             data: {
                 id: roleId,
                 name: roleName.val(),

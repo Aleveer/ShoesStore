@@ -1,5 +1,4 @@
 <?php
-use backend\services\session;
 use backend\bus\UserBUS;
 use backend\enums\StatusEnums;
 use backend\models\UserModel;
@@ -19,7 +18,7 @@ if (isPost()) {
         $filterAll['phone'],
         $filterAll['gender'],
         null,
-        0,
+        4,
         StatusEnums::INACTIVE,
         $filterAll['address'],
         null,
@@ -28,6 +27,7 @@ if (isPost()) {
         null
     );
     //TODO: Fix the validate model section at backend:
+    //TODO: Register not working
     $errors = UserBUS::getInstance()->validateModel($userModel);
     if ($filterAll['password_confirm'] == null || trim($filterAll['password_confirm']) == "") {
         $errors['password_confirm']['required'] = 'Password confirm is required!';
@@ -57,27 +57,25 @@ if (isPost()) {
             $sendMailStatus = sendMail($filterAll['email'], $subject, $content);
 
             if ($sendMailStatus) {
-                session::getInstance()->setFlashData('msg', 'Đăng kí thành công, vui lòng kiểm tra email để kích hoạt tài khoản!');
-                session::getInstance()->setFlashData('msg_type', 'success');
+                header('Content-Type: application/json');
+                echo json_encode(['status' => 'success', 'message' => 'Đăng kí tài khoản thành công!']);
+                exit;
             } else {
-                session::getInstance()->setFlashData('msg', 'Hệ thống đang gặp sự cố, vui lòng thử lại sau');
-                session::getInstance()->setFlashData('msg_type', 'danger');
+                header('Content-Type: application/json');
+                echo json_encode(['status' => 'error', 'message' => 'Hệ thống đang gặp sự cố, vui lòng thử lại sau!']);
+                exit;
             }
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'message' => 'Hệ thống đang gặp sự cố, vui lòng thử lại sau!']);
+            exit;
         }
-        redirect('?module=auth&action=register');
     } else {
-        session::getInstance()->setFlashData('msg', 'Vui lòng kiểm tra lại dữ liệu!');
-        session::getInstance()->setFlashData('msg_type', 'danger');
-        session::getInstance()->setFlashData('errors', $errors);
-        session::getInstance()->setFlashData('duLieuDaNhap', $filterAll);
-        redirect('?module=auth&action=register');
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'error', 'message' => 'Vui lòng kiểm tra lại dữ liệu!', 'errors' => $errors]);
+        exit;
     }
 }
-
-$msg = session::getInstance()->getFlashData('msg');
-$msg_type = session::getInstance()->getFlashData('msg_type');
-$errors = session::getInstance()->getFlashData('errors');
-$duLieuDaNhap = session::getInstance()->getFlashData('duLieuDaNhap');
 
 $data = [
     'pageTitle' => 'Đăng ký'
@@ -92,80 +90,65 @@ $data = [
     <div class="row">
         <div class="col-4" style="margin: 24px auto;">
             <form class="cw" action="" method="post">
-                <h2 style="text-align:center; text-transform: uppercase;">Register</h2>
-                <?php if (!empty($msg)) {
-                    getMsg($msg, $msg_type);
-                } ?>
+                <h2 class="header_register" style="text-align:center; text-transform: uppercase;">Register</h2>
                 <div class="form-group mg-form mt-3">
                     <label for="">Full name</label>
-                    <input name="fullname" class="form-control" type="text" placeholder="Your full name..."
-                        value="<?php echo formOldInfor('fullname', $duLieuDaNhap) ?>">
-                    <?php echo formError('fullname', $errors) ?>
+                    <input name="fullname" class="form-control" type="text" placeholder="Your full name...">
                 </div>
 
                 <div class="form-group mg-form mt-3">
                     <label for="">Username</label>
-                    <input name="username" class="form-control" type="text" placeholder="Your username..."
-                        value="<?php echo formOldInfor('username', $duLieuDaNhap) ?>">
-                    <?php echo formError('username', $errors) ?>
+                    <input name="username" class="form-control" type="text" placeholder="Your username...">
                 </div>
 
                 <div class="form-group mg-form mt-3">
                     <label for="">Email</label>
-                    <input name="email" class="form-control" type="text" placeholder="Your email..."
-                        value="<?php echo formOldInfor('email', $duLieuDaNhap) ?>">
-                    <?php echo formError('email', $errors) ?>
+                    <input name="email" class="form-control" type="text" placeholder="Your email...">
                 </div>
 
                 <div class="form-group mg-form mt-3">
                     <label for="">Phone number</label>
-                    <input name="phone" class="form-control" type="number" placeholder="Your phone number... (optional)"
-                        value="<?php echo formOldInfor('phone', $duLieuDaNhap) ?>">
-                    <?php echo formError('phone', $errors) ?>
+                    <input name="phone" class="form-control" type="number" placeholder="Your phone number...">
                 </div>
 
                 <div class="form-group mg-form mt-3">
                     <label for="">Address</label>
-                    <input name="address" class="form-control" type="text" placeholder="Your address..."
-                        value="<?php echo formOldInfor('address', $duLieuDaNhap) ?>">
-                    <?php echo formError('address', $errors) ?>
+                    <input name="address" class="form-control" type="text" placeholder="Your address...">
                 </div>
 
                 <div class="form-group mg-form mt-3">
                     <label for="">Password</label>
-                    <input name="password" class="form-control" type="password" placeholder="Your password..."
-                        value="<?php echo formOldInfor('password', $duLieuDaNhap) ?>">
-                    <?php echo formError('password', $errors) ?>
+                    <input name="password" class="form-control" type="password" placeholder="Your password...">
                 </div>
 
                 <div class="form-group mg-form mt-3">
                     <label for="">Re-type password</label>
                     <input name="password_confirm" class="form-control" type="password"
-                        placeholder="Re-type your password..."
-                        value="<?php echo formOldInfor('password_confirm', $duLieuDaNhap) ?>">
-                    <?php echo formError('password_confirm', $errors) ?>
+                        placeholder="Re-type your password...">
                 </div>
 
                 <div class="form-group mg-form mt-3">
                     <label for="">Gender</label>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" value="male" <?php echo (formOldInfor('gender', $duLieuDaNhap) == 'male') ? 'checked' : ''; ?>>
+                        <input class="form-check-input" type="radio" name="gender" value="male">
                         <label class="form-check-label" for="gender-male">Male</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" value="female" <?php echo (formOldInfor('gender', $duLieuDaNhap) == 'female') ? 'checked' : ''; ?>>
+                        <input class="form-check-input" type="radio" name="gender" value="female">
                         <label class="form-check-label" for="gender-female">Female</label>
                     </div>
-                    <?php echo formError('gender', $errors) ?>
+                </div>
 
-                    <button type="submit" class="btn btn-primary btn-block mg-form"
-                        style="width:100%; margin-top:16px;">Register</button>
-                    <hr>
-                    <p class="text-center"><a href="?module=auth&action=login">Already have an account? Log in here</a>
-                    </p>
+                <button id="registerBtn" type="button" class="btn btn-primary btn-block mg-form"
+                    style="width:100%; margin-top:16px;">Register</button>
+                <hr>
+                <p class="text-center"><a href="?module=auth&action=login">Already have an account? Log
+                        in here</a></p>
             </form>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/register_handling.js"></script>
 </body>
 
 <div id="footer">

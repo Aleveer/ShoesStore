@@ -28,7 +28,7 @@ $(document).ready(function () {
         $.ajax({
             url: 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view',
             type: 'POST',
-            datatype: 'json',
+            dataType: 'json',
             data: {
                 productId: productId,
                 sizeId: sizeId,

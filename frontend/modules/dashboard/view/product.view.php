@@ -287,11 +287,17 @@ function showProductList($product)
                             <?php
                             if (isPost()) {
                                 if (isset($_POST['saveBtn'])) {
+                                    error_log('Save button clicked');
                                     $productName = $_POST['productName'];
+                                    error_log($productName);
                                     $productCategory = $_POST['category'];
+                                    error_log($productCategory);
                                     $productPrice = $_POST['price'];
+                                    error_log($productPrice);
                                     $productGender = $_POST['gender'];
+                                    error_log($productGender);
                                     $productDescription = $_POST['description'];
+                                    error_log($productDescription);
                                     $data = $_POST['image'];
                                     $productModel = new ProductModel(null, $productName, $productCategory, $productPrice, $productDescription, null, $productGender, 'active');
                                     $productModel->setImage($data);

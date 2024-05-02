@@ -181,11 +181,11 @@ use backend\bus\SizeBUS;
                     $id = $_POST['id'];
                     $sizeModel = SizeBUS::getInstance()->getModelById($id);
                     $sizeName = 'Size ' . $sizeName;
-                    //Use for loop to check for duplicate sizeName:
                     if ($sizeName != $sizeModel->getName()) {
                         foreach (SizeBUS::getInstance()->getAllModels() as $size) {
                             if ($size->getName() == $sizeName) {
                                 error_log('Size already exists');
+                                ob_end_clean();
                                 return jsonResponse('error', 'Size already exists');
                             }
                         }

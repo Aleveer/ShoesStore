@@ -25,7 +25,7 @@ $(document).ready(function () {
         $.ajax({
             url: 'http://localhost/frontend/index.php?module=dashboard&view=size.view',
             method: 'POST',
-            datatype: 'json',
+            dataType: 'json',
             data: {
                 id: sizeId,
                 name: sizeName,

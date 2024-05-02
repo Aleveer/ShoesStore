@@ -43,7 +43,7 @@ $(document).ready(function () {
                 $.ajax({
                     url: window.location.href,
                     method: 'POST',
-                    dataType: 'html',
+                    dataType: 'json',
                     data: {
                         productId: productId,
                         completelyDeleteProduct: true,

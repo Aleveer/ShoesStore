@@ -72,7 +72,7 @@ if (isLogin()) {
             </a>
         </button>
         <hr>
-        <h2>Chi Tiết Sản Phẩm</h2>
+        <h2>Product Detail</h2>
         <hr>
         <div class="pitem">
             <figure class="pimg">

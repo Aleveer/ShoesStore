@@ -93,8 +93,8 @@ function showOrder($order)
                                 style="width: 100%;">
                             <input type="date" id="startDate" name="startDate" class="form-control rounded-0"
                                 style="width: 120px;" placeholder="Start Date">
-                            <input type="date" id="endDate" name="endDate" class="form-control rounded-0" style="width: 120px;"
-                                placeholder="End Date">
+                            <input type="date" id="endDate" name="endDate" class="form-control rounded-0"
+                                style="width: 120px;" placeholder="End Date">
                             <button type="submit" class="btn btn-sm btn-primary align-middle padx-0 pady-0"
                                 id="searchBtnId" name="searchBtnName">
                                 <span data-feather="search"></span>

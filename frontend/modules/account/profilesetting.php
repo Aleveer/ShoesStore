@@ -237,9 +237,6 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
 
                                         if (!$result) {
                                             error_log("Failed to change password!");
-                                            // //echo '<script>alert("Failed to change password!")</script>';
-                                            // echo json_encode(['success' => false, 'message' => 'Failed to change password!']);
-                                            // return;
                                             return jsonResponse('error', 'Failed to change password!');
                                         }
 
@@ -308,11 +305,11 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
                 </div>
             </div>
         </div>
-
     </div>
-    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/profile_setting.js"></script>
+
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/profile_setting.js"></script>
 </body>
 
 <div id="footer">

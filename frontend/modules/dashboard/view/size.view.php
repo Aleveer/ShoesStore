@@ -150,12 +150,10 @@ use backend\bus\SizeBUS;
             </div>
 
             <?php
-            //TODO: Notifcation not showing up
             if (isPost()) {
                 if (isset($_POST['saveBtn'])) {
                     $sizeName = $_POST['sizeName'];
                     $sizeName = 'Size ' . $sizeName;
-                    //Check for duplicate sizeName:
                     foreach (SizeBUS::getInstance()->getAllModels() as $size) {
                         if ($size->getName() == $sizeName) {
                             error_log('Size already exists');

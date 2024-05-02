@@ -25,6 +25,8 @@ $(document).ready(function () {
 
             if (!productName.value) {
                 alert("Please enter product name");
+                //clear the input field
+                productName.value = "";
                 return;
             }
 
@@ -35,16 +37,22 @@ $(document).ready(function () {
 
             if (!productPrice.value) {
                 alert("Please enter product price");
+                //clear the input field
+                productPrice.value = "";
                 return;
             }
 
             if (isNaN(productPrice.value)) {
                 alert("Please enter a valid price");
+                //clear the input field
+                productPrice.value = "";
                 return;
             }
 
             if (productPrice.value < 1) {
                 alert("Price can't be less than 1");
+                //clear the input field
+                productPrice.value = "";
                 return;
             }
 
@@ -57,6 +65,8 @@ $(document).ready(function () {
             //Check description:
             if (!productDescription.value) {
                 alert("Please enter product description");
+                //clear the input field
+                productDescription.value = "";
                 return;
             }
 

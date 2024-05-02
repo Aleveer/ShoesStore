@@ -1,4 +1,6 @@
 <?php
+use backend\enums\StatusEnums;
+
 ob_start();
 use backend\bus\CategoriesBUS;
 use backend\bus\OrderItemsBUS;
@@ -284,23 +286,16 @@ function showProductList($product)
                                     name="saveBtnName">Save</button>
                             </div>
                             <?php
-                            //TODO: Something weird here which causes the save button to not work when trying to input invalid data
                             if (isPost()) {
                                 if (isset($_POST['saveBtn'])) {
                                     error_log('Save button clicked');
                                     $productName = $_POST['productName'];
-                                    error_log($productName);
                                     $productCategory = $_POST['category'];
-                                    error_log($productCategory);
                                     $productPrice = $_POST['price'];
-                                    error_log($productPrice);
                                     $productGender = $_POST['gender'];
-                                    error_log($productGender);
                                     $productDescription = $_POST['description'];
-                                    error_log($productDescription);
                                     $data = $_POST['image'];
-                                    $productModel = new ProductModel(null, $productName, $productCategory, $productPrice, $productDescription, null, $productGender, 'active');
-                                    $productModel->setImage($data);
+                                    $productModel = new ProductModel(null, $productName, $productCategory, $productPrice, $productDescription, $data, $productGender, strtolower(StatusEnums::INACTIVE));
                                     ProductBUS::getInstance()->addModel($productModel);
                                     ProductBUS::getInstance()->refreshData();
                                     ob_end_clean();
@@ -315,20 +310,20 @@ function showProductList($product)
 
                 <?php
                 //Handle delete product:
-                //TODO: Fix not popping up notification
                 if (isPost()) {
                     if (isset($_POST['deleteButton'])) {
                         error_log('Delete button clicked');
                         $productId = $_POST['productId'];
                         $updateProductStatus = ProductBUS::getInstance()->getModelById($productId);
-                        $updateProductStatus->setStatus('inactive');
+                        $updateProductStatus->setStatus(strtolower(StatusEnums::INACTIVE));
                         ProductBUS::getInstance()->updateModel($updateProductStatus);
                         ProductBUS::getInstance()->refreshData();
+                        ob_end_clean();
+                        return jsonResponse('success', 'Product hidden successfully!');
                     }
                 }
 
                 //Handle completely delete product:
-                //TODO: Fix not popping up notification
                 if (isPost()) {
                     if (isset($_POST['completelyDeleteProduct'])) {
                         $productId = $_POST['productId'];
@@ -348,6 +343,7 @@ function showProductList($product)
                             }
                             ProductBUS::getInstance()->deleteModel($productPreparedToDel->getId());
                             ProductBUS::getInstance()->refreshData();
+                            error_log('Product deleted successfully!');
                             ob_end_clean();
                             return jsonResponse('success', 'Product deleted successfully!');
                         }

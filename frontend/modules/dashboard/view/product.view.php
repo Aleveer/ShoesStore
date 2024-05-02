@@ -291,11 +291,9 @@ function showProductList($product)
                                     $productPrice = $_POST['price'];
                                     $productGender = $_POST['gender'];
                                     $productDescription = $_POST['description'];
-
-                                    $productModel = new ProductModel(null, $productName, $productCategory, $productPrice, $productDescription, null, $productGender, 'active');
                                     $data = $_POST['image'];
+                                    $productModel = new ProductModel(null, $productName, $productCategory, $productPrice, $productDescription, null, $productGender, 'active');
                                     $productModel->setImage($data);
-
                                     ProductBUS::getInstance()->addModel($productModel);
                                     ProductBUS::getInstance()->refreshData();
                                     //Once created, refresh the page:

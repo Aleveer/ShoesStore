@@ -46,7 +46,8 @@ $(document).ready(function () {
                         completelyDeleteProduct: true,
                     },
                     success: function (response) {
-
+                        //Reload the page
+                        window.location.href = 'http://localhost/frontend/index.php?module=dashboard&view=product.view';
                     },
                     error: function (xhr, status, error) {
                         console.log('Completely delete request failed');

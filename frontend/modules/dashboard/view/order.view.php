@@ -84,7 +84,6 @@ function showOrder($order)
                 </div>
 
                 <!-- SEARCH BAR -->
-                <!-- TODO: Re-organize the search bar -->
                 <div class="container-lg d-flex justify-content-start m-0">
                     <form action="" method="POST" class="m-0 col-lg-6">
                         <div class="input-group">

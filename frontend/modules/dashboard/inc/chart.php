@@ -9,7 +9,7 @@ use backend\models\UserPermissionModel;
 
 <!-- Chart JS Lib -->
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 <script>
     // Revenue Chart
     var revenueChart = new Chart(document.getElementById('Revenue_Income'), {

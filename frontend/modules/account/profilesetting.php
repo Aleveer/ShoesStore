@@ -29,7 +29,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
     <title>Profile Setting</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="<?php echo _WEB_HOST_TEMPLATE ?>/css/account-setting.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../../../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <?php layouts("header") ?>
 </div>
@@ -311,7 +311,7 @@ $ordersListFromUser = OrdersBUS::getInstance()->getOrdersByUserId($userModel->ge
     </div>
     <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/profile_setting.js"></script>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../../../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 <div id="footer">

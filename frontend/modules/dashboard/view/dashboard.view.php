@@ -29,7 +29,7 @@ function displayThongKe($thongKe, $index)
             <th scope="col">' . $thongKe->getUserId() . '</th>
             <th scope="col">' . $thongKe->getCustomerName() . '</th>
             <th scope="col">' . $thongKe->getTotalPurchaseAmount() . '</th>
-            <th scope="col"><button class="seeDetailBtn" id="' . $thongKe->getUserId() . '">Xem chi tiết</button></th>
+            <th scope="col"><button class="seeDetailBtn" id="' . $thongKe->getUserId() . '"><i class="fas fa-eye"></i></button></th>
         </tr>
         ';
 }
@@ -38,6 +38,7 @@ function displayThongKe($thongKe, $index)
 <html>
 
 <body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- HEADER -->
     <?php include (__DIR__ . '/../inc/header.php'); ?>
 
@@ -105,7 +106,7 @@ function displayThongKe($thongKe, $index)
                                 <input type="date" id="purchased-date-to" name="dateTo" class="form-control"
                                     style="width: 150px;" placeholder="End Date">
                             </div>
-                            <div class="col">
+                            <div class="search col">
                                 <button type="submit"
                                     class="filter_by_date_btn btn btn-sm btn-primary align-middle padx-0 pady-0">
                                     <span data-feather="search"></span>
@@ -120,11 +121,11 @@ function displayThongKe($thongKe, $index)
                         <!-- HEADER TABLE -->
                         <thead>
                             <tr>
-                                <th scope="col">STT</th>
+                                <th scope="col"></th>
                                 <th scope="col">Customer Id</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Total Price</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">Order List</th>
                             </tr>
                         </thead>
 
@@ -163,15 +164,12 @@ function displayThongKe($thongKe, $index)
                     <!-- HEADER TABLE -->
                     <thead>
                         <tr>
-                            <th scope="col" class="col-1">ID Order</th>
-                            <th scope="col" class="col-1">User ID</th>
-                            <th scope="col" class="col-2">Customer Name</th>
+                            <th scope="col" class="col-2">Order Id</th>
                             <th scope="col" class="col-2">Order Date</th>
-                            <th scope="col" class="col-2">Address</th>
-                            <th scope="col" class="col-2">Payment method</th>
+                            <th scope="col" class="col-2">Customer Name</th>
                             <th scope="col" class="col-1">Final Price</th>
                             <th scope="col" class="col-1 text-center">Status</th>
-                            <th scope="col" class="col-1 text-center">Info</th>
+                            <th scope="col" class="col-1 text-center">Action</th>
                         </tr>
                     </thead>
 
@@ -308,14 +306,15 @@ function displayThongKe($thongKe, $index)
                     htmlInTable += `
                         <tr class="align-middle">
                             <td>${order.id}</td>
-                            <td>${order.userId}</td>
-                            <td>${order.customerName}</td>
                             <td>${order.orderDate}</td>
-                            <td>${order.address ? order.address : 'chưa chọn'}</td>
-                            <td>${order.paymentMethod ? order.paymentMethod : 'chưa chọn'}</td>
+                            <td>${order.customerName}</td>
                             <td>${order.totalAmount}</td>
                             <td class="text-center">${order.status}</td>
-                            <td class="text-center"><button class="orderDetailBtn" data-order-id="${order.id}">Xem chi tiết</button></td>
+                            <td class="text-center">
+                                <button class="orderDetailBtn" data-order-id="${order.id}">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </td>
                         </tr>`;
                 });
             }

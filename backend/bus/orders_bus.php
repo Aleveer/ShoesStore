@@ -9,6 +9,7 @@ use backend\dao\OrdersDAO;
 class OrdersBUS implements BUSInterface
 {
     private $ordersList = array();
+    private $statisticList = array();
     private static $instance;
     public static function getInstance()
     {
@@ -151,6 +152,22 @@ class OrdersBUS implements BUSInterface
         return array_filter($this->ordersList, function ($orders) use ($after) {
             return $orders->getOrderDate() >= $after;
         });
+    }
+
+    public function filterByDateRange($ngayTu = null, $ngayDen = null): array
+    {
+        if (empty($ngayTu) && empty($ngayDen)) {
+            return $statisticList = OrdersDAO::getInstance()->getAllThongKe();
+        } elseif (!empty($ngayTu) && empty($ngayDen)) {
+            return $statisticList = OrdersDAO::getInstance()->getByNgayTu($ngayTu);
+        } elseif (empty($ngayTu) && !empty($ngayDen)) {
+            return $statisticList = OrdersDAO::getInstance()->getByNgayDen($ngayDen);
+        } elseif (!empty($ngayTu) && !empty($ngayDen)) {
+            return $statisticList = OrdersDAO::getInstance()->getByNgayTuNgayDen($ngayTu, $ngayDen);
+        }
+
+        // Add a default return statement
+        return array();
     }
 
 }

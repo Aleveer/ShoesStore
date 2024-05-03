@@ -29,7 +29,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                url: 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view', // replace with your server script URL
+                url: 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view',
                 method: "POST",
                 dataType: "json",
                 data: {

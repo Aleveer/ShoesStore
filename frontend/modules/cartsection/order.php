@@ -9,7 +9,6 @@ use backend\models\OrderItemsModel;
 use backend\models\OrdersModel;
 use backend\services\session;
 use backend\bus\SizeItemsBUS;
-use backend\bus\SizeBUS;
 use backend\bus\OrdersBUS;
 use backend\bus\OrderItemsBUS;
 use backend\bus\CouponsBUS;

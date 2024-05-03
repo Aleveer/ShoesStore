@@ -179,6 +179,7 @@ if (isLogin()) {
                             if ($cartItem != null) {
                                 $sizeItem = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $product->getId());
                                 if ($cartItem->getQuantity() + $quantity > $sizeItem->getQuantity()) {
+                                    ob_end_clean();
                                     return jsonResponse('error', 'The quantity of the product in the cart can\'t exceeds the remaining quantity of the product');
                                 } else if ($cartItem->getQuantity() + $quantity <= $sizeItem->getQuantity()) {
                                     $cartItem->setQuantity($cartItem->getQuantity() + $quantity);

@@ -45,8 +45,7 @@ if (isPost()) {
             null,
             null
         );
-        //TODO: Fix the validate model section at backend: there maybe errors
-        //TODO: Fix notification message may not work
+        //TODO: Fix the validate model section at backend: there may be errors
         $errors = UserBUS::getInstance()->validateModel($userModel);
         error_log('Errors: ' . json_encode($errors));
         if ($filterAll['password_confirm'] == null || trim($filterAll['password_confirm']) == "") {
@@ -66,11 +65,11 @@ if (isPost()) {
                 // Tạo link kích hoạt
                 $linkActive = _WEB_HOST . '?module=auth&action=active&token=' . $activeToken;
                 // Thiết lập gửi mail
-                $subject = $filterAll['fullname'] . ' vui lòng kích hoạt tài khoản!!!';
+                $subject = $filterAll['fullname'] . ' please active your account!!!';
                 $content = 'Chào ' . $filterAll['fullname'] . '<br/>';
-                $content .= 'Vui lòng click vào đường link dưới đây để kích hoạt tài khoản:' . '<br/>';
+                $content .= 'Please click on this link below here to activate your account:' . '<br/>';
                 $content .= $linkActive . '<br/>';
-                $content .= 'Trân trọng cảm ơn!!';
+                $content .= 'Thank you so much!!';
 
                 // Tiến hành gửi mail
                 $sendMailStatus = sendMail($filterAll['email'], $subject, $content);

@@ -148,27 +148,14 @@ class UserBUS implements BUSInterface
             $errors['gender']['required'] = "Gender is required";
         }
 
-        // Check for possibly taken properties in database:
-        if ($this->isUsernameTaken($userModel->getUsername())) {
-            $errors['username']['taken'] = "Username is taken";
+        //Validate username and password
+        if (!$validation->isValidUsername($userModel->getUsername())) {
+            $errors['username']['valid'] = "Invalid username";
         }
 
-        // if ($this->isEmailTaken($userModel->getEmail())) {
-        //     $errors['email']['taken'] = "Email is taken";
-        // }
-
-        // if ($this->isPhoneTaken($userModel->getPhone())) {
-        //     $errors['phone']['taken'] = "Phone number is taken";
-        // }
-
-        // Validate username and password
-        // if (!$validation->isValidUsername($userModel->getUsername())) {
-        //     $errors['username']['valid'] = "Invalid username";
-        // }
-
-        // if (!$validation->isValidPassword($userModel->getPassword())) {
-        //     $errors['password']['valid'] = "Invalid password";
-        // }
+        if (!$validation->isValidPassword($userModel->getPassword())) {
+            $errors['password']['valid'] = "Invalid password";
+        }
 
         if (strlen($userModel->getPassword()) < 8) {
             $errors['password']['min-length'] = "Password must be at least 8 characters";

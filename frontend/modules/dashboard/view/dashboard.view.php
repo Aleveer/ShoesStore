@@ -295,8 +295,6 @@ function displayThongKeKH($thongKe, $index)
                             <th scope="col" class="col-1">User ID</th>
                             <th scope="col" class="col-2">Customer Name</th>
                             <th scope="col" class="col-2">Order Date</th>
-                            <th scope="col" class="col-2">Address</th>
-                            <th scope="col" class="col-2">Payment method</th>
                             <th scope="col" class="col-1">Final Price</th>
                             <th scope="col" class="col-1 text-center">Status</th>
                             <th scope="col" class="col-1 text-center">Info</th>
@@ -533,8 +531,6 @@ function displayThongKeKH($thongKe, $index)
                             <td>${order.userId}</td>
                             <td>${order.customerName}</td>
                             <td>${order.orderDate}</td>
-                            <td>${order.address ? order.address : 'chưa chọn'}</td>
-                            <td>${order.paymentMethod ? order.paymentMethod : 'chưa chọn'}</td>
                             <td>${order.totalAmount}</td>
                             <td class="text-center">${order.status}</td>
                             <td class="text-center"><button class="orderDetailBtn" data-order-id="${order.id}"><i class="fas fa-eye"></i></button></td>

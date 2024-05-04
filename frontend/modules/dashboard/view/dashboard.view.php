@@ -56,15 +56,13 @@ function displayThongKeKH($thongKe, $index)
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
+                    <!-- <div class="btn-toolbar mb-2 mb-md-0">
 
-                        <!-- Function Button -->
                         <div class="btn-group me-2">
                             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
                         </div>
 
-                        <!-- Drop Down Menu -->
                         <div class="dropdown">
                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
                                 id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -81,7 +79,7 @@ function displayThongKeKH($thongKe, $index)
                                 <li><a class="dropdown-item" href="#">Last Year</a></li>
                             </ul>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row justify-content-evenly">

@@ -181,7 +181,6 @@ function showUserList($user, $currentLoggedInUser)
                                 echo "</div>";
                             } else {
                                 $searchResult = UserBUS::getInstance()->searchModel($searchQuery, ['id', 'username', 'email', 'name', 'phone', 'address']);
-                                // Check if searchModel returned any results
                                 if (empty($searchResult) || count($searchResult) == 0) {
                                     echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
                                     echo "No result found!";

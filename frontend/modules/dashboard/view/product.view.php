@@ -174,24 +174,19 @@ function showProductList($product)
                                     $searchResult = ProductBUS::getInstance()->getAllModels();
                                 } else {
                                     $searchResult = ProductBUS::getInstance()->searchModel($searchQuery, ['id', 'name', 'price', 'description']);
-
-                                    // Check if searchModel returned any results
                                     if (empty($searchResult) || count($searchResult) == 0) {
                                         echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
                                         echo "No result found!";
                                         echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
                                         echo "</div>";
                                     } else {
-
                                         if (isset($_GET['page'])) {
                                             header('Location: http://localhost/frontend/index.php?module=dashboard&view=product.view');
                                             exit;
                                         }
-
                                         foreach ($searchResult as $product) {
                                             echo showProductList($product);
                                         }
-
                                     }
                                 }
                             }

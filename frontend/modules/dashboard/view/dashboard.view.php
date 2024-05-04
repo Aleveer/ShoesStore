@@ -138,7 +138,12 @@ function displayThongKe($thongKe, $index)
                             if (isPost()) {
                                 $filterAll = filter();
                                 if (isset($filterAll['dateFrom']) && isset($filterAll['dateTo'])) {
-                                    $thongKeList = OrdersBUS::getInstance()->filterByDateRange($filterAll['dateFrom'], $filterAll['dateTo']);
+                                    //Get dateFrom and dateTo as format : yyyy-mm-dd
+                                    $startDate = date('Y-m-d', strtotime($filterAll['dateFrom']));
+                                    $endDate = date('Y-m-d', strtotime($filterAll['dateTo']));
+                                    //Add +1 to end date to get all data in that day:
+                                    $endDate = date('Y-m-d', strtotime($endDate . ' +1 day'));
+                                    $thongKeList = OrdersBUS::getInstance()->filterByDateRange($startDate, $endDate);
                                     $thongKeListArray = array_map(function ($thongKe) {
                                         return $thongKe->toArray();
                                     }, $thongKeList);
@@ -233,6 +238,18 @@ function displayThongKe($thongKe, $index)
             var dateFrom = document.getElementById('purchased-date-from').value;
             var dateTo = document.getElementById('purchased-date-to').value;
 
+            //Check valid input date:
+            if (dateFrom === '' && dateTo === '') {
+                alert('Please input date');
+                return;
+            }
+
+            //Check valid date:
+            if (dateFrom > dateTo) {
+                alert('Start date must be less than end date');
+                return;
+            }
+
             fetch('http://localhost/frontend/?module=dashboard&view=dashboard.view', {
                 method: 'POST',
                 headers: {
@@ -246,7 +263,6 @@ function displayThongKe($thongKe, $index)
                 .then(function (data) {
                     var tableBody = document.querySelector('.showAllThongKe');
                     tableBody.innerHTML = htmlThongKeList(data.thongKeList);
-                    // Add click event to see detail buttons after re-rendering
                     addSeeDetailButtonClickEvent();
                 });
         });

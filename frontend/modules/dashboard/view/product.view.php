@@ -173,7 +173,6 @@ function showProductList($product)
                                     echo "</div>";
                                     $searchResult = ProductBUS::getInstance()->getAllModels();
                                 } else {
-
                                     $searchResult = ProductBUS::getInstance()->searchModel($searchQuery, ['id', 'name', 'price', 'description']);
 
                                     // Check if searchModel returned any results

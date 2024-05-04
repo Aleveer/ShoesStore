@@ -172,7 +172,6 @@ function showUserList($user, $currentLoggedInUser)
                     if (isPost()) {
                         $filterAll = filter();
                         if (isset($_POST['accountSearchName'])) {
-                            error_log("Searching for account...");
                             $searchQuery = $_POST['accountSearch'];
                             $searchResult = array();
                             if (empty($searchQuery) || trim($searchQuery) == "") {

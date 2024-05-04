@@ -130,7 +130,7 @@ function showUserList($user, $currentLoggedInUser)
                             $page = isset($_GET['page']) ? $_GET['page'] : 1;
 
                             if (!isPost() || (isPost() && !isset($_POST['accountSearchName']))) {
-                                $userChunks = array_chunk($userList, 9);
+                                $userChunks = array_chunk($userList, 12);
                                 $accountsForCurrentPage = $userChunks[$page - 1];
                                 foreach ($accountsForCurrentPage as $account): ?>
                                     <?= showUserList($account, $userModel); ?>

@@ -189,4 +189,29 @@ class ProductBUS implements BUSInterface
             throw new InvalidArgumentException("Category ID must be greater than 0");
         }
     }
+
+    public function filterByName($from, $limit, $name)
+    {
+        return ProductDAO::getInstance()->filterByName($from, $limit, $name);
+    }
+
+    public function paginationTech($from, $limit)
+    {
+        return ProductDAO::getInstance()->paginationTech($from, $limit);
+    }
+
+    public function countAllModels()
+    {
+        return ProductDAO::getInstance()->countAllModels();
+    }
+
+    public function multiFilter($from, $limit, $filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo)
+    {
+        return ProductDAO::getInstance()->multiFilter($from, $limit, $filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo);
+    }
+
+    public function countFilteredProducts($filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo)
+    {
+        return ProductDAO::getInstance()->countFilteredProducts($filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo);
+    }
 }

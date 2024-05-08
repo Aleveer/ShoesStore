@@ -145,4 +145,138 @@ class ProductDAO implements DAOInterface
         }
         return $productList;
     }
+
+    public function filterByName($from, $limit, $name)
+    {
+        $productList = [];
+        $query = "SELECT * FROM product WHERE LOWER(name) LIKE '%' || LOWER(?) || '%' LIMIT ?, ?;";
+        $args = [
+            $from + 1,
+            $limit,
+            $name
+        ];
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
+        while ($row = $rs->fetch_assoc()) {
+            $productModel = $this->createProductModel($row);
+            array_push($productList, $productModel);
+        }
+        return $productList;
+    }
+
+    public function paginationTech($from, $limit)
+    {
+        $productList = [];
+        $query = "SELECT * FROM products LIMIT ?, ?;";
+        $args = [
+            $from + 1,
+            $limit
+        ];
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
+        while ($row = $rs->fetch_assoc()) {
+            $productModel = $this->createProductModel($row);
+            array_push($productList, $productModel);
+        }
+        return $productList;
+    }
+
+    public function countAllModels()
+    {
+        $query = "SELECT COUNT(*) AS total FROM products;";
+        $rs = DatabaseConnection::executeQuery($query);
+        $row = $rs->fetch_assoc();
+        return $row['total'];
+    }
+
+
+    public function multiFilter($from, $limit, $filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo)
+    {
+        $productList = [];
+        $query = "SELECT * FROM products WHERE 1=1";
+        $args = [];
+
+        // Thêm điều kiện lọc vào câu truy vấn nếu các biến filter được định nghĩa và không rỗng
+        if (!empty($filterName)) {
+            $query .= " AND LOWER(name) LIKE ?";
+            $args[] = '%' . strtolower($filterName) . '%';
+        }
+        if (!empty($filterCategory)) {
+            $filterCategory = (int) $filterCategory;
+            if ($filterCategory != 0) {
+                $query .= " AND category_id = ?";
+                $args[] = $filterCategory;
+            }
+        }
+        if ($filterGender != "") {
+            $filterGender = (int) $filterGender;
+            if ($filterGender != -1) {
+                $query .= " AND gender = ?";
+                $args[] = $filterGender;
+            }
+        }
+
+        // Thêm điều kiện lọc về giá vào câu truy vấn
+        if (!empty($filterPriceFrom) && !empty($filterPriceTo)) {
+            $query .= " AND price BETWEEN ? AND ?";
+            $args[] = $filterPriceFrom;
+            $args[] = $filterPriceTo;
+        } elseif (!empty($filterPriceFrom)) {
+            $query .= " AND price >= ?";
+            $args[] = $filterPriceFrom;
+        } elseif (!empty($filterPriceTo)) {
+            $query .= " AND price <= ?";
+            $args[] = $filterPriceTo;
+        }
+
+        $query .= " LIMIT ?, ?";
+        $args[] = $from;
+        $args[] = $limit;
+
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
+        while ($row = $rs->fetch_assoc()) {
+            $productModel = $this->createProductModel($row);
+            array_push($productList, $productModel);
+        }
+        return $productList;
+    }
+
+
+    public function countFilteredProducts($filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo)
+    {
+        $query = "SELECT COUNT(*) AS total FROM products WHERE 1=1";
+        $args = [];
+
+        // Thêm điều kiện lọc vào câu truy vấn nếu các biến filter được định nghĩa và không rỗng
+        if (!empty($filterName)) {
+            $query .= " AND LOWER(name) LIKE ?";
+            $args[] = '%' . strtolower($filterName) . '%';
+        }
+        if (!empty($filterCategory)) {
+            $query .= " AND category_id = ?";
+            $args[] = $filterCategory;
+        }
+        if ($filterGender != "") {
+            $filterGender = (int) $filterGender;
+            if ($filterGender != -1) {
+                $query .= " AND gender = ?";
+                $args[] = $filterGender;
+            }
+        }
+
+        // Thêm điều kiện lọc về giá vào câu truy vấn
+        if (!empty($filterPriceFrom) && !empty($filterPriceTo)) {
+            $query .= " AND price BETWEEN ? AND ?";
+            $args[] = $filterPriceFrom;
+            $args[] = $filterPriceTo;
+        } elseif (!empty($filterPriceFrom)) {
+            $query .= " AND price >= ?";
+            $args[] = $filterPriceFrom;
+        } elseif (!empty($filterPriceTo)) {
+            $query .= " AND price <= ?";
+            $args[] = $filterPriceTo;
+        }
+
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
+        $row = $rs->fetch_assoc();
+        return $row['total'];
+    }
 }

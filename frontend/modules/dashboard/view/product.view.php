@@ -1,7 +1,9 @@
 <?php
+
 use backend\enums\StatusEnums;
 
 ob_start();
+
 use backend\bus\CategoriesBUS;
 use backend\bus\OrderItemsBUS;
 use backend\bus\SizeItemsBUS;
@@ -25,34 +27,6 @@ include (__DIR__ . '/../inc/head.php');
 use backend\bus\ProductBUS;
 
 $productList = ProductBUS::getInstance()->getAllModels();
-
-function showProductList($product)
-{
-    echo "
-        <tr>
-            <td><img src='{$product->getImage()}' alt='{$product->getName()}' class='rounded float-start'></td>
-            <td class='text-center'>{$product->getId()}</td>
-            <td>{$product->getName()}</td>
-            <td>" . CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName() . "</td>
-            <td>{$product->getDescription()}</td>
-            <td class='text-center'>{$product->getPrice()}</td>
-            <td class='text-center'>
-                <div>
-                    <a href='http://localhost/frontend/index.php?module=dashboard&view=product.update&id={$product->getId()}' class='btn btn-sm btn-warning'>
-                        <span data-feather='tool'></span>
-                    </a>
-                    <button class='btn btn-sm btn-danger' id='completelyDeleteProduct' name='completelyDeleteProduct'>
-                        <span data-feather='trash-2'></span>
-                    </button>
-                    <button class='btn btn-sm btn-danger' id='deleteProductButton' name='deleteProductButton'>
-                        <span data-feather='eye-off'></span>
-                    </button>
-                </div>
-            </td>
-            <td class='text-center'>{$product->getStatus()}</td>
-        </tr>
-    ";
-}
 ?>
 
 <body>
@@ -82,16 +56,14 @@ function showProductList($product)
                     </div>
                 </div>
 
-                <form action="" method="POST" class="m-0 col-lg-6">
-                    <div class="search-group input-group py-2">
-                        <input type="text" name="productSearch" id="productSearchBar" class="searchInput form-control"
-                            placeholder="Search anything here...">
-                        <button type="submit" id="productSearchButton" name="productSearchButtonName"
-                            class="btn btn-sm btn-primary align-middle px-3">
-                            <span data-feather="search"></span>
-                        </button>
-                    </div>
-                </form>
+                <div class="search-group input-group py-2">
+                    <input type="text" name="productSearch" id="productSearchBar" class="searchInput form-control"
+                        placeholder="Search anything here...">
+                    <button type="submit" id="productSearchButton" name="productSearchButtonName"
+                        class="btn btn-sm btn-primary align-middle px-3">
+                        <span data-feather="search"></span>
+                    </button>
+                </div>
 
                 <table class="table align-middle table-borderless table-hover">
                     <thead class="table-light">
@@ -107,87 +79,55 @@ function showProductList($product)
                         </tr>
                     </thead>
 
-                    <tbody>
-                        <?php
-                        //By default, the product list shows all: 
-                        if (!isPost() || (isPost() && !isset($_POST['productSearchButtonName']))) {
-                            if (count($productList) > 0) {
-                                // Get the current page number from the URL, if it's not set default to 1
-                                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    <tbody class="areaProduct">
+                        <nav aria-label='Page navigation example'>
+                            <ul class='pagination justify-content-start areaPagination'>
 
-                                // By default, the product list shows all: 
-                                if (!isPost() || (isPost() && !isset($_POST['productSearchButtonName']))) {
-                                    // Split the product list into chunks of 12
-                                    $productChunks = array_chunk($productList, 12);
+                            </ul>
+                        </nav>
 
-                                    // Get the products for the current page
-                                    $productsForCurrentPage = $productChunks[$page - 1];
-
-                                    foreach ($productsForCurrentPage as $product): ?>
-                                        <?= showProductList($product); ?>
-                                    <?php endforeach;
-                                }
-
-                                // Calculate the total number of pages
-                                $totalPages = count($productChunks);
-
-                                echo "<nav aria-label='Page navigation example'>";
-                                echo "<ul class='pagination justify-content-start'>";
-
-                                // Add previous button
-                                if ($page > 1) {
-                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page - 1) . "'>Previous</a></li>";
-                                }
-
-                                for ($i = 1; $i <= $totalPages; $i++) {
-                                    // Highlight the current page
-                                    if ($i == $page) {
-                                        echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
-                                    } else {
-                                        echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=$i'>$i</a></li>";
-                                    }
-                                }
-
-                                // Add next button
-                                if ($page < $totalPages) {
-                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=product.view&page=" . ($page + 1) . "'>Next</a></li>";
-                                }
-
-                                echo "</ul>";
-                                echo "</nav>";
-                            }
-                        }
-                        ?>
-
-                        <!-- Function -->
                         <?php
                         if (isPost()) {
                             $filterAll = filter();
-                            if (isset($_POST['productSearchButtonName'])) {
-                                $searchQuery = $_POST['productSearch'];
-                                $searchResult = array();
-                                if (empty($searchQuery)) {
-                                    echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
-                                    echo "Please input the search bar to search!";
-                                    echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
-                                    echo "</div>";
-                                    $searchResult = ProductBUS::getInstance()->getAllModels();
+                            if (isset($filterAll['thisPage']) && isset($filterAll['limit'])) {
+                                $thisPage = $filterAll['thisPage'];
+                                $limit = $filterAll['limit'];
+                                $beginGet = $limit * ($thisPage - 1);
+
+                                $filterName = $filterAll['filterName'];
+                                $filterCategory = $filterAll['filterCategory'];
+                                $filterGender = $filterAll['filterGender'];
+                                $filterPriceFrom = $filterAll['filterPriceFrom'];
+                                $filterPriceTo = $filterAll['filterPriceTo'];
+
+                                if (
+                                    ($filterName == "") &&
+                                    ($filterCategory == "") &&
+                                    ($filterGender == "") &&
+                                    ($filterPriceFrom == "") &&
+                                    ($filterPriceTo == "")
+                                ) {
+                                    $totalQuantity = ProductBUS::getInstance()->countAllModels();
+                                    $listSP = ProductBUS::getInstance()->paginationTech($beginGet, $limit);
+                                    $listSPArray = array_map(function ($product) {
+                                        $categoryName = CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName();
+                                        return $product->toArrayDashBoard($categoryName);
+                                    }, $listSP);
+                                    ob_end_clean();
+                                    header('Content-Type: application/json');
+                                    echo json_encode(['listProducts' => $listSPArray, 'thisPage' => $thisPage, 'limit' => $limit, 'totalQuantity' => $totalQuantity, 'beginGet' => $beginGet]);
+                                    exit;
                                 } else {
-                                    $searchResult = ProductBUS::getInstance()->searchModel($searchQuery, ['id', 'name', 'price', 'description']);
-                                    if (empty($searchResult) || count($searchResult) == 0) {
-                                        echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
-                                        echo "No result found!";
-                                        echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
-                                        echo "</div>";
-                                    } else {
-                                        if (isset($_GET['page'])) {
-                                            header('Location: http://localhost/frontend/index.php?module=dashboard&view=product.view');
-                                            exit;
-                                        }
-                                        foreach ($searchResult as $product) {
-                                            echo showProductList($product);
-                                        }
-                                    }
+                                    $listSP = ProductBUS::getInstance()->multiFilter($beginGet, $limit, $filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo);
+                                    $totalQuantity = ProductBUS::getInstance()->countFilteredProducts($filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo);
+                                    $totalQuantity = isset($totalQuantity) ? $totalQuantity : 0;
+                                    $listSPArray = array_map(function ($product) {
+                                        return $product->toArray();
+                                    }, $listSP);
+                                    ob_end_clean();
+                                    header('Content-Type: application/json');
+                                    echo json_encode(['listProducts' => $listSPArray, 'thisPage' => $thisPage, 'limit' => $limit, 'totalQuantity' => $totalQuantity, 'beginGet' => $beginGet]);
+                                    exit;
                                 }
                             }
                         }
@@ -277,28 +217,32 @@ function showProductList($product)
                 <?php
                 //Handle delete product:
                 if (isPost()) {
-                    if (isset($_POST['deleteButton'])) {
-                        error_log('Delete button clicked');
-                        $productId = $_POST['productId'];
+                    $filterAll = filter();
+                    if (isset($filterAll['hide']) && isset($filterAll['id'])) {
+                        $productId = $filterAll['id'];
                         $updateProductStatus = ProductBUS::getInstance()->getModelById($productId);
                         $updateProductStatus->setStatus(strtolower(StatusEnums::INACTIVE));
-                        ProductBUS::getInstance()->updateModel($updateProductStatus);
+                        $result = ProductBUS::getInstance()->updateModel($updateProductStatus);
                         ProductBUS::getInstance()->refreshData();
                         ob_end_clean();
-                        return jsonResponse('success', 'Product hidden successfully!');
+                        if ($result) {
+                            return jsonResponse('success', 'Product hidden successfully!');
+                        } else {
+                            return jsonResponse('error', 'Something went wrong!');
+                        }
                     }
                 }
 
                 //Handle completely delete product:
                 if (isPost()) {
-                    if (isset($_POST['completelyDeleteProduct'])) {
-                        $productId = $_POST['productId'];
+                    $fitlerAll = filter();
+                    if (isset($filterAll['delete']) && isset($filterAll['id'])) {
+                        $productId = $_POST['id'];
                         $productPreparedToDel = ProductBUS::getInstance()->getModelById($productId);
 
                         //Check for orders that contain the product:
                         $orders = OrderItemsBUS::getInstance()->getOrderItemsListByProductId($productId);
                         if (count($orders) > 0) {
-                            error_log('Cannot delete product. Product is in orders.');
                             ob_end_clean();
                             return jsonResponse('error', 'Cannot delete product. Product is in orders.');
                         } else {
@@ -309,7 +253,6 @@ function showProductList($product)
                             }
                             ProductBUS::getInstance()->deleteModel($productPreparedToDel->getId());
                             ProductBUS::getInstance()->refreshData();
-                            error_log('Product deleted successfully!');
                             ob_end_clean();
                             return jsonResponse('success', 'Product deleted successfully!');
                         }
@@ -321,4 +264,222 @@ function showProductList($product)
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_product.js"></script>
                 <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_product.js"></script>
+
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+
+                        // Pagination and filter
+                        let thisPage = 1;
+                        let limit = 12;
+                        let searchInput = document.getElementById('productSearchBar');
+                        let areaProduct = document.querySelector('.areaProduct');
+                        let areaPagination = document.querySelector('.areaPagination');
+
+                        let filterName = "";
+                        let filterCategory = "";
+                        let filterGender = "";
+                        let filterPriceFrom = "";
+                        let filterPriceTo = "";
+
+                        function loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo) {
+                            fetch('http://localhost/frontend/index.php?module=dashboard&view=product.view', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: 'thisPage=' + thisPage + '&limit=' + limit + '&filterName=' + filterName + '&filterCategory=' + filterCategory + '&filterGender=' + filterGender + '&filterPriceFrom=' + filterPriceFrom + '&filterPriceTo=' + filterPriceTo
+                            })
+                                .then(function (response) {
+                                    return response.json();
+                                })
+                                .then(function (data) {
+                                    areaProduct.innerHTML = toHTMLProductList(data.listProducts);
+                                    areaPagination.innerHTML = toHTMLPagination(data.totalQuantity, data.thisPage, data.limit);
+                                    totalPage = Math.ceil(data.totalQuantity / data.limit);
+                                    changePageIndexLogic(totalPage, data.totalQuantity, data.limit);
+                                    addEventoHideToBtn();
+                                    addEventCompletelyDeleteToBtn();
+                                });
+                        }
+
+                        loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo);
+
+                        function toHTMLProductList(products) {
+                            let productListHTML = '';
+                            products.forEach(product => {
+                                productListHTML += `
+                                <tr>
+                                    <td><img src='${product.image}' alt='${product.name}' class='rounded float-start product_img'></td>
+                                    <td class='text-center product_id'>${product.id}</td>
+                                    <td class="product_name">${product.name}</td>
+                                    <td class="product_category_name">${product.categoryName}</td>
+                                    <td class="product_description">${product.description}</td>
+                                    <td class='text-center'>${product.price}</td>
+                                    <td class='text-center'>
+                                        <div>
+                                            <a href='http://localhost/frontend/index.php?module=dashboard&view=product.update&id=${product.id}' class='btn btn-sm btn-warning'>
+                                                <i class='fas fa-edit'></i>
+                                            </a>
+                                            <button class='btn btn-sm btn-danger' id='completelyDeleteProduct' name='completelyDeleteProduct'>
+                                                <i class='fas fa-trash-alt'></i>
+                                            </button>
+                                            <button class='btn btn-sm btn-danger' id='deleteProductButton' name='deleteProductButton'>
+                                                <i class='fas fa-eye-slash'></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="product_status" class='text-center'>${product.status}</td>
+                                </tr>
+                            `;
+                            });
+                            return productListHTML;
+                        }
+
+
+
+                        function toHTMLPagination(totalQuantity, thisPage, limit) {
+                            buttonPrev = `<li id="prevPage" class="page-item"><a class="page-link">Previous</a></li>`;
+                            buttonNext = `<li id="nextPage" class="page-item"><a class="page-link">Next</a></li>`;
+
+                            pageIndexButtons = '';
+                            for (i = 1; i <= Math.ceil(totalQuantity / limit); i++) {
+                                if (i == thisPage) {
+                                    pageIndexButtons += `<li class="pageIndex page-item active"><a class="page-link">${i}</a></li>`;
+                                } else {
+                                    pageIndexButtons += `<li class="pageIndex page-item"><a class="page-link">${i}</a></li>`;
+                                }
+                            }
+                            return buttonPrev + pageIndexButtons + buttonNext;
+                        }
+
+
+                        function changePageIndexLogic(totalPage, totalQuantity, limit) {
+                            if (totalQuantity < limit && totalQuantity > 0) {
+                                document.getElementById('prevPage').classList.add('hideBtn');
+                                document.getElementById('nextPage').classList.add('hideBtn');
+                            } else if (totalQuantity > limit) {
+                                let pageIndexButtons = document.querySelectorAll('.pageIndex');
+
+                                if (thisPage == 1) {
+                                    document.getElementById('prevPage').classList.add('hideBtn');
+                                } else {
+                                    document.getElementById('prevPage').classList.remove('hideBtn');
+                                }
+
+                                if (thisPage == totalPage) {
+                                    document.getElementById('nextPage').classList.add('hideBtn');
+                                } else {
+                                    document.getElementById('nextPage').classList.remove('hideBtn');
+                                }
+
+                                document.getElementById('prevPage').addEventListener('click', function () {
+                                    thisPage--;
+                                    loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo);
+                                })
+
+                                document.getElementById('nextPage').addEventListener('click', function () {
+                                    thisPage++;
+                                    loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo);
+                                })
+
+                                pageIndexButtons.forEach(function (button) {
+                                    button.addEventListener('click', function () {
+                                        thisPage = parseInt(this.textContent);
+                                        loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo);
+                                    });
+                                });
+                            } else if (totalQuantity == 0) {
+                                document.getElementById('prevPage').classList.add('hideBtn');
+                                document.getElementById('nextPage').classList.add('hideBtn');
+                                areaProduct.innerHTML = `
+                            <h1> No products found </h1>
+                            `
+                            }
+                        }
+
+                        searchInput.addEventListener('input', function () {
+                            filterName = searchInput.value;
+                            thisPage = 1;
+                            loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo);
+                        })
+
+
+
+                        // hide btn
+                        function addEventoHideToBtn() {
+                            let hideButtons = document.querySelectorAll('[name="deleteProductButton"]');
+                            hideButtons.forEach(function (button) {
+                                button.addEventListener('click', function () {
+                                    let productElement = this.closest('tr');
+                                    let productIdElement = productElement.querySelector('.product_id');
+                                    let productId = productIdElement.textContent.trim();
+                                    let productStatusElement = productElement.querySelector('.product_status');
+                                    let productStatus = productStatusElement.textContent.trim();
+
+                                    if (productStatus === 'inactive') {
+                                        alert('Product is already hidden');
+                                        return;
+                                    }
+
+                                    fetch('http://localhost/frontend/index.php?module=dashboard&view=product.view', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                        },
+                                        body: 'hide=' + true + '&id=' + productId
+                                    })
+                                        .then(function (response) {
+                                            return response.json();
+                                        })
+                                        .then(function (data) {
+                                            if (data.status == "success") {
+                                                alert(data.message);
+                                            } else if (data.status == "error") {
+                                                alert(data.message);
+                                            }
+                                        });
+
+                                    loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo);
+                                });
+                            });
+                        }
+
+
+                        // delete btn
+                        function addEventCompletelyDeleteToBtn() {
+                            let deleteButtons = document.querySelectorAll('[name="completelyDeleteProduct"]');
+                            deleteButtons.forEach(function (button) {
+                                button.addEventListener('click', function () {
+                                    let confirmed = confirm('Are you sure you want to delete this product? This action cannot be undone.');
+                                    if (confirmed) {
+                                        let productElement = this.closest('tr');
+                                        let productIdElement = productElement.querySelector('.product_id');
+                                        let productId = productIdElement.textContent.trim();
+
+                                        fetch('http://localhost/frontend/index.php?module=dashboard&view=product.view', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                            },
+                                            body: 'delete=' + true + '&id=' + productId
+                                        })
+                                            .then(function (response) {
+                                                return response.json();
+                                            })
+                                            .then(function (data) {
+                                                if (data.status == "success") {
+                                                    alert(data.message);
+                                                } else if (data.status == "error") {
+                                                    alert(data.message);
+                                                }
+                                            });
+
+                                        loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo);
+                                    }
+                                });
+                            });
+                        }
+                    });
+                </script>
 </body>

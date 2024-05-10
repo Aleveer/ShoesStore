@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\models;
 
 class ProductModel
@@ -111,6 +112,20 @@ class ProductModel
             'id' => $this->id,
             'name' => $this->name,
             'categoryId' => $this->categoryId,
+            'price' => $this->price,
+            'description' => $this->description,
+            'image' => $this->image,
+            'gender' => $this->gender,
+            'status' => $this->status,
+        ];
+    }
+
+    public function toArrayDashBoard($categoryName)
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'categoryName' => $categoryName,
             'price' => $this->price,
             'description' => $this->description,
             'image' => $this->image,

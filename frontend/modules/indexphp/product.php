@@ -1,4 +1,6 @@
 <?php
+use backend\enums\StatusEnums;
+
 ob_start();
 
 use backend\bus\ProductBUS;
@@ -232,20 +234,37 @@ function displayProduct($product)
                             ) {
                                 $totalQuantity = ProductBUS::getInstance()->countAllModels();
                                 $listSP = ProductBUS::getInstance()->paginationTech($beginGet, $limit);
-                                $listSPArray = array_map(function ($product) {
-                                    return $product->toArray();
-                                }, $listSP);
+                                $listSP = array_filter($listSP, function ($product) {
+                                    return $product->getStatus() == strtolower(StatusEnums::ACTIVE);
+                                });
+                                $listSP = array_values($listSP);
+                                if (count($listSP) > 0) {
+                                    $listSPArray = array_map(function ($product) {
+                                        return $product->toArray();
+                                    }, $listSP);
+                                } else {
+                                    $listSPArray = [];
+                                }
                                 ob_end_clean();
                                 header('Content-Type: application/json');
                                 echo json_encode(['listProducts' => $listSPArray, 'thisPage' => $thisPage, 'limit' => $limit, 'totalQuantity' => $totalQuantity, 'beginGet' => $beginGet]);
                                 exit;
                             } else {
                                 $listSP = ProductBUS::getInstance()->multiFilter($beginGet, $limit, $filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo);
+                                $listSP = array_filter($listSP, function ($product) {
+                                    return $product->getStatus() == strtolower(StatusEnums::ACTIVE);
+                                });
+                                $listSP = array_values($listSP);
+
                                 $totalQuantity = ProductBUS::getInstance()->countFilteredProducts($filterName, $filterCategory, $filterGender, $filterPriceFrom, $filterPriceTo);
                                 $totalQuantity = isset($totalQuantity) ? $totalQuantity : 0;
-                                $listSPArray = array_map(function ($product) {
-                                    return $product->toArray();
-                                }, $listSP);
+                                if (count($listSP) > 0) {
+                                    $listSPArray = array_map(function ($product) {
+                                        return $product->toArray();
+                                    }, $listSP);
+                                } else {
+                                    $listSPArray = [];
+                                }
                                 ob_end_clean();
                                 header('Content-Type: application/json');
                                 echo json_encode(['listProducts' => $listSPArray, 'thisPage' => $thisPage, 'limit' => $limit, 'totalQuantity' => $totalQuantity, 'beginGet' => $beginGet]);

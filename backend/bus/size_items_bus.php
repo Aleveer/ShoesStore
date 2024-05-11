@@ -28,7 +28,7 @@ class SizeItemsBUS implements BUSInterface
     {
         $this->sizeItemsList = SizeItemsDAO::getInstance()->getAll();
     }
-    public function getModelById(int $id)
+    public function getModelById($id)
     {
         return SizeItemsDAO::getInstance()->getById($id);
     }
@@ -55,12 +55,16 @@ class SizeItemsBUS implements BUSInterface
         return $result;
     }
 
-    public function deleteModel($sizeItemsModel)
+    public function deleteModel($sizeItemId)
     {
-        $result = SizeItemsDAO::getInstance()->delete($sizeItemsModel->getId());
+        $result = SizeItemsDAO::getInstance()->delete($sizeItemId);
         if ($result) {
-            $index = array_search($sizeItemsModel, $this->sizeItemsList);
-            unset($this->sizeItemsList[$index]);
+            foreach ($this->sizeItemsList as $index => $sizeItem) {
+                if ($sizeItem->getId() == $sizeItemId) {
+                    unset($this->sizeItemsList[$index]);
+                    break;
+                }
+            }
             $this->refreshData();
         }
         return $result;
@@ -106,5 +110,25 @@ class SizeItemsBUS implements BUSInterface
             }
         }
         return $result;
+    }
+
+    public function countAllModels()
+    {
+        return SizeItemsDAO::getInstance()->countAllModels();
+    }
+
+    public function paginationTech($from, $limit)
+    {
+        return SizeItemsDAO::getInstance()->paginationTech($from, $limit);
+    }
+
+    public function filterByName($from, $limit, $name)
+    {
+        return SizeItemsDAO::getInstance()->filterByName($from, $limit, $name);
+    }
+
+    public function countFilterByName($name)
+    {
+        return SizeItemsDAO::getInstance()->countFilterByName($name);
     }
 }

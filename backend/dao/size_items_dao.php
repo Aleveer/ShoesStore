@@ -119,4 +119,96 @@ class SizeItemsDAO implements DAOInterface
         }
         return $sizeItemList;
     }
+
+    public function countAllModels()
+    {
+        $query = "SELECT COUNT(*) AS total FROM size_items;";
+        $rs = DatabaseConnection::executeQuery($query);
+        $row = $rs->fetch_assoc();
+        return $row['total'];
+    }
+
+    public function paginationTech($from, $limit)
+    {
+        $sizeItemsList = [];
+        $query = "SELECT * FROM size_items LIMIT ?, ?;";
+        $args = [
+            $from + 1,
+            $limit
+        ];
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
+        while ($row = $rs->fetch_assoc()) {
+            $sizeItemModel = $this->createSizeItemModel($row);
+            array_push($sizeItemsList, $sizeItemModel);
+        }
+        return $sizeItemsList;
+    }
+
+    public function filterByName($from, $limit, $name)
+    {
+        $inventoryList = [];
+        $query = "
+        SELECT 
+            p.image AS Image, 
+            p.name AS ProductName, 
+            c.name AS Category, 
+            s.name AS Size, 
+            si.quantity AS Quantity,
+            si.id AS Id
+        FROM 
+            products AS p
+        INNER JOIN 
+            size_items AS si ON p.id = si.product_id
+        INNER JOIN 
+            categories AS c ON p.category_id = c.id
+        INNER JOIN 
+            sizes AS s ON si.size_id = s.id
+        WHERE 
+            LOWER(p.name) LIKE CONCAT('%', LOWER(?), '%')
+        LIMIT ?, ?;
+        ";
+        $args = [
+            $name,
+            $from,
+            $limit
+        ];
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
+        while ($row = $rs->fetch_assoc()) {
+            $image = $row['Image'];
+            $productName = $row['ProductName'];
+            $category = $row['Category'];
+            $size = $row['Size'];
+            $quantity = $row['Quantity'];
+            $id = $row['Id'];
+
+            // Thêm các giá trị vào mảng kết quả
+            $inventoryItem = [
+                'image' => $image,
+                'productName' => $productName,
+                'category' => $category,
+                'size' => $size,
+                'quantity' => $quantity,
+                'id' => $id
+            ];
+            array_push($inventoryList, $inventoryItem);
+        }
+        return $inventoryList;
+    }
+
+    public function countFilterByName($name)
+    {
+        $query = "
+        SELECT 
+            COUNT(*) AS Total
+        FROM 
+            products AS p
+        INNER JOIN 
+            size_items AS si ON p.id = si.product_id
+        WHERE 
+            LOWER(p.name) LIKE LOWER(?)";
+        $args = ["%$name%"];
+        $rs = DatabaseConnection::executeQuery($query, ...$args);
+        $row = $rs->fetch_assoc();
+        return $row['Total'];
+    }
 }

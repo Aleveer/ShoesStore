@@ -1,5 +1,6 @@
 <?php
 ob_start();
+
 use backend\bus\CategoriesBUS;
 use backend\bus\SizeBUS;
 use backend\bus\SizeItemsBUS;
@@ -53,16 +54,14 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     </div>
                 </div>
 
-                <form method="POST" style="width: 70%;">
-                    <div class="search-group input-group">
-                        <input type="text" id="productSearch" class="searchInput form-control" name="searchValue"
-                            placeholder="Search product name here...">
-                        <button type="submit" class="btn btn-sm btn-primary align-middle padx-0 pady-0"
-                            name="searchBtnName" id="searchBtnId">
-                            <span data-feather="search"></span>
-                        </button>
-                    </div>
-                </form>
+                <div class="search-group input-group">
+                    <input type="text" id="productSearch" class="searchInput form-control" name="searchValue"
+                        placeholder="Search product name here...">
+                    <button type="submit" class="btn btn-sm btn-primary align-middle padx-0 pady-0" name="searchBtnName"
+                        id="searchBtnId">
+                        <span data-feather="search"></span>
+                    </button>
+                </div>
 
                 <table class="table align-middle table-borderless table-hover">
                     <thead class="table-light">
@@ -75,227 +74,57 @@ $productList = ProductBUS::getInstance()->getAllModels();
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <?php
-                    if (!isPost() || (!isPost() && !isset($_POST['searchBtnName']))) {
-                        $products = SizeItemsBUS::getInstance()->getAllModels();
-                        $sizeItemList = SizeItemsBUS::getInstance()->getAllModels();
 
-                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    <tbody class="areaSizeItems">
+                        <nav aria-label='Page navigation example'>
+                            <ul class='pagination justify-content-start areaPagination'>
 
-                        $sizeItemChunks = array_chunk($sizeItemList, 12);
-                        $sizeItemsForCurrentPage = $sizeItemChunks[$page - 1];
-                        foreach ($sizeItemsForCurrentPage as $sizeItem) {
-                            $product = ProductBUS::getInstance()->getModelById($sizeItem->getProductId());
-                            $size = SizeBUS::getInstance()->getModelById($sizeItem->getSizeId());
-                            ?>
-                            <tbody>
-                                <tr>
-                                    <td><img src='<?php echo $product->getImage(); ?>' alt='' class='rounded float-start'>
-                                    </td>
-                                    <td><?php echo $product->getName(); ?></td>
-                                    <td>
-                                        <?php $categoryName = CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName(); ?>
-                                        <?php echo $categoryName; ?>
-                                    </td>
-                                    <td>
-                                        <?php echo preg_replace('/[^0-9]/', '', $size->getName()); ?><br>
-                                    </td>
-                                    <td>
-                                        <?php echo $sizeItem->getQuantity(); ?><br>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#editQuantityModal_<?= $product->getId() ?>_<?= $size->getId() ?>">
-                                            <span data-feather="tool"></span>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger"
-                                            id='deleteSizeItemBtn_<?= $product->getId() ?>_<?= $size->getId() ?>'
-                                            name='deleteSizeItemBtn'>
-                                            <span data-feather="trash-2"></span>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <!-- edit quantity modal -->
-                                <div class="modal fade" id="editQuantityModal_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                    tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <form id="form_<?= $product->getId() ?>_<?= $size->getId() ?>">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Size Quantity</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <label for="inputSize" class="form-label">Size</label>
-                                                    <input type="text" name="inputSize" id="inputSize" class="form-control"
-                                                        value="<?= preg_replace('/[^0-9]/', '', $size->getName()) ?>" readonly>
+                            </ul>
+                        </nav>
+                        <?php
+                        if (isPost()) {
+                            $filterAll = filter();
+                            if (isset($filterAll['thisPage']) && $filterAll['limit']) {
+                                $thisPage = $filterAll['thisPage'];
+                                $limit = $filterAll['limit'];
+                                $beginGet = $limit * ($thisPage - 1);
 
-                                                    <label for="inputQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                                        class="form-label">Current
-                                                        Quantity</label>
-                                                    <input type="number" name="inputQuantity"
-                                                        id="inputQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                                        class="form-control" value="<?= $sizeItem->getQuantity() ?>" readonly>
+                                $filterName = $filterAll['filterName'];
 
-                                                    <label for="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                                        class="form-label">New Quantity</label>
-                                                    <input type="number" name="inputNewQuantity"
-                                                        id="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                                        class="form-control">
-                                                    <p class="text-danger"> Tip: Negative number for decreasing quantity, else
-                                                        increasing quantity from
-                                                        current quantity</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Save</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </tbody>
-                            <?php
-                        }
+                                if (($filterName == "")) {
+                                    $totalQuantity = SizeItemsBUS::getInstance()->countAllModels();
+                                    $listSizeItem = SizeItemsBUS::getInstance()->paginationTech($beginGet, $limit);
 
-                        $totalPages = count($sizeItemChunks);
+                                    $listSizeItemArray = array_map(function ($sizeItem) {
+                                        $product = ProductBUS::getInstance()->getModelById($sizeItem->getProductId());
+                                        $productName = $product->getName();
+                                        $productImg = $product->getImage();
+                                        $categoryId = $product->getCategoryId();
+                                        $categoryName = CategoriesBUS::getInstance()->getModelById($categoryId)->getName();
+                                        $sizeName = SizeBUS::getInstance()->getModelById($sizeItem->getSizeId())->getName();
+                                        $size = preg_replace('/[^0-9]/', '', $sizeName);
 
-                        echo "<nav aria-label='Page navigation example'>";
-                        echo "<ul class='pagination justify-content-center'>";
+                                        return $sizeItem->toArray($productName, $categoryName, $size, $productImg);
+                                    }, $listSizeItem);
 
-                        // Add previous button
-                        if ($page > 1) {
-                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=inventory.view&page=" . ($page - 1) . "'>Previous</a></li>";
-                        }
-
-                        $range = 2; // Change this to increase or decrease the range of pages displayed around the current page
-                        for ($i = 1; $i <= $totalPages; $i++) {
-                            // If the page number is within the range of the current page or is the first or last page, display it
-                            if ($i == $page || $i == 1 || $i == $totalPages || ($i > $page - $range && $i < $page + $range)) {
-                                // Highlight the current page
-                                if ($i == $page) {
-                                    echo "<li class='page-item active'><a class='page-link' href='?module=dashboard&view=inventory.view&page=$i'>$i</a></li>";
+                                    ob_end_clean();
+                                    header('Content-Type: application/json');
+                                    echo json_encode(['listSizeItems' => $listSizeItemArray, 'thisPage' => $thisPage, 'limit' => $limit, 'totalQuantity' => $totalQuantity, 'beginGet' => $beginGet]);
+                                    exit;
                                 } else {
-                                    echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=inventory.view&page=$i'>$i</a></li>";
+                                    $listInventory = SizeItemsBUS::getInstance()->filterByName($beginGet, $limit, $filterName);
+                                    $totalQuantity = SizeItemsBUS::getInstance()->countFilterByName($filterName);
+                                    $totalQuantity = isset($totalQuantity) ? $totalQuantity : 0;
+                                    ob_end_clean();
+                                    header('Content-Type: application/json');
+                                    echo json_encode(['listSizeItems' => $listInventory, 'thisPage' => $thisPage, 'limit' => $limit, 'totalQuantity' => $totalQuantity, 'beginGet' => $beginGet]);
+                                    exit;
                                 }
                             }
-                            // If the page number is just outside the range of the current page, display an ellipsis
-                            else if ($i == $page - $range - 1 || $i == $page + $range + 1) {
-                                echo "<li class='page-item disabled'><a class='page-link'>...</a></li>";
-                            }
                         }
-
-                        // Add next button
-                        if ($page < $totalPages) {
-                            echo "<li class='page-item'><a class='page-link' href='?module=dashboard&view=inventory.view&page=" . ($page + 1) . "'>Next</a></li>";
-                        }
-
-                        echo "</ul>";
-                        echo "</nav>";
                         ?>
+                    </tbody>
 
-                        </tbody>
-                        <?php
-                    }
-                    if (isPost() && isset($_POST['searchBtnName'])) {
-                        $searchValue = $_POST['searchValue'];
-                        if (empty($searchValue) || trim($searchValue) == '') {
-                            echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
-                            echo "Please input the search bar to search!";
-                            echo "<button type='button' class='btn-close' data-bs-dismiss='alert' onclick='window.history.back(); aria-label='Close'></button>";
-                            echo "</div>";
-                        }
-
-                        $products = ProductBUS::getInstance()->searchModel($searchValue, ['name']);
-                        if (count($products) == 0 && !empty($searchValue)) {
-                            echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
-                            echo "No product found!";
-                            echo "<button type='button' class='btn-close' data-bs-dismiss='alert' onclick='window.history.back(); aria-label='Close'></button>";
-                            echo "</div>";
-                        }
-
-                        //Show search result:
-                        foreach ($products as $product) {
-                            $sizeItems = SizeItemsBUS::getInstance()->getModelByProductId($product->getId());
-                            foreach ($sizeItems as $sizeItem) {
-                                $size = SizeBUS::getInstance()->getModelById($sizeItem->getSizeId());
-                                ?>
-                                <tbody>
-                                    <tr>
-                                        <td><img src='<?php echo $product->getImage(); ?>' alt='' class='rounded float-start'>
-                                        </td>
-                                        <td><?php echo $product->getName(); ?></td>
-                                        <td>
-                                            <?php $categoryName = CategoriesBUS::getInstance()->getModelById($product->getCategoryId())->getName(); ?>
-                                            <?php echo $categoryName; ?>
-                                        </td>
-                                        <td>
-                                            <?php echo preg_replace('/[^0-9]/', '', $size->getName()); ?><br>
-                                        </td>
-                                        <td>
-                                            <?php echo $sizeItem->getQuantity(); ?><br>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#editQuantityModal_<?= $product->getId() ?>_<?= $size->getId() ?>">
-                                                <span data-feather="tool"></span>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger"
-                                                id='deleteSizeItemBtn_<?= $product->getId() ?>_<?= $size->getId() ?>'
-                                                name='deleteSizeItemBtn'>
-                                                <span data-feather="trash-2"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <!-- edit quantity modal -->
-                                    <div class="modal fade" id="editQuantityModal_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                        tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <form id="form_<?= $product->getId() ?>_<?= $size->getId() ?>">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Size Quantity</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <label for="inputSize" class="form-label">Size</label>
-                                                        <input type="text" name="inputSize" id="inputSize" class="form-control"
-                                                            value="<?= preg_replace('/[^0-9]/', '', $size->getName()) ?>" readonly>
-
-                                                        <label for="inputQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                                            class="form-label">Current
-                                                            Quantity</label>
-                                                        <input type="number" name="inputQuantity"
-                                                            id="inputQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                                            class="form-control" value="<?= $sizeItem->getQuantity() ?>" readonly>
-
-                                                        <label for="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                                            class="form-label">New Quantity</label>
-                                                        <input type="number" name="inputNewQuantity"
-                                                            id="inputNewQuantity_<?= $product->getId() ?>_<?= $size->getId() ?>"
-                                                            class="form-control">
-                                                        <p class="text-danger"> Tip: Negative number for decreasing quantity, else
-                                                            increasing quantity from
-                                                            current quantity</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Save</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </tbody>
-                                <?php
-                            }
-                        }
-                    }
-                    ?>
                 </table>
 
                 <!-- Add modal -->
@@ -367,10 +196,47 @@ $productList = ProductBUS::getInstance()->getAllModels();
                         </div>
                     </div>
                 </div>
+
+                <!-- Update model -->
+                <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="updateModalWrapper modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Size Quantity</h1>
+                                <button type="button" class="btn-close closeUpdateModal" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label for="inputSizeUpdate" class="form-label">Size</label>
+                                <input type="text" name="inputSize" id="inputSizeUpdate" class="form-control" value=""
+                                    readonly>
+
+                                <label for="inputQuantityUpdate" class="form-label">Current
+                                    Quantity</label>
+                                <input type="number" name="inputQuantity" id="inputQuantityUpdate" class="form-control"
+                                    value="" readonly>
+
+                                <label for="inputNewQuantityUpdate" class="form-label">New Quantity</label>
+                                <input type="number" name="inputNewQuantity" id="inputNewQuantityUpdate"
+                                    class="form-control">
+                                <p class="text-danger"> Tip: Negative number for decreasing quantity, else
+                                    increasing quantity from
+                                    current quantity</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary closeUpdateModalBtn"
+                                    data-bs-dismiss="modal">Close</button>
+                                <button id="updateSizeItemBtn" type="button" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
             <?php
             if (isPost()) {
                 //Handle add size item:
+                $filterAll = filter();
                 if (isset($_POST['saveBtnName'])) {
                     $productId = $_POST['productName'];
                     $sizeId = $_POST['size'];
@@ -395,28 +261,36 @@ $productList = ProductBUS::getInstance()->getAllModels();
                 }
 
                 //Handle update quantity:
-                if (isset($_POST['button'])) {
-                    $productId = $_POST['productId'];
-                    $sizeId = $_POST['sizeId'];
-                    $newQuantity = $_POST['newQuantity'];
-                    $currentQuantity = $_POST['currentQuantity'];
-                    $sizeItem = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $productId);
-                    $sizeItem->setQuantity($currentQuantity + $newQuantity);
-                    SizeItemsBUS::getInstance()->updateModel($sizeItem);
+                if (isset($filterAll['update']) && isset($filterAll['id']) && isset($filterAll['newQuantity'])) {
+                    $sizeItemId = $filterAll['id'];
+                    $newQuantity = $filterAll['newQuantity'];
+
+                    $sizeItem = SizeItemsBUS::getInstance()->getModelById($sizeItemId);
+                    $sizeItem->setQuantity($sizeItem->getQuantity() + $newQuantity);
+                    $result = SizeItemsBUS::getInstance()->updateModel($sizeItem);
                     SizeItemsBUS::getInstance()->refreshData();
-                    ob_end_clean();
-                    return jsonResponse('success', 'Update quantity successfully!');
+                    if ($result) {
+                        ob_end_clean();
+                        return jsonResponse('success', 'Update quantity successfully!');
+                    } else {
+                        ob_end_clean();
+                        return jsonResponse('error', 'Something went wrong!');
+                    }
                 }
 
                 //Handle delete size item:
-                if (isset($_POST['delete'])) {
-                    $productId = $_POST['productId'];
-                    $sizeId = $_POST['sizeId'];
-                    $sizeItem = SizeItemsBUS::getInstance()->getModelBySizeIdAndProductId($sizeId, $productId);
-                    SizeItemsBUS::getInstance()->deleteModel($sizeItem);
+                if (isset($filterAll['delete']) && isset($filterAll['id'])) {
+                    $sizeItemId = $filterAll['id'];
+                    $sizeItem = SizeItemsBUS::getInstance()->getModelById($sizeItemId);
+                    $result = SizeItemsBUS::getInstance()->deleteModel($sizeItem->getId());
                     SizeItemsBUS::getInstance()->refreshData();
-                    ob_end_clean();
-                    return jsonResponse('success', 'Delete size item successfully!');
+                    if ($result) {
+                        ob_end_clean();
+                        return jsonResponse('success', 'Delete size item successfully!');
+                    } else {
+                        ob_end_clean();
+                        return jsonResponse('error', 'Something went wrong!');
+                    }
                 }
             }
             ?>
@@ -426,7 +300,281 @@ $productList = ProductBUS::getInstance()->getAllModels();
             <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_sizeitem.js"></script>
-            <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/update_sizeitem.js"></script>
-            <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/delete_sizeitem.js"></script>
 
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    let thisPage = 1;
+                    let limit = 12;
+
+                    let areaSizeItems = document.querySelector('.areaSizeItems');
+                    let areaPagination = document.querySelector('.areaPagination');
+                    let searchInput = document.querySelector('#productSearch');
+
+                    let updateModal = document.getElementById('updateModal');
+                    let updateModalWrapper = document.querySelector('.updateModalWrapper');
+                    let closeUpdateModal = document.querySelector('.closeUpdateModal');
+                    let closeUpdateModalBtn = document.querySelector('.closeUpdateModalBtn');
+                    let inputSizeUpdate = document.getElementById('inputSizeUpdate');
+                    let inputQuantityUpdate = document.getElementById('inputQuantityUpdate');
+                    let inputNewQuantityUpdate = document.getElementById('inputNewQuantityUpdate');
+                    let updateSizeItemBtn = document.getElementById('updateSizeItemBtn');
+
+                    let filterName = "";
+                    let sizeItemId = "";
+
+                    function loadData(thisPage, limit, filterName) {
+                        fetch('http://localhost/frontend/index.php?module=dashboard&view=inventory.view', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'thisPage=' + thisPage + '&limit=' + limit + '&filterName=' + filterName
+                        })
+                            .then(function (response) {
+                                return response.json();
+                            })
+                            .then(function (data) {
+                                areaSizeItems.innerHTML = toHTMLSizeItem(data.listSizeItems);
+                                areaPagination.innerHTML = toHTMLPagination(data.totalQuantity, data.thisPage, data.limit);
+                                totalPage = Math.ceil(data.totalQuantity / data.limit);
+                                changePageIndexLogic(totalPage, data.totalQuantity, data.limit);
+                                addEventUpdateBtn(data.listSizeItems);
+                                addEventDeleteBtn();
+                            });
+                    }
+
+                    loadData(thisPage, limit, filterName);
+
+
+                    function toHTMLSizeItem(sizeItems) {
+                        let html = '';
+                        sizeItems.forEach(function (sizeItem) {
+                            html += `
+                                <tr id="${sizeItem.id}">
+                                    <td><img src='${sizeItem.image}' alt='' class='rounded float-start'></td>
+                                    <td>${sizeItem.productName}</td>
+                                    <td>${sizeItem.category}</td>
+                                    <td>${sizeItem.size}</td>
+                                    <td>${sizeItem.quantity}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning" name="updateBtn">
+                                            <span data-feather="tool">Sửa</span>
+                                        </button>
+                                        <button class="deleteSizeItemBtn btn btn-sm btn-danger" name="deleteSizeItemBtn">
+                                            <span data-feather="trash-2">Xoá</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        return html;
+                    }
+
+                    function toHTMLPagination(totalQuantity, thisPage, limit) {
+                        buttonPrev = `<li id="prevPage" class="page-item"><a class="page-link">Previous</a></li>`;
+                        buttonNext = `<li id="nextPage" class="page-item"><a class="page-link">Next</a></li>`;
+
+                        pageIndexButtons = '';
+                        totalPage = Math.ceil(totalQuantity / limit);
+
+                        // Nếu tổng số trang lớn hơn 6, chỉ hiển thị một phần của các trang
+                        if (totalPage > 6) {
+                            // Hiển thị trang đầu
+                            if (thisPage == 1) {
+                                pageIndexButtons += `<li class="pageIndex page-item active"><a class="page-link">1</a></li>`
+                            } else {
+                                pageIndexButtons += `<li class="pageIndex page-item"><a class="page-link">1</a></li>`
+                            }
+
+                            if (thisPage >= 5) {
+                                pageIndexButtons += `<li class="pageIndex page-item"><a class="page-link">...</a></li>`
+                            }
+
+                            for (i = Math.max(2, parseInt(thisPage) - 2); i <= Math.min(totalPage - 1, parseInt(thisPage) + 3); i++) {
+                                pageIndexButtons += `<li class="pageIndex page-item ${thisPage == i ? 'active' : ''}"><a class="page-link">${i}</a></li>`;
+                            }
+
+                            if (thisPage <= totalPage - 5) {
+                                pageIndexButtons += `<li class="pageIndex page-item"><a class="page-link">...</a></li>`
+                            }
+                            if (thisPage == totalPage) {
+                                pageIndexButtons += `<li class="pageIndex page-item active"><a class="page-link">${totalPage}</a></li>`
+                            } else {
+                                pageIndexButtons += `<li class="pageIndex page-item"><a class="page-link">${totalPage}</a></li>`
+                            }
+                        } else {
+                            // Nếu tổng số trang nhỏ hơn hoặc bằng 6, hiển thị tất cả các trang
+                            for (i = 1; i <= totalPage; i++) {
+                                pageIndexButtons += `<li class="pageIndex page-item ${thisPage == i ? 'active' : ''}"><a class="page-link">${i}</a></li>`;
+                            }
+                        }
+
+                        return buttonPrev + pageIndexButtons + buttonNext;
+                    }
+
+                    function changePageIndexLogic(totalPage, totalQuantity, limit) {
+                        if (totalQuantity < limit && totalQuantity > 0) {
+                            document.getElementById('prevPage').classList.add('hideBtn');
+                            document.getElementById('nextPage').classList.add('hideBtn');
+                        } else if (totalQuantity > limit) {
+                            let pageIndexButtons = document.querySelectorAll('.pageIndex');
+
+                            if (thisPage == 1) {
+                                document.getElementById('prevPage').classList.add('hideBtn');
+                            } else {
+                                document.getElementById('prevPage').classList.remove('hideBtn');
+                            }
+
+                            if (thisPage == totalPage) {
+                                document.getElementById('nextPage').classList.add('hideBtn');
+                            } else {
+                                document.getElementById('nextPage').classList.remove('hideBtn');
+                            }
+
+                            document.getElementById('prevPage').addEventListener('click', function () {
+                                thisPage--;
+                                loadData(thisPage, limit, filterName);
+                            })
+
+                            document.getElementById('nextPage').addEventListener('click', function () {
+                                thisPage++;
+                                loadData(thisPage, limit, filterName);
+                            })
+
+                            pageIndexButtons.forEach(function (button) {
+                                button.addEventListener('click', function () {
+                                    if (this.textContent != "...") {
+                                        thisPage = parseInt(this.textContent);
+                                    }
+                                    loadData(thisPage, limit, filterName);
+                                });
+                            });
+                        } else if (totalQuantity == 0) {
+                            document.getElementById('prevPage').classList.add('hideBtn');
+                            document.getElementById('nextPage').classList.add('hideBtn');
+                            areaSizeItems.innerHTML = `
+                            <h1> Không tồn tại sản phẩm nào </h1>
+                            `
+                        }
+                    }
+
+                    searchInput.addEventListener('input', function () {
+                        filterName = searchInput.value;
+                        loadData(thisPage, limit, filterName);
+                    })
+
+                    function showUpdateModal() {
+                        updateModal.style.display = 'block';
+                        updateModal.setAttribute('role', 'dialog');
+                        updateModal.classList.add('show');
+                        updateModal.style.backgroundColor = 'rgba(0,0,0,0.4)';
+                    }
+
+                    function hideUpdateModal() {
+                        updateModal.style.display = 'none';
+                        updateModal.removeAttribute('role');
+                        updateModal.classList.remove('show');
+                        updateModal.style.backgroundColor = 'rgba(0,0,0,0.4)';
+                    }
+
+                    updateModal.addEventListener('click', function () {
+                        hideUpdateModal();
+                    })
+
+                    updateModalWrapper.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                    })
+
+                    closeUpdateModal.addEventListener('click', function () {
+                        hideUpdateModal();
+                    })
+
+                    closeUpdateModalBtn.addEventListener('click', function () {
+                        hideUpdateModal();
+                    })
+
+
+                    function getElementInListById(list, id) {
+                        for (var i = 0; i < list.length; i++) {
+                            if (list[i].id == id) {
+                                return list[i];
+                            }
+                        }
+                    }
+
+
+                    function addEventUpdateBtn(list) {
+                        let updateButtons = document.querySelectorAll('[name="updateBtn"]');
+                        updateButtons.forEach(function (button) {
+                            button.addEventListener('click', function () {
+                                let sizeItemElement = this.closest('tr');
+                                sizeItemId = sizeItemElement.getAttribute('id');
+
+                                let sizeItemInList = getElementInListById(list, sizeItemId);
+
+                                inputSizeUpdate.value = sizeItemInList.size;
+                                inputQuantityUpdate.value = sizeItemInList.quantity;
+                                showUpdateModal();
+                            });
+                        });
+                    }
+
+                    function addEventDeleteBtn() {
+                        let deleteButtons = document.querySelectorAll('.deleteSizeItemBtn');
+                        deleteButtons.forEach(function (button) {
+                            button.addEventListener('click', function () {
+                                let confirmed = confirm('Bạn có chắc chắn muốn xoá không?');
+                                if (confirmed) {
+                                    let sizeItemElement = this.closest('tr');
+                                    sizeItemId = sizeItemElement.getAttribute('id');
+                                    fetch('http://localhost/frontend/index.php?module=dashboard&view=inventory.view', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                        },
+                                        body: 'delete=' + true + '&id=' + sizeItemId
+                                    })
+                                        .then(function (response) {
+                                            return response.json();
+                                        })
+                                        .then(function (data) {
+                                            if (data.status == "success") {
+                                                alert(data.message);
+                                                window.location.href = 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view';
+                                            } else if (data.status == "error") {
+                                                alert(data.message);
+                                            }
+                                        })
+                                    loadData(thisPage, limit, filterName);
+                                }
+                            })
+                        })
+                    }
+
+                    updateSizeItemBtn.addEventListener('click', function () {
+                        let newQuantity = inputNewQuantityUpdate.value;
+
+                        fetch('http://localhost/frontend/index.php?module=dashboard&view=inventory.view', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'update=' + true + '&id=' + sizeItemId + '&newQuantity=' + newQuantity
+                        })
+                            .then(function (response) {
+                                return response.json();
+                            })
+                            .then(function (data) {
+                                if (data.status == "success") {
+                                    alert(data.message);
+                                } else if (data.status == "error") {
+                                    alert(data.message);
+                                }
+                            });
+                        hideUpdateModal();
+                        loadData(thisPage, limit, filterName);
+                    })
+                });
+            </script>
 </body>

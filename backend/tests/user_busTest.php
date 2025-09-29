@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . "/../bus/user_bus.php");
 
+use backend\bus\UserBUS;
 use PHPUnit\Framework\TestCase;
 
 class user_busTest extends TestCase

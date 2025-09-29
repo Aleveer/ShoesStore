@@ -156,6 +156,23 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                 }
                 ?>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link <?php echo isActivePage($_GET['view'], 'chatbot.view'); ?>"
+                    href="?module=dashboard&view=chatbot.view">
+                    <span data-feather="message-square"></span>
+                    Chatbot Management
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] === 'deepseek') ? 'active' : ''; ?>"
+                    href="?module=chat&action=deepseek">
+                    <span data-feather="zap"></span>
+                    DeepSeek AI Chat
+                </a>
+            </li>
+
             <!-- <li class="nav-item">
                 <a class="nav-link" href="#">
                     <span data-feather="bar-chart-2"></span>

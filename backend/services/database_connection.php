@@ -82,6 +82,7 @@ class DatabaseConnection
             return $affectedRows;
         } catch (Exception $e) {
             error_log("Error executing update: " . $e->getMessage());
+            return 0; // Return 0 on error
         }
     }
 
@@ -134,4 +135,5 @@ class DatabaseConnection
             error_log("Error rolling back transaction: " . $e->getMessage());
         }
     }
+
 }

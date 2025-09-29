@@ -665,9 +665,6 @@ ADD
 
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
 ALTER TABLE
   `users`
 ADD
@@ -699,3 +696,24 @@ ALTER TABLE
   tokenLogin
 ADD
   CONSTRAINT FK_tokenLogin_user FOREIGN KEY (user_id) REFERENCES `users`(id);
+
+CREATE TABLE chatbot_conversations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  session_token VARCHAR(255) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  is_active BOOLEAN DEFAULT TRUE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE KEY uq_user_active (user_id, is_active)
+);
+
+CREATE TABLE chatbot_messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  conversation_id INT NOT NULL,
+  role ENUM('user', 'assistant', 'system') NOT NULL,
+  content TEXT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (conversation_id) REFERENCES chatbot_conversations(id) ON DELETE CASCADE,
+  INDEX idx_conversation_created (conversation_id, created_at)
+);

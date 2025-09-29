@@ -87,10 +87,29 @@ class TokenLoginBUS implements BUSInterface
 
     public function deleteModel($tokenLoginModel)
     {
-        $result = TokenLoginDAO::getInstance()->delete($tokenLoginModel->getId());
+        // Check if $tokenLoginModel is an object or an ID
+        if (is_object($tokenLoginModel)) {
+            $id = $tokenLoginModel->getId();
+        } else {
+            $id = $tokenLoginModel;
+        }
+
+        $result = TokenLoginDAO::getInstance()->delete($id);
         if ($result) {
-            $index = array_search($tokenLoginModel, $this->tokenLoginList);
-            unset($this->tokenLoginList[$index]);
+            if (is_object($tokenLoginModel)) {
+                $index = array_search($tokenLoginModel, $this->tokenLoginList);
+                if ($index !== false) {
+                    unset($this->tokenLoginList[$index]);
+                }
+            } else {
+                // Find and remove by ID
+                foreach ($this->tokenLoginList as $index => $model) {
+                    if ($model->getId() == $id) {
+                        unset($this->tokenLoginList[$index]);
+                        break;
+                    }
+                }
+            }
             $this->refreshData();
         }
         return $result;

@@ -34,3 +34,9 @@
 
 > **Lưu ý:**  
 > TUYỆT ĐỐI KHÔNG copy cả thư mục ShoesStore vào Htdocs. Chỉ copy nội dung bên trong thư muụ ShoesStore để tránh lỗi URL.
+> Đồ án có tích hợp Chatbot sử dụng [OpenRouter](https://openrouter.ai/), nếu muốn sử dụng phải cung cấp 1 API key.
+
+10. **Cách thêm API Key Chatbot vào đồ án**
+   - Tạo 1 file .env ở thư mục root
+   - Đặt tên biến là OPENROUTER_API_KEY="Nhập API key vào đây"
+   - Hiện tại chỉ có chức năng chat với bot và tạo phiên chat mới. Các tính năng khác liên quan đến AI sẽ bổ sung sau.

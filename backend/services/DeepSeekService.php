@@ -126,7 +126,7 @@ class DeepSeekService
             ];
 
             $data = [
-                'model' => 'openai/gpt-3.5-turbo',
+                'model' => 'deepseek/deepseek-chat-v3.1:free',
                 'messages' => $messages,
                 'temperature' => 0.7,
                 'max_tokens' => 1000,

@@ -40,3 +40,12 @@
    - Tạo 1 file .env ở thư mục root
    - Đặt tên biến là OPENROUTER_API_KEY="Nhập API key vào đây"
    - Hiện tại chỉ có chức năng chat với bot và tạo phiên chat mới. Các tính năng khác liên quan đến AI sẽ bổ sung sau.
+   - Có thể đổi model ở file DeepSeekService.php
+    $data = [
+                'model' => 'deepseek/deepseek-chat-v3.1:free',
+                'messages' => $messages,
+                'temperature' => 0.7,
+                'max_tokens' => 1000,
+                'stream' => false
+            ];
+	'model' => 'deepseek/deepseek-chat-v3.1:free' có thể xài model tính phí hay miễn phí đều được, những API phải lấy từ OpenRouter.

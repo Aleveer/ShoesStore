@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Use ajax to send the data only if there is a change:
         $.ajax({
-            url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
+            url: generateUrl({ module: 'account', action: 'profilesetting' }),
             type: "POST",
             dataType: "json",
             data: {
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Create an AJAX request
                     let xhr = new XMLHttpRequest();
-                    xhr.open('POST', 'http://localhost/frontend/index.php?module=account&action=profilesetting', true);
+                    xhr.open('POST', generateUrl({ module: 'account', action: 'profilesetting' }), true);
 
                     // Set up a handler for when the request finishes
                     xhr.onload = function () {
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 femaleGender.checked !== femaleGender.defaultChecked) {
                 // Use ajax to send the data only if there is a change:
                 $.ajax({
-                    url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
+                    url: generateUrl({ module: 'account', action: 'profilesetting' }),
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 confirmPassword.value !== confirmPassword.defaultValue) {
                 // Use ajax to send the data only if there is a change:
                 $.ajax({
-                    url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
+                    url: generateUrl({ module: 'account', action: 'profilesetting' }),
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             $.ajax({
-                url: "http://localhost/frontend/index.php?module=account&action=profilesetting",
+                url: generateUrl({ module: 'account', action: 'profilesetting' }),
                 type: "POST",
                 dataType: "json",
                 data: {

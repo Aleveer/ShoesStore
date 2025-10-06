@@ -15,8 +15,8 @@ if (!checkPermission(3)) {
     die('Access denied');
 }
 
-include (__DIR__ . '/../inc/head.php');
-include (__DIR__ . '/../inc/app/app.php');
+include(__DIR__ . '/../inc/head.php');
+include(__DIR__ . '/../inc/app/app.php');
 
 // Namespace
 use backend\bus\OrdersBUS;
@@ -49,7 +49,7 @@ function showOrder($order)
     echo '</select>';
     echo '</td>';
     echo '<td class="text-center">';
-    echo '<a href="http://localhost/frontend/index.php?module=dashboard&view=order.view.detail&customerOrderId=' . $order->getId() . '">';
+    echo '<a href="' . generateUrl(['module' => 'dashboard', 'view' => 'order.view.detail', 'params' => ['customerOrderId' => $order->getId()]]) . '">';
     echo '<button class="btn btn-sm btn-primary view-button" data-order-id="' . $order->getId() . '">';
     echo '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">';
     echo '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>';
@@ -66,13 +66,13 @@ function showOrder($order)
 
 <body>
     <!-- HEADER -->
-    <?php include (__DIR__ . '/../inc/header.php'); ?>
+    <?php include(__DIR__ . '/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include (__DIR__ . '/../inc/sidebar.php'); ?>
+            <?php include(__DIR__ . '/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -338,7 +338,7 @@ function showOrder($order)
                         function updateOrderStatus(orderId, status) {
                             $.ajax({
                                 type: 'POST',
-                                url: 'http://localhost/frontend/index.php?module=dashboard&view=order.view',
+                                url: generateUrl({ module: 'dashboard', view: 'order.view' }),
                                 data: {
                                     orderId: orderId,
                                     status: status
@@ -352,7 +352,7 @@ function showOrder($order)
                 </div>
             </main>
 
-            <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+            <?php include(__DIR__ . '/../inc/app/app.php'); ?>
 </body>
 
 </html>

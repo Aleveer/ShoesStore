@@ -9,7 +9,7 @@ $(document).ready(function () {
                 $('.messageErrorDetail').text();
             }
             $.ajax({
-                url: "http://localhost/frontend/?module=auth&action=login",
+                url: generateUrl({ module: 'auth', action: 'login' }),
                 type: "POST",
                 dataType: "json",
                 data: {
@@ -27,7 +27,7 @@ $(document).ready(function () {
                             $('.message').append("<div class='messageErrorDetail cw text-center alert alert-danger'>" + data.message + "</div>");
                         }
                     } else {
-                        window.location.href = "?module=indexphp&action=userhomepage";
+                        navigateTo({ module: 'indexphp', action: 'userhomepage' });
                     }
                 },
                 error: function (xhr, status, error) {

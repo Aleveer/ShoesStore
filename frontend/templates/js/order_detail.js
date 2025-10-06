@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Fetch and display order details based on orderId
             console.log('Displaying details for order id: ' + orderId);
             // Use fetch to get order details:
-            fetch('http://localhost/frontend/index.php?module=account&action=order-detail&orderId=' + orderId)
+            fetch(generateUrl({ module: 'account', action: 'order-detail', params: { orderId: orderId } }))
                 .then(function (response) {
                     if (!response.ok) {
                         throw new Error('HTTP error ' + response.status);

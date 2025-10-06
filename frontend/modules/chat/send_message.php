@@ -5,12 +5,7 @@ use backend\models\ChatbotConversationModel;
 use backend\models\ChatbotMessageModel;
 use backend\bus\TokenLoginBUS;
 use backend\services\session;
-
-require_once(__DIR__ . '/../../../backend/services/DeepSeekService.php');
-require_once(__DIR__ . '/../../../backend/bus/chatbotconversation_bus.php');
-require_once(__DIR__ . '/../../../backend/bus/chatbotmessage_bus.php');
-require_once(__DIR__ . '/../../../backend/models/chatbotconversation_model.php');
-require_once(__DIR__ . '/../../../backend/models/chatbotmessage_model.php');
+use backend\services\DeepSeekService;
 
 if (!defined('_CODE')) {
     die('Access denied');

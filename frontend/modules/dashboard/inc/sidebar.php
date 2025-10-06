@@ -25,7 +25,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                 if (checkPermission(5)) {
                     ?>
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'dashboard.view'); ?>" aria-current="page"
-                        href="?module=dashboard&view=dashboard.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'dashboard.view']) ?>">
                         <span data-feather="home"></span>
                         Dashboard
                     </a>
@@ -39,7 +39,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'order.view'); ?>"
-                        href="?module=dashboard&view=order.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'order.view']) ?>">
                         <span data-feather="file"></span>
                         Orders
                     </a>
@@ -54,7 +54,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'product.view'); ?>"
-                        href="?module=dashboard&view=product.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'product.view']) ?>">
                         <span data-feather="shopping-cart"></span>
                         Products
                     </a>
@@ -69,7 +69,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'category.view'); ?>"
-                        href="?module=dashboard&view=category.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'category.view']) ?>">
                         <span data-feather="list"></span>
                         Categories
                     </a>
@@ -84,7 +84,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'size.view'); ?>"
-                        href="?module=dashboard&view=size.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'size.view']) ?>">
                         <span data-feather="hash"></span>
                         Sizes
                     </a>
@@ -95,7 +95,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php echo isActivePage($_GET['view'], 'coupon.view'); ?>"
-                    href="?module=dashboard&view=coupon.view">
+                    href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'coupon.view']) ?>">
                     <span data-feather="star"></span>
                     Coupons
                 </a>
@@ -105,7 +105,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                 if (checkPermission(2)) {
                     ?>
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'inventory.view'); ?>"
-                        href="?module=dashboard&view=inventory.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'inventory.view']) ?>">
                         <span data-feather="package"></span>
                         Inventory
                     </a>
@@ -119,7 +119,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'account.view'); ?>"
-                        href="?module=dashboard&view=account.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'account.view']) ?>">
                         <span data-feather="users"></span>
                         Accounts
                     </a>
@@ -133,7 +133,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'permission.view'); ?>"
-                        href="?module=dashboard&view=permission.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'permission.view']) ?>">
                         <span data-feather="life-buoy"></span>
                         Permissions
                     </a>
@@ -147,7 +147,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
                     ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo isActivePage($_GET['view'], 'role.view'); ?>"
-                        href="?module=dashboard&view=role.view">
+                        href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'role.view']) ?>">
                         <span data-feather="tool"></span>
                         Roles Setup
                     </a>
@@ -159,7 +159,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
 
             <li class="nav-item">
                 <a class="nav-link <?php echo isActivePage($_GET['view'], 'chatbot.view'); ?>"
-                    href="?module=dashboard&view=chatbot.view">
+                    href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'chatbot.view']) ?>">
                     <span data-feather="message-square"></span>
                     Chatbot Management
                 </a>
@@ -167,7 +167,7 @@ $userModel = UserBUS::getInstance()->getModelById($tokenModel->getUserId());
 
             <li class="nav-item">
                 <a class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] === 'deepseek') ? 'active' : ''; ?>"
-                    href="?module=chat&action=deepseek">
+                    href="<?php echo generateUrl(['module' => 'chat', 'action' => 'deepseek']) ?>">
                     <span data-feather="zap"></span>
                     DeepSeek AI Chat
                 </a>

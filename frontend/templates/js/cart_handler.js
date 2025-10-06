@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (quantity > 1) {
                 quantity--;
                 productQuantity[index].value = quantity;
-                fetch('http://localhost/frontend/index.php?module=cartsection&action=cart', {
+                fetch(generateUrl({ module: 'cartsection', action: 'cart' }), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (quantity < maxQuantity) {
                 quantity++;
                 productQuantity[index].value = quantity;
-                fetch('http://localhost/frontend/index.php?module=cartsection&action=cart', {
+                fetch(generateUrl({ module: 'cartsection', action: 'cart' }), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Remove the item from the cart
             cartItem[index].remove();
             //Send post:
-            fetch('http://localhost/frontend/index.php?module=cartsection&action=cart', {
+            fetch(generateUrl({ module: 'cartsection', action: 'cart' }), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //         // This could be an AJAX request or a form submission, depending on your needs
     //         // For example, using jQuery's AJAX method:
     //         $.ajax({
-    //             url: 'http://localhost/frontend/index.php?module=cartsection&action=order',
+    //             url: generateUrl({module: 'cartsection', action: 'order'}),
     //             method: 'POST',
     //             data: { selectedItems: selectedItems },
     //             success: function (response) {

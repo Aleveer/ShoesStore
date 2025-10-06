@@ -18,12 +18,12 @@ $id = $_GET['id'];
 $product = ProductBUS::getInstance()->getModelById($id);
 if ($product == null) {
     echo '<script>alert("This product does not exist!")</script>';
-    redirect('?module=indexphp&action=product');
+    redirect(generateUrl(['module' => 'indexphp', 'action' => 'product']));
 }
 
 if ($product->getStatus() == "inactive") {
     echo '<script>alert("This product is not available!")</script>';
-    redirect('?module=indexphp&action=product');
+    redirect(generateUrl(['module' => 'indexphp', 'action' => 'product']));
 }
 
 $sizeItemsProduct = SizeItemsBUS::getInstance()->getModelByProductId($id);
@@ -67,7 +67,7 @@ if (isLogin()) {
 <body>
     <div class="singleproduct">
         <button id="closepitem">
-            <a href="?module=indexphp&action=product">
+            <a href="<?php echo generateUrl(['module' => 'indexphp', 'action' => 'product']) ?>">
                 <i class="fa-solid fa-xmark"></i>
             </a>
         </button>

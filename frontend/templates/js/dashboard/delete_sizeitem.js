@@ -17,7 +17,7 @@ $(document).ready(function () {
         var confirmDelete = confirm('Are you sure you want to delete this item?');
         if (confirmDelete) {
             $.ajax({
-                url: 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view',
+                url: generateUrl({ module: 'dashboard', view: 'inventory.view' }),
                 type: 'POST',
                 datatype: 'json',
                 data: {

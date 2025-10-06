@@ -27,13 +27,6 @@ if (!$loginStatus) {
     exit;
 }
 
-require_once(__DIR__ . '/../../../backend/bus/chatbotconversation_bus.php');
-require_once(__DIR__ . '/../../../backend/bus/chatbotmessage_bus.php');
-require_once(__DIR__ . '/../../../backend/models/chatbotconversation_model.php');
-require_once(__DIR__ . '/../../../backend/models/chatbotmessage_model.php');
-require_once(__DIR__ . '/../../../backend/bus/token_login_bus.php');
-require_once(__DIR__ . '/../../../backend/services/session.php');
-
 use backend\bus\ChatbotConversationBUS;
 use backend\bus\ChatbotMessageBUS;
 use backend\models\ChatbotConversationModel;

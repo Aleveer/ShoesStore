@@ -38,9 +38,7 @@ $(document).ready(function () {
 
             // Sending data via AJAX
             $.ajax({
-                url:
-                    "http://localhost/frontend/?module=indexphp&action=singleproduct&id=" +
-                    id,
+                url: generateUrl({ module: 'indexphp', action: 'singleproduct', params: { id: id } }),
                 type: "POST",
                 dataType: "json",
                 data: {

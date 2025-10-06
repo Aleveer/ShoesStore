@@ -7,8 +7,8 @@
     <h1>XTREMA 3</h1>
     <h3>COMFY AND TRENDY</h3>
     <p>
-      Experience the perfect blend of comfort and style with XTREMA 3.<br/>
-      Our products are designed with utmost attention to detail, <br/>
+      Experience the perfect blend of comfort and style with XTREMA 3.<br />
+      Our products are designed with utmost attention to detail, <br />
       ensuring not just a trendy look, but also an
       unparalleled comfort.
     </p>
@@ -22,7 +22,7 @@
     <script>
       $(document).ready(function () {
         $('.btn__slider').click(function () {
-          window.location.href = '?module=indexphp&action=product';
+          navigateTo({ module: 'indexphp', action: 'product' });
         });
       });
     </script>

@@ -32,7 +32,7 @@ function displayProduct($product)
                     <span></span>
                     <span></span>
                     <span></span>
-                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '">SEE MORE</a>
+                    <a href="' . generateUrl(['module' => 'indexphp', 'action' => 'singleproduct', 'params' => ['id' => $product->getId()]]) . '">SEE MORE</a>
                 </button>
             </div>
         </div>
@@ -307,7 +307,7 @@ function displayProduct($product)
 
         // Hàm tải dữ liệu cho trang hiện tại
         function loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo) {
-            fetch('http://localhost/frontend/index.php?module=indexphp&action=product', {
+            fetch(generateUrl({ module: 'indexphp', action: 'product' }), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -344,7 +344,7 @@ function displayProduct($product)
                                 <span></span>
                                 <span></span>
                                 <span></span>
-                                <a href="?module=indexphp&action=singleproduct&id=${product.id}">SEE MORE</a>
+                                <a href="${generateUrl({ module: 'indexphp', action: 'singleproduct', params: { id: product.id } })}">SEE MORE</a>
                             </button>
                         </div>
                     </div>

@@ -3266,3 +3266,224 @@ Data: Array
     [message_count] => 4
 )
 
+[06-Oct-2025 07:46:41 Europe/Berlin] [2025-10-06 07:46:41] Getting chat history for user
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:46:41 Europe/Berlin] [2025-10-06 07:46:41] Found conversation ID: 1
+[06-Oct-2025 07:46:41 Europe/Berlin] [2025-10-06 07:46:41] Returning chat history
+Data: Array
+(
+    [conversation_id] => 1
+    [message_count] => 2
+)
+
+[06-Oct-2025 07:46:57 Europe/Berlin] [2025-10-06 07:46:57] Login status check
+Data: Array
+(
+    [is_logged_in] => yes
+)
+
+[06-Oct-2025 07:46:57 Europe/Berlin] [2025-10-06 07:46:57] User session details
+Data: Array
+(
+    [token_login] => exists
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Loaded 47 products from database
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Sample Product 1: Asics GT-2000 11 - $100000
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Sample Product 2: On Women’s Cloudrunner - $100000
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Sample Product 3: Saucony Guide 16 - $150000
+[06-Oct-2025 07:46:57 Europe/Berlin] [2025-10-06 07:46:57] Received chat request
+Data: Array
+(
+    [POST_data] => Array
+        (
+            [message] => Hi
+        )
+
+    [User_IP] => 127.0.0.1
+    [User_Agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0
+)
+
+[06-Oct-2025 07:46:57 Europe/Berlin] [2025-10-06 07:46:57] User info for chat
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:46:57 Europe/Berlin] [2025-10-06 07:46:57] Using conversation ID: 1
+[06-Oct-2025 07:46:57 Europe/Berlin] Executed query: INSERT INTO chatbot_messages (conversation_id, role, content, created_at) VALUES (?, ?, ?, ?), affected rows: 1
+[06-Oct-2025 07:46:57 Europe/Berlin] [2025-10-06 07:46:57] Sending message to DeepSeek API
+Data: Array
+(
+    [message] => Hi
+    [history_count] => 3
+)
+
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Starting new message request for: Hi
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Formatting product catalog - Product count: 47
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Loaded 5 categories from database
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Generated product catalog with 47 products
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Product catalog preview: === OUR STORE INVENTORY (FROM DATABASE) ===
+• Asics GT-2000 11 (Running Shoes - Men) - $100,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.
+• On Women’s Cloudrunner (Running Shoes - Women) - $100,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.
+• Saucony Guide 16 (Running Shoes - Me
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] System prompt length: 11161
+[06-Oct-2025 07:46:57 Europe/Berlin] [DeepSeek] Request payload: {
+    "model": "deepseek\/deepseek-chat-v3.1:free",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You are a shoe store assistant AI. You can ONLY recommend products that exist in the current store inventory provided below. Under NO circumstances should you suggest products that are not in this exact list.\n\n=== OUR STORE INVENTORY (FROM DATABASE) ===\n\u2022 Asics GT-2000 11 (Running Shoes - Men) - $100,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.\n\u2022 On Women\u2019s Cloudrunner (Running Shoes - Women) - $100,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.\n\u2022 Saucony Guide 16 (Running Shoes - Men) - $150,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.\n\u2022 Hoka Bondi 8 (Running Shoes - Women) - $150,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.\n\u2022 Brooks Women Ariel 20 Running Shoes (Running Shoes - Women) - $150,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running. \n\u2022 Saucony Peregrine 13 Hiking Shoe (Running Shoes - Men) - $150,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running.\n\u2022 Asics Gel-Excite 9 (Running Shoes - Men) - $150,000 - Has thick cushioning to absorb shock when the foot hits the road. Protects the forefoot and heel. Suitable for marathons or long-distance running. \n\u2022 Adidas Ultraboost Light Running Shoe (Walking Shoes - Women) - $200,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe.\n\u2022 Ryka Devotion Plus 3 Walking Shoe (Walking Shoes - Men) - $200,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe. \n\u2022 Brooks Glycerin GTS 20 (Walking Shoes - Men) - $200,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe.\n\u2022 Asics Gel-venture 8 (Walking Shoes - Women) - $200,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe. \n\u2022 New Balance Men\u2019s Fresh Foam 1080 V11 (Walking Shoes - Women) - $200,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe.\n\u2022 Hoka Bondi 7 Shoes (Walking Shoes - Women) - $250,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe.\n\u2022 Vionic Tokyo Sneaker (Walking Shoes - Men) - $250,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe. \n\u2022 Altra Women\u2019s Lone Peak 7 Trail Running Shoe (Walking Shoes - Women) - $250,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe.\n\u2022 Keen Targhee Vent Hiking Shoes (Walking Shoes - Men) - $250,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe. \n\u2022 Allbirds Tree Runners (Walking Shoes - Men) - $250,000 - Lightweight, hugs the feet, reduces pain and muscle tension when walking. The slightly rounded sole helps transfer weight from heel to toe.\n\u2022 NikeCourt Air Zoom Vapor Pro 2 (Nam) (Tennis - Men) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 NikeCourt Air Zoom Vapor Pro 2 (N\u1eef) (Tennis - Women) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Nike Zoom GP Challenge 1 (Nam) (Tennis - Men) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Nike Zoom GP Challenge 1 (N\u1eef) (Tennis - Women) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Adidas Barricade Tokyo (Nam) (Tennis - Men) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Adidas Adizero Ubersonic 4 (Nam) (Tennis - Men) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Nike Vapor Lite HC (N\u1eef) (Tennis - Women) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Adidas Gamecourt (Nam) (Tennis - Men) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Adidas Solematch Bounce (Nam) (Tennis - Men) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Nike Air Zoom Vapor Pro (Nam) (Tennis - Men) - $300,000 - Supports the inside and outside of the foot. .Flexible at the base for quick forward movement.\n\u2022 Nike Pegasus Trail 4 GTX (Trail Running Shoes - Men) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Topo Athletic Ultraventure 3 (Trail Running Shoes - Men) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Hoka Mafate Speed 4 (Trail Running Shoes - Men) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Altra Lone Peak 7 (Trail Running Shoes - Women) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Salomon Speedcross 5 (Trail Running Shoes - Men) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Brooks Cascadia 16 (Trail Running Shoes - Women) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Saucony Peregrine 11 (Trail Running Shoes - Men) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 La Sportiva Bushido II (Trail Running Shoes - Men) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Inov-8 Terraultra G 270 (Trail Running Shoes - Men) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Merrell MTL Long Sky (Trail Running Shoes - Women) - $350,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.Resistant to mud, soil, water and rocks. Bigger spikes for grip on uneven surfaces.\n\u2022 Nike Kyrie 7 (Basketball Shoes - Women) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 PEAK Streetball Master (Basketball Shoes - Men) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 Adidas Harden Stepback (Basketball Shoes - Men) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 Nike PG 5 (Basketball Shoes - Men) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 Nike LeBron 19 (Basketball Shoes - Men) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 Adidas Dame 7 (Basketball Shoes - Women) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 Adidas N3XT L3V3L 2022 (Basketball Shoes - Men) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 Under Armour HOVR Havoc 5 (Basketball Shoes - Women) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 Puma Clyde All-Pro (Basketball Shoes - Women) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n\u2022 New Balance Kawhi Leonard 1 (Basketball Shoes - Men) - $360,000 - The sole is thick and hard, providing support when running up and down the court. The shoe collar is high, covering the ankle.\n=== END OF INVENTORY (47 products) ===\n\n\nSTRICT RULES:\n- If someone asks for running shoes, ONLY recommend from the 'Running Shoes' category in the inventory above\n- If someone asks for basketball shoes, ONLY recommend from the 'Basketball Shoes' category in the inventory above\n- If someone asks for tennis shoes, ONLY recommend from the 'Tennis' category in the inventory above\n- If someone asks for walking shoes, ONLY recommend from the 'Walking Shoes' category in the inventory above\n- If someone asks for trail running shoes, ONLY recommend from the 'Trail Running Shoes' category in the inventory above\n- You CANNOT recommend Nike Air Zoom Pegasus 37, Brooks Ghost 13, Asics Gel-Nimbus 23, or any other shoes not listed in the inventory\n- Always copy the EXACT product names, prices, and descriptions from the inventory list above\n- Use this format: \u2022 [Exact Product Name from Inventory] ([Category] - [Gender]) - $[Exact Price] - [Exact Description]\n\nRemember: You can ONLY recommend shoes that are listed in the inventory between '=== OUR STORE INVENTORY ===' markers above."
+        },
+        {
+            "role": "user",
+            "content": "Hi"
+        },
+        {
+            "role": "assistant",
+            "content": "Hello! Welcome to our shoe store. How can I help you today?"
+        },
+        {
+            "role": "user",
+            "content": "Hi"
+        },
+        {
+            "role": "user",
+            "content": "Hi"
+        }
+    ],
+    "temperature": 0.7,
+    "max_tokens": 1000,
+    "stream": false
+}
+[06-Oct-2025 07:47:01 Europe/Berlin] [DeepSeek] HTTP Response Code: 200
+[06-Oct-2025 07:47:01 Europe/Berlin] [DeepSeek] Raw Response: 
+         
+
+         
+
+         
+
+         
+
+         
+{"id":"gen-1759729622-c2Sy2Z7J72mH1smcYDJB","provider":"DeepInfra","model":"deepseek/deepseek-chat-v3.1:free","object":"chat.completion","created":1759729622,"choices":[{"logprobs":null,"finish_reason":"stop","native_finish_reason":"stop","index":0,"message":{"role":"assistant","content":"Hello! Welcome to our shoe store. How can I help you find the perfect pair of shoes today?","refusal":null,"reasoning":null}}],"usage":{"prompt_tokens":277
+[06-Oct-2025 07:47:01 Europe/Berlin] [DeepSeek] Original AI response: Hello! Welcome to our shoe store. How can I help you find the perfect pair of shoes today?
+[06-Oct-2025 07:47:01 Europe/Berlin] [DeepSeek] Valid product names: Asics GT-2000 11, On Women’s Cloudrunner, Saucony Guide 16, Hoka Bondi 8, Brooks Women Ariel 20 Running Shoes...
+[06-Oct-2025 07:47:01 Europe/Berlin] [DeepSeek] Validated response: Hello! Welcome to our shoe store. How can I help you find the perfect pair of shoes today?
+[06-Oct-2025 07:47:01 Europe/Berlin] [2025-10-06 07:47:01] DeepSeek API response
+Data: Array
+(
+    [success] => 1
+    [message] => Hello! Welcome to our shoe store. How can I help you find the perfect pair of shoes today?
+)
+
+[06-Oct-2025 07:47:01 Europe/Berlin] Executed query: INSERT INTO chatbot_messages (conversation_id, role, content, created_at) VALUES (?, ?, ?, ?), affected rows: 1
+[06-Oct-2025 07:47:01 Europe/Berlin] [2025-10-06 07:47:01] Successfully saved bot response
+[06-Oct-2025 07:47:04 Europe/Berlin] [2025-10-06 07:47:04] Starting new chat session for user
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:47:04 Europe/Berlin] Executed query: DELETE FROM chatbot_messages WHERE conversation_id = ?, affected rows: 4
+[06-Oct-2025 07:47:04 Europe/Berlin] [2025-10-06 07:47:04] Deleted messages for conversation ID: 1
+[06-Oct-2025 07:47:04 Europe/Berlin] Executed query: UPDATE chatbot_conversations SET is_active = 0 WHERE user_id = ?, affected rows: 1
+[06-Oct-2025 07:47:04 Europe/Berlin] Executed query: UPDATE chatbot_conversations SET is_active = 0 WHERE user_id = ?, affected rows: 0
+[06-Oct-2025 07:47:04 Europe/Berlin] Executed query: INSERT INTO chatbot_conversations (user_id, session_token, created_at, updated_at, is_active) VALUES (?, ?, ?, ?, ?), affected rows: 1
+[06-Oct-2025 07:47:04 Europe/Berlin] [2025-10-06 07:47:04] Started new conversation
+Data: Array
+(
+    [conversation_id] => 2
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:47:08 Europe/Berlin] [2025-10-06 07:47:08] Getting chat history for user
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:47:08 Europe/Berlin] [2025-10-06 07:47:08] Found conversation ID: 2
+[06-Oct-2025 07:47:08 Europe/Berlin] [2025-10-06 07:47:08] Returning chat history
+Data: Array
+(
+    [conversation_id] => 2
+    [message_count] => 0
+)
+
+[06-Oct-2025 07:47:26 Europe/Berlin] [2025-10-06 07:47:26] Getting chat history for user
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:47:26 Europe/Berlin] [2025-10-06 07:47:26] Found conversation ID: 2
+[06-Oct-2025 07:47:26 Europe/Berlin] [2025-10-06 07:47:26] Returning chat history
+Data: Array
+(
+    [conversation_id] => 2
+    [message_count] => 0
+)
+
+[06-Oct-2025 07:48:15 Europe/Berlin] [2025-10-06 07:48:15] Getting chat history for user
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:48:15 Europe/Berlin] [2025-10-06 07:48:15] Found conversation ID: 2
+[06-Oct-2025 07:48:15 Europe/Berlin] [2025-10-06 07:48:15] Returning chat history
+Data: Array
+(
+    [conversation_id] => 2
+    [message_count] => 0
+)
+
+[06-Oct-2025 07:48:16 Europe/Berlin] [2025-10-06 07:48:16] Getting chat history for user
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:48:16 Europe/Berlin] [2025-10-06 07:48:16] Found conversation ID: 2
+[06-Oct-2025 07:48:16 Europe/Berlin] [2025-10-06 07:48:16] Returning chat history
+Data: Array
+(
+    [conversation_id] => 2
+    [message_count] => 0
+)
+
+[06-Oct-2025 07:48:19 Europe/Berlin] [2025-10-06 07:48:19] Getting chat history for user
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:48:19 Europe/Berlin] [2025-10-06 07:48:19] Found conversation ID: 2
+[06-Oct-2025 07:48:19 Europe/Berlin] [2025-10-06 07:48:19] Returning chat history
+Data: Array
+(
+    [conversation_id] => 2
+    [message_count] => 0
+)
+
+[06-Oct-2025 07:49:23 Europe/Berlin] [2025-10-06 07:49:23] Getting chat history for user
+Data: Array
+(
+    [user_id] => 1
+)
+
+[06-Oct-2025 07:49:23 Europe/Berlin] [2025-10-06 07:49:23] Found conversation ID: 2
+[06-Oct-2025 07:49:23 Europe/Berlin] [2025-10-06 07:49:23] Returning chat history
+Data: Array
+(
+    [conversation_id] => 2
+    [message_count] => 0
+)
+

@@ -69,7 +69,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                url: 'http://localhost/frontend/index.php?module=dashboard&view=coupon.view',
+                url: generateUrl({ module: 'dashboard', view: 'coupon.view' }),
                 method: "POST",
                 dataType: "json",
                 data: {

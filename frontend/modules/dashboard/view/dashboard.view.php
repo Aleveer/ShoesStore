@@ -15,7 +15,7 @@ if (!isAllowToDashBoard()) {
 }
 
 
-include (__DIR__ . '/../inc/head.php');
+include(__DIR__ . '/../inc/head.php');
 
 $thongKeListKH = OrdersBUS::getInstance()->filterByDateRangeKH();
 $thongKeListKHArray = array_map(function ($thongKe) {
@@ -44,13 +44,13 @@ function displayThongKeKH($thongKe, $index)
 
 <body>
     <!-- HEADER -->
-    <?php include (__DIR__ . '/../inc/header.php'); ?>
+    <?php include(__DIR__ . '/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include (__DIR__ . '/../inc/sidebar.php'); ?>
+            <?php include(__DIR__ . '/../inc/sidebar.php'); ?>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div
@@ -322,8 +322,8 @@ function displayThongKeKH($thongKe, $index)
         </div>
     </div>
     <?php
-    include (__DIR__ . '/../inc/app/app.php');
-    include (__DIR__ . '/../inc/chart.php')
+    include(__DIR__ . '/../inc/app/app.php');
+    include(__DIR__ . '/../inc/chart.php')
         ?>
 </body>
 
@@ -394,7 +394,7 @@ function displayThongKeKH($thongKe, $index)
             </tr>`;
             dateFrom = document.getElementById('purchased-date-from').value;
             dateTo = document.getElementById('purchased-date-to').value;
-            fetch('http://localhost/frontend/?module=dashboard&view=dashboard.view', {
+            fetch(generateUrl({ module: 'dashboard', view: 'dashboard.view' }), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -431,7 +431,7 @@ function displayThongKeKH($thongKe, $index)
             </tr>`
             dateFrom = document.getElementById('purchased-date-from').value;
             dateTo = document.getElementById('purchased-date-to').value;
-            fetch('http://localhost/frontend/?module=dashboard&view=dashboard.view', {
+            fetch(generateUrl({ module: 'dashboard', view: 'dashboard.view' }), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -489,7 +489,7 @@ function displayThongKeKH($thongKe, $index)
 
         // Function to get order list by user id
         function getOrderListByUserId(userId) {
-            fetch("http://localhost/frontend/?module=dashboard&view=dashboard.view", {
+            fetch(generateUrl({ module: 'dashboard', view: 'dashboard.view' }), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -513,7 +513,7 @@ function displayThongKeKH($thongKe, $index)
                 button.addEventListener('click', function () {
                     // Get userId from button's id
                     let orderId = button.getAttribute('data-order-id');
-                    window.location.href = 'http://localhost/frontend/index.php?module=dashboard&view=order.view.detail&customerOrderId=' + orderId;
+                    window.location.href = generateUrl({ module: 'dashboard', view: 'order.view.detail', params: { customerOrderId: orderId } });
                 });
             });
         }

@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'http://localhost/frontend/index.php?module=dashboard&view=size.view',
+            url: generateUrl({ module: 'dashboard', view: 'size.view' }),
             method: 'POST',
             dataType: 'json',
             data: {

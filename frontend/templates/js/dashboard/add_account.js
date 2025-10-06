@@ -61,7 +61,7 @@ $(document).ready(function () {
                         //Close the modal
                         $('#addAccountModal').modal('hide');
                         // Redirect to account view page
-                        window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=account.view";
+                        navigateTo({ module: 'dashboard', view: 'account.view' });
                     } else if (data.status == "error") {
                         alert(data.message);
                     }

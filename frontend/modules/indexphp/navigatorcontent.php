@@ -61,15 +61,15 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
         <li>
             <div class="product-item">
                 <div>
-                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '">
+                    <a href="' . generateUrl(['module' => 'indexphp', 'action' => 'singleproduct', 'params' => ['id' => $product->getId()]]) . '">
                         <img src="' . $product->getImage() . '" alt>
                     </a>
                 </div>
                 <div class="product-info">
-                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '" class="product-name">' . $product->getName() . '</a>
+                    <a href="' . generateUrl(['module' => 'indexphp', 'action' => 'singleproduct', 'params' => ['id' => $product->getId()]]) . '" class="product-name">' . $product->getName() . '</a>
                     <div class="product-price">
                         <ul class="price"><span>$' . $product->getPrice() . '</span>
-                            <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
+                            <a href="' . generateUrl(['module' => 'indexphp', 'action' => 'singleproduct', 'params' => ['id' => $product->getId()]]) . '"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
                         </ul>
                     </div>
                 </div>
@@ -85,7 +85,7 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
                         <p>Introducing our latest hot product, designed with cutting-edge technology and unparalleled
                             craftsmanship. This product is the epitome of innovation and style, setting a new standard
                             in the industry. Experience the difference with our hot product today.</p>
-                        <span><a href="?module=indexphp&action=product">SEE MORE <i
+                        <span><a href="' . generateUrl(['module' => 'indexphp', 'action' => 'product']) . '">SEE MORE <i
                                     class="fa-solid fa-arrow-right"></i></a></span>
                     </div>
                 </div>
@@ -113,7 +113,8 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
         <div class="see__more">
             <span class="title">ALL OUR PRODUCT</span>
             <div class="divider"></div>
-            <span><a href="?module=indexphp&action=product">SEE MORE <i class="fa-solid fa-arrow-right"></i></a></span>
+            <span><a href="' . generateUrl(['module' => 'indexphp', 'action' => 'product']) . '">SEE MORE <i
+                        class="fa-solid fa-arrow-right"></i></a></span>
         </div>
 
         <div class="in__wrap">
@@ -125,15 +126,15 @@ $randomProducts = ProductBUS::getInstance()->getRandomRecommendProducts();
         <li class="tbay">
             <div class="product-item">
                 <div>
-                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '">
+                    <a href="' . generateUrl(['module' => 'indexphp', 'action' => 'singleproduct', 'params' => ['id' => $product->getId()]]) . '">
                         <img src="' . $product->getImage() . '" alt>
                     </a>
                 </div>
                 <div class="product-info">
-                    <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '" class="product-name">' . $product->getName() . '</a>
+                    <a href="' . generateUrl(['module' => 'indexphp', 'action' => 'singleproduct', 'params' => ['id' => $product->getId()]]) . '" class="product-name">' . $product->getName() . '</a>
                     <div class="product-price">
                         <ul class="price"><span>$' . $product->getPrice() . '</span>
-                            <a href="?module=indexphp&action=singleproduct&id=' . $product->getId() . '"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
+                            <a href="' . generateUrl(['module' => 'indexphp', 'action' => 'singleproduct', 'params' => ['id' => $product->getId()]]) . '"><i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></a>
                         </ul>
                     </div>
                 </div>

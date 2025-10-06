@@ -23,8 +23,8 @@ if (!checkPermission(4)) {
     die('Access denied');
 }
 
-include (__DIR__ . '/../inc/head.php');
-include (__DIR__ . '/../inc/app/app.php');
+include(__DIR__ . '/../inc/head.php');
+include(__DIR__ . '/../inc/app/app.php');
 $userList = UserBUS::getInstance()->getAllModels();
 
 //Get current logged in user
@@ -57,7 +57,7 @@ function showUserList($user, $currentLoggedInUser)
     echo "<td class='col-1'>" . $user->getStatus() . "</td>";
     echo "<td>";
     if ($canEdit) {
-        echo "<a href='http://localhost/frontend/index.php?module=dashboard&view=account.update&id=" . $user->getId() . "' class='btn btn-sm btn-primary'>";
+        echo "<a href='" . generateUrl(['module' => 'dashboard', 'view' => 'account.update', 'params' => ['id' => $user->getId()]]) . "' class='btn btn-sm btn-primary'>";
         echo "<span data-feather='tool'></span>";
         echo "</a>";
     }
@@ -76,13 +76,13 @@ function showUserList($user, $currentLoggedInUser)
 
 <body>
     <!-- HEADER -->
-    <?php include (__DIR__ . '/../inc/header.php'); ?>
+    <?php include(__DIR__ . '/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include (__DIR__ . '/../inc/sidebar.php'); ?>
+            <?php include(__DIR__ . '/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -188,7 +188,7 @@ function showUserList($user, $currentLoggedInUser)
                                     echo "</div>";
                                 } else {
                                     if (isset($_GET['page'])) {
-                                        header('Location: http://localhost/frontend/index.php?module=dashboard&view=account.view');
+                                        header('Location: ' . generateUrl(['module' => 'dashboard', 'view' => 'account.view']));
                                         exit;
                                     }
                                     if (count($searchResult) > 0) {
@@ -376,7 +376,7 @@ function showUserList($user, $currentLoggedInUser)
         }
     }
     ?>
-    <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+    <?php include(__DIR__ . '/../inc/app/app.php'); ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
     <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/account_status.js"></script>

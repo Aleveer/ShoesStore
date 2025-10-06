@@ -26,7 +26,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'http://localhost/frontend/index.php?module=dashboard&view=role.view',
+            url: generateUrl({ module: 'dashboard', view: 'role.view' }),
             method: 'POST',
             dataType: 'json',
             data: {

@@ -19,7 +19,7 @@ if (!checkPermission(2)) {
     die('Access denied');
 }
 
-include (__DIR__ . '/../inc/head.php');
+include(__DIR__ . '/../inc/head.php');
 
 use backend\bus\ProductBUS;
 
@@ -29,13 +29,13 @@ $productList = ProductBUS::getInstance()->getAllModels();
 
 <body>
     <!-- HEADER -->
-    <?php include (__DIR__ . '/../inc/header.php'); ?>
+    <?php include(__DIR__ . '/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include (__DIR__ . '/../inc/sidebar.php'); ?>
+            <?php include(__DIR__ . '/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-9 ms-sm-auto col-lg-10 px-4">
@@ -296,7 +296,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
             ?>
 
 
-            <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+            <?php include(__DIR__ . '/../inc/app/app.php'); ?>
             <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_sizeitem.js"></script>
@@ -324,7 +324,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     let sizeItemId = "";
 
                     function loadData(thisPage, limit, filterName) {
-                        fetch('http://localhost/frontend/index.php?module=dashboard&view=inventory.view', {
+                        fetch(generateUrl({ module: 'dashboard', view: 'inventory.view' }), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -528,7 +528,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                                 if (confirmed) {
                                     let sizeItemElement = this.closest('tr');
                                     sizeItemId = sizeItemElement.getAttribute('id');
-                                    fetch('http://localhost/frontend/index.php?module=dashboard&view=inventory.view', {
+                                    fetch(generateUrl({ module: 'dashboard', view: 'inventory.view' }), {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -541,7 +541,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                                         .then(function (data) {
                                             if (data.status == "success") {
                                                 alert(data.message);
-                                                window.location.href = 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view';
+                                                window.location.href = generateUrl({ module: 'dashboard', view: 'inventory.view' });
                                             } else if (data.status == "error") {
                                                 alert(data.message);
                                             }
@@ -555,7 +555,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     updateSizeItemBtn.addEventListener('click', function () {
                         let newQuantity = inputNewQuantityUpdate.value;
 
-                        fetch('http://localhost/frontend/index.php?module=dashboard&view=inventory.view', {
+                        fetch(generateUrl({ module: 'dashboard', view: 'inventory.view' }), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded',

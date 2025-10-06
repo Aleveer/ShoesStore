@@ -26,7 +26,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'http://localhost/frontend/index.php?module=dashboard&view=inventory.view',
+            url: generateUrl({ module: 'dashboard', view: 'inventory.view' }),
             type: 'POST',
             dataType: 'json',
             data: {

@@ -15,7 +15,7 @@ $(document).ready(function () {
                 $('.top_message').remove();
             }
             $.ajax({
-                url: "http://localhost/frontend/?module=auth&action=register",
+                url: generateUrl({ module: 'auth', action: 'register' }),
                 type: "POST",
                 dataType: "json",
                 data: {

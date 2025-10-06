@@ -12,7 +12,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                url: 'http://localhost/frontend/index.php?module=dashboard&view=product.view',
+                url: generateUrl({ module: 'dashboard', view: 'product.view' }),
                 method: 'POST',
                 dataType: 'json',
                 data: {
@@ -39,7 +39,7 @@ $(document).ready(function () {
             let productId = $(this).closest('tr').children('td:nth-child(2)').text();
             if (confirm('Product will be deleted permanently. This action cannot be undone. Proceed with caution! Proceed?')) {
                 $.ajax({
-                    url: 'http://localhost/frontend/index.php?module=dashboard&view=product.view',
+                    url: generateUrl({ module: 'dashboard', view: 'product.view' }),
                     method: 'POST',
                     dataType: 'json',
                     data: {

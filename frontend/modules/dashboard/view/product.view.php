@@ -22,7 +22,7 @@ if (!checkPermission(1)) {
     die('Access denied');
 }
 
-include (__DIR__ . '/../inc/head.php');
+include(__DIR__ . '/../inc/head.php');
 
 use backend\bus\ProductBUS;
 
@@ -31,13 +31,13 @@ $productList = ProductBUS::getInstance()->getAllModels();
 
 <body>
     <!-- HEADER -->
-    <?php include (__DIR__ . '/../inc/header.php'); ?>
+    <?php include(__DIR__ . '/../inc/header.php'); ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- SIDEBAR MENU -->
-            <?php include (__DIR__ . '/../inc/sidebar.php'); ?>
+            <?php include(__DIR__ . '/../inc/sidebar.php'); ?>
 
             <!-- MAIN -->
             <main class="col-9 ms-sm-auto col-lg-10 px-4">
@@ -259,7 +259,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                     }
                 }
                 ?>
-                <?php include (__DIR__ . '/../inc/app/app.php'); ?>
+                <?php include(__DIR__ . '/../inc/app/app.php'); ?>
                 <script src="https://kit.fontawesome.com/2a9b643027.js" crossorigin="anonymous"></script>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/dashboard/add_product.js"></script>
@@ -283,7 +283,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                         let filterPriceTo = "";
 
                         function loadData(thisPage, limit, filterName, filterCategory, filterGender, filterPriceFrom, filterPriceTo) {
-                            fetch('http://localhost/frontend/index.php?module=dashboard&view=product.view', {
+                            fetch(generateUrl({ module: 'dashboard', view: 'product.view' }), {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -318,7 +318,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                                     <td class='text-center'>${product.price}</td>
                                     <td class='text-center'>
                                         <div>
-                                            <a href='http://localhost/frontend/index.php?module=dashboard&view=product.update&id=${product.id}' class='btn btn-sm btn-warning'>
+                                            <a href='${generateUrl({ module: 'dashboard', view: 'product.update', params: { id: product.id } })}' class='btn btn-sm btn-warning'>
                                                 <i class='fas fa-edit'></i>
                                             </a>
                                             <button class='btn btn-sm btn-danger' id='completelyDeleteProduct' name='completelyDeleteProduct'>
@@ -422,7 +422,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                                         return;
                                     }
 
-                                    fetch('http://localhost/frontend/index.php?module=dashboard&view=product.view', {
+                                    fetch(generateUrl({ module: 'dashboard', view: 'product.view' }), {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -457,7 +457,7 @@ $productList = ProductBUS::getInstance()->getAllModels();
                                         let productIdElement = productElement.querySelector('.product_id');
                                         let productId = productIdElement.textContent.trim();
 
-                                        fetch('http://localhost/frontend/index.php?module=dashboard&view=product.view', {
+                                        fetch(generateUrl({ module: 'dashboard', view: 'product.view' }), {
                                             method: 'POST',
                                             headers: {
                                                 'Content-Type': 'application/x-www-form-urlencoded',

@@ -97,7 +97,7 @@ $(document).ready(function () {
                 success: function (data) {
                     if (data.status == "success") {
                         alert(data.message);
-                        window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=product.view";
+                        navigateTo({ module: 'dashboard', view: 'product.view' });
                     } else if (data.status == "error") {
                         alert(data.message);
                     }
@@ -113,7 +113,7 @@ $(document).ready(function () {
     if (cancelEditBtn) {
         cancelEditBtn.addEventListener("click", (event) => {
             event.preventDefault();
-            window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=product.view";
+            navigateTo({ module: 'dashboard', view: 'product.view' });
         });
     }
 });

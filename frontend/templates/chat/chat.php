@@ -255,7 +255,7 @@ if (!defined('_CODE')) {
         // Load chat history from server
         function loadChatHistory() {
             console.log('Loading chat history...');
-            fetch('?module=chat&action=get_history', {
+            fetch(generateUrl({ module: 'chat', action: 'get_history' }), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -325,7 +325,7 @@ if (!defined('_CODE')) {
                 const loadingDiv = addLoadingMessage();
 
                 // Send to server
-                fetch('?module=chat&action=send_message', {
+                fetch(generateUrl({ module: 'chat', action: 'send_message' }), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',

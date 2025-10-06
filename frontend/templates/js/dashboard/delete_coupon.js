@@ -5,7 +5,7 @@ $(document).ready(function () {
             console.log('delete button clicked');
             let couponId = $(this).closest('tr').find('td:first').text();
             $.ajax({
-                url: 'http://localhost/frontend/index.php?module=dashboard&view=coupon.view',
+                url: generateUrl({ module: 'dashboard', view: 'coupon.view' }),
                 method: 'POST',
                 dataType: 'json',
                 data: {

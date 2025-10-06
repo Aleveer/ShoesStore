@@ -5,7 +5,7 @@ $(document).ready(function () {
             console.log('delete button clicked');
             let categoryId = $(this).closest('tr').find('td:first').text();
             $.ajax({
-                url: 'http://localhost/frontend/index.php?module=dashboard&view=category.view',
+                url: generateUrl({ module: 'dashboard', view: 'category.view' }),
                 method: 'POST',
                 dataType: 'json',
                 data: {

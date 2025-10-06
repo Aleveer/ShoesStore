@@ -99,6 +99,7 @@ class OrdersBUS implements BUSInterface
     }
     public function getOrdersByUserId($userId)
     {
+        $this->refreshData();
         $ordersByUserId = array();
         foreach ($this->ordersList as $orders) {
             if ($orders->getUserId() == $userId) {

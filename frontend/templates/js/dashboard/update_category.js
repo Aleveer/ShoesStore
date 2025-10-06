@@ -25,7 +25,7 @@ $(document).ready(function () {
             return;
         }
         $.ajax({
-            url: 'http://localhost/frontend/index.php?module=dashboard&view=category.view',
+            url: generateUrl({ module: 'dashboard', view: 'category.view' }),
             method: 'POST',
             datatype: 'json',
             data: {

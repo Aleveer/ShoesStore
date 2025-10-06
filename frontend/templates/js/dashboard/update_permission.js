@@ -15,7 +15,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'http://localhost/frontend/index.php?module=dashboard&view=permission.view',
+            url: generateUrl({ module: 'dashboard', view: 'permission.view' }),
             type: 'POST',
             dataType: 'json',
             data: {

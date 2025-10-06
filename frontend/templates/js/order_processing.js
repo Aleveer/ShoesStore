@@ -30,13 +30,13 @@ $(document).ready(function () {
                 return;
             }
 
-            if(!inputPaymentMethodId) {
+            if (!inputPaymentMethodId) {
                 alert('Please select a payment method');
                 return;
             }
 
             $.ajax({
-                url: 'http://localhost/frontend/index.php?module=indexphp&action=order',
+                url: generateUrl({ module: 'indexphp', action: 'order' }),
                 type: 'POST',
                 dataType: 'html',
                 data: {

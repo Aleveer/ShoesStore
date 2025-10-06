@@ -1,4 +1,6 @@
 <?php
+namespace backend\services;
+
 use backend\bus\ProductBUS;
 use backend\bus\CategoriesBUS;
 
@@ -16,7 +18,7 @@ class DeepSeekService
 
         if (empty($this->apiKey)) {
             error_log("DeepSeekService: No API key provided");
-            throw new Exception("API key is required");
+            throw new \Exception("API key is required");
         }
 
         // Load products and categories from database
@@ -31,7 +33,7 @@ class DeepSeekService
                     error_log("[DeepSeek] Sample Product " . ($i + 1) . ": " . $product->getName() . " - $" . $product->getPrice());
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("[DeepSeek] Error loading products: " . $e->getMessage());
             error_log("[DeepSeek] Stack trace: " . $e->getTraceAsString());
             $this->productList = [];
@@ -77,7 +79,7 @@ class DeepSeekService
             error_log("[DeepSeek] Product catalog preview: " . substr($productCatalog, 0, 500));
 
             return $productCatalog;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("[DeepSeek] Error formatting product catalog: " . $e->getMessage());
             error_log("[DeepSeek] Stack trace: " . $e->getTraceAsString());
             return "Product catalog temporarily unavailable.";
@@ -144,7 +146,7 @@ class DeepSeekService
                     'Authorization: Bearer ' . $this->apiKey,
                     'Content-Type: application/json',
                     'Accept: application/json',
-                    'HTTP-Referer: http://localhost/frontend/index.php',
+                    'HTTP-Referer: ' . (isset($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] . '/frontend/index.php' : 'http://localhost/frontend/index.php'),
                     'X-Title: Shoe Store Chat'
                 ],
                 CURLOPT_TIMEOUT => 30,
@@ -215,7 +217,7 @@ class DeepSeekService
                 'error' => $errorData['error']['message'] ?? $errorMessage
             ];
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Exception in sendMessage: " . $e->getMessage());
             error_log("Stack trace: " . $e->getTraceAsString());
 
@@ -277,7 +279,7 @@ class DeepSeekService
                             " (" . $categoryName . " - " . $genderText . ") - \$" . number_format($product->getPrice()) .
                             " - " . $product->getDescription();
                     }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     error_log("[DeepSeek] Error in validation: " . $e->getMessage());
                 }
             }

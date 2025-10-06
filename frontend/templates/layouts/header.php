@@ -33,11 +33,13 @@ if (!defined('_CODE')) {
     <!-- jQuery (needed for chatbot AJAX). If already loaded elsewhere, this will be cached. -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJ+Y7B1dC1Vn38DSksPQ5JgqS0b+7nu3y5wRk=" crossorigin="anonymous"></script>
+    <!-- URL Builder for consistent URL generation -->
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/url_builder.js"></script>
 </head>
 
 <body>
     <div class="header__logo">
-        <a href="?module=indexphp">
+        <a href="<?php echo generateUrl(['module' => 'indexphp']) ?>">
             <img src="<?php echo _WEB_HOST_TEMPLATE ?>/images/logoShoes.jpg" alt="Wait a minute!!"
                 style="width: 50px; height: 50px;">
         </a>
@@ -45,21 +47,21 @@ if (!defined('_CODE')) {
     <div class="header__content">
         <ul class="navbar header__content__item">
             <li class="navbar__item">
-                <a href="?module=indexphp">Home</a>
+                <a href="<?php echo generateUrl(['module' => 'indexphp']) ?>">Home</a>
             </li>
             <li class="navbar__item">
-                <a href="?module=indexphp&action=product">
+                <a href="<?php echo generateUrl(['module' => 'indexphp', 'action' => 'product']) ?>">
                     Shop
                 </a>
             </li>
             <li class="navbar__item">
-                <a href="?module=indexphp&action=FAQ">FAQ</a>
+                <a href="<?php echo generateUrl(['module' => 'indexphp', 'action' => 'FAQ']) ?>">FAQ</a>
         </ul>
 
         <?php
         if (!isLogin() || ($userModel->getRoleId() == RolesEnums::CUSTOMER)) {
             echo '<div class="cart header__content__item">
-        <a href="?module=cartsection&action=cart">
+        <a href="' . generateUrl(['module' => 'cartsection', 'action' => 'cart']) . '">
             <i class="fa-sharp fa-solid fa-cart-shopping cart__icon"></i>
         </a></div>';
         }
@@ -69,33 +71,38 @@ if (!defined('_CODE')) {
             <?php
             if (isLogin()):
                 ?>
-            <div class="user__logo" onclick="showDetailUser()">
-                <img class="user__image" src="<?php echo _WEB_HOST_TEMPLATE ?>/images/avt.png" alt="">
-                <i class="fa-solid fa-angle-down user__dropdown"></i>
-                <ul class="user__dropdown__menu hide">
-                    <?php if ($userModel->getRoleId() == RolesEnums::CUSTOMER) { ?>
-                    <li class="user__dropdown__menu__item">
-                        <a href="?module=account&action=profilesetting">Profile Setting</a>
-                    </li>
-                    <li class="user__dropdown__menu__item">
-                        <a href="?module=account&action=order-list">Purchase List</a>
-                    </li>
-                    <?php } else { ?>
-                    <li class="user__dropdown__menu__item">
-                        <a href="?module=dashboard&view=dashboard.view">Dashboard</a>
-                    </li>
-                    <?php } ?>
-                    <li class="user__dropdown__menu__item">
-                        <a href="?module=auth&action=logout">Log out</a>
-                    </li>
-                </ul>
-            </div>
-            <?php
+                <div class="user__logo" onclick="showDetailUser()">
+                    <img class="user__image" src="<?php echo _WEB_HOST_TEMPLATE ?>/images/avt.png" alt="">
+                    <i class="fa-solid fa-angle-down user__dropdown"></i>
+                    <ul class="user__dropdown__menu hide">
+                        <?php if ($userModel->getRoleId() == RolesEnums::CUSTOMER) { ?>
+                            <li class="user__dropdown__menu__item">
+                                <a href="<?php echo generateUrl(['module' => 'account', 'action' => 'profilesetting']) ?>">Profile
+                                    Setting</a>
+                            </li>
+                            <li class="user__dropdown__menu__item">
+                                <a href="<?php echo generateUrl(['module' => 'account', 'action' => 'order-list']) ?>">Purchase
+                                    List</a>
+                            </li>
+                        <?php } else { ?>
+                            <li class="user__dropdown__menu__item">
+                                <a
+                                    href="<?php echo generateUrl(['module' => 'dashboard', 'view' => 'dashboard.view']) ?>">Dashboard</a>
+                            </li>
+                        <?php } ?>
+                        <li class="user__dropdown__menu__item">
+                            <a href="<?php echo generateUrl(['module' => 'auth', 'action' => 'logout']) ?>">Log out</a>
+                        </li>
+                    </ul>
+                </div>
+                <?php
             else:
                 ?>
-            <a class="btn btn-primary" href="?module=auth&action=login">Login</a>
-            <a class="btn btn-primary ml8" href="?module=auth&action=register">Register</a>
-            <?php
+                <a class="btn btn-primary"
+                    href="<?php echo generateUrl(['module' => 'auth', 'action' => 'login']) ?>">Login</a>
+                <a class="btn btn-primary ml8"
+                    href="<?php echo generateUrl(['module' => 'auth', 'action' => 'register']) ?>">Register</a>
+                <?php
             endif;
             ?>
         </div>

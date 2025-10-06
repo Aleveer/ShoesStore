@@ -40,4 +40,8 @@ if (!isset($title)) {
 
     <!-- Feather Icon -->
     <script src="https://unpkg.com/feather-icons"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- URL Builder for consistent URL generation -->
+    <script src="<?php echo _WEB_HOST_TEMPLATE ?>/js/url_builder.js"></script>
 </head>

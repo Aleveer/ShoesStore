@@ -9,7 +9,7 @@ $(document).ready(function () {
             //Use ajax to send the id to the server:
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost/frontend/index.php?module=dashboard&view=account.view',
+                url: generateUrl({ module: 'dashboard', view: 'account.view' }),
                 dataType: 'json',
                 data: {
                     'id': id,
@@ -40,7 +40,7 @@ $(document).ready(function () {
             //Use ajax to send the id to the server:
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost/frontend/index.php?module=dashboard&view=account.view',
+                url: generateUrl({ module: 'dashboard', view: 'account.view' }),
                 dataType: 'json',
                 data: {
                     'id': id,

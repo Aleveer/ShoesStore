@@ -112,7 +112,7 @@ $(document).ready(function () {
                     if (data.status == "success") {
                         alert(data.message);
                         // Redirect to account view page
-                        window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=account.view";
+                        navigateTo({ module: 'dashboard', view: 'account.view' });
                     } else if (data.status == "error") {
                         alert(data.message);
                     }
@@ -128,7 +128,7 @@ $(document).ready(function () {
     if (cancelEditBtn) {
         cancelEditBtn.addEventListener("click", (event) => {
             event.preventDefault();
-            window.location.href = "http://localhost/frontend/index.php?module=dashboard&view=account.view";
+            navigateTo({ module: 'dashboard', view: 'account.view' });
         });
     }
 });
